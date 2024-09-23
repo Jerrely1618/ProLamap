@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Row, Col } from "antd";
+import { motion } from "framer-motion";
 
 const roadmapData = {
   PEP8: [],
@@ -18,6 +18,8 @@ const roadmapData = {
   Recursion: ["DFS/BFS"],
   Graphs: ["DFS/BFS"],
 };
+
+const randomFloat = (min, max) => Math.random() * (max - min) + min;
 
 const getLevels = (data) => {
   const levels = {};
@@ -40,62 +42,67 @@ const getLevels = (data) => {
       findLevel(node, 0);
     }
   });
-
   return levels;
 };
 
-const RoadMapBubble = ({ text }) => (
-  <button className="bg-gray-500 text-white w-28 py-1.5 my-2 rounded-xl shadow-md transition">
-    {text}
-  </button>
-);
+const RoadMapBubble = ({ text, isHoveringRoadmap, isDarkTheme }) => {
+  const [hovered, setHovered] = useState(false);
 
-const Arrow = ({ from, to }) => (
-  <svg
-    style={{
-      position: "absolute",
-      top: from.y,
-      left: from.x,
-      width: "100%",
-      height: "100%",
-      pointerEvents: "none",
-    }}
-    viewBox="0 0 100 100"
-  >
-    <line
-      x1={from.x + 50}
-      y1={from.y + 50}
-      x2={to.x + 50}
-      y2={to.y}
-      stroke="black"
-      strokeWidth="2"
-    />
-    <polygon
-      points={`${to.x + 50},${to.y} ${to.x + 45},${to.y + 5} ${to.x + 55},${
-        to.y + 5
-      }`}
-      fill="black"
-    />
-  </svg>
-);
+  return (
+    <motion.button
+      className={`w-28 py-1.5 my-2 mx-2 rounded-xl shadow-md transition font-semibold text-xl
+        ${
+          isDarkTheme
+            ? "bg-light-background text-light-text1"
+            : "bg-dark-background text-dark-text1"
+        } 
+        ${
+          hovered
+            ? isDarkTheme
+              ? "bg-light-background"
+              : "bg-dark-background"
+            : ""
+        }`}
+      animate={{
+        x: hovered || !isHoveringRoadmap ? 0 : randomFloat(-7, 7),
+        y: hovered || !isHoveringRoadmap ? 0 : randomFloat(-7, 7),
+      }}
+      transition={{
+        x: { repeat: Infinity, duration: randomFloat(0.5, 1), ease: "linear" },
+        y: { repeat: Infinity, duration: randomFloat(0.5, 1), ease: "linear" },
+      }}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      whileHover={{
+        scale: 1.15,
+        transition: {
+          duration: 0.05,
+          ease: "linear",
+        },
+      }}
+    >
+      {text}
+    </motion.button>
+  );
+};
 
-const RoadMap = () => {
+const RoadMap = ({ isDarkTheme }) => {
   const levels = getLevels(roadmapData);
   const [scale, setScale] = useState(1);
   const [translate, setTranslate] = useState({
     x: 0,
-    y: window.innerHeight / 4,
+    y: window.innerHeight / 5,
   });
-  const roadmapRef = useRef(null);
   const [isPanning, setIsPanning] = useState(false);
   const panStart = useRef({ x: 0, y: 0 });
-  const nodeRefs = useRef({});
+  const [isHoveringRoadmap, setIsHoveringRoadmap] = useState(false);
+  const lastTouchY = useRef(0);
+  const lastTouchX = useRef(0);
 
   useEffect(() => {
-    // Clear refs on unmount
-    return () => {
-      nodeRefs.current = {};
-    };
+    const roadMapWidth = (window.innerWidth * 2) / 3;
+    const initialScale = Math.min(roadMapWidth / 650, window.innerHeight / 500);
+    setScale(Math.max(0.5, Math.min(1.2, initialScale)));
   }, []);
 
   const handleWheel = (e) => {
@@ -103,6 +110,23 @@ const RoadMap = () => {
     const zoomAmount = e.deltaY * -0.001;
     setScale((prevScale) => Math.max(0.5, Math.min(2, prevScale + zoomAmount)));
   };
+
+  const handleTouchStart = (e) => {
+    setIsPanning(true);
+    lastTouchX.current = e.touches[0].clientX - translate.x;
+    lastTouchY.current = e.touches[0].clientY - translate.y;
+  };
+
+  const handleTouchMove = (e) => {
+    if (isPanning) {
+      setTranslate({
+        x: e.touches[0].clientX - lastTouchX.current,
+        y: e.touches[0].clientY - lastTouchY.current,
+      });
+    }
+  };
+
+  const handleTouchEnd = () => setIsPanning(false);
 
   const handleMouseDown = (e) => {
     setIsPanning(true);
@@ -124,85 +148,40 @@ const RoadMap = () => {
   };
 
   return (
-    <div className="w-full h-full flex items-center justify-center">
+    <div
+      className="w-full h-full items-center justify-center"
+      onMouseEnter={() => setIsHoveringRoadmap(true)}
+      onMouseLeave={() => {
+        setIsPanning(false);
+        setIsHoveringRoadmap(false);
+      }}
+    >
       <div
-        ref={roadmapRef}
-        className="w-full h-full cursor-grab flex flex-col items-center"
+        className="w-full h-full cursor-grab"
         onWheel={handleWheel}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseUp}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
         style={{
           transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`,
           transition: isPanning ? "none" : "transform 0.2s ease",
         }}
       >
-        <div className="relative">
+        <div className="grid gap-4" style={{ overflow: "hidden" }}>
           {Object.keys(levels).map((level) => (
-            <Row key={level} justify="center" gutter={[24, 5]}>
-              {levels[level].map((node, index) => {
-                const nodeRef = React.createRef();
-                nodeRefs.current[node] = nodeRef;
-
-                const hasParent = Object.values(roadmapData).some((children) =>
-                  children.includes(node)
-                );
-                const hasChildren = roadmapData[node]?.length > 0;
-
-                return (
-                  <Col
-                    key={node}
-                    span={4}
-                    style={{ margin: "0 12px", position: "relative" }}
-                    ref={nodeRef}
-                  >
-                    {/* Draw arrow to parent if exists */}
-                    {hasParent && index > 0 && (
-                      <Arrow
-                        from={{
-                          x:
-                            nodeRefs.current[
-                              Object.keys(roadmapData).find((key) =>
-                                roadmapData[key].includes(node)
-                              )
-                            ]?.current?.offsetLeft || 0,
-                          y:
-                            nodeRefs.current[
-                              Object.keys(roadmapData).find((key) =>
-                                roadmapData[key].includes(node)
-                              )
-                            ]?.current?.offsetTop || 0,
-                        }}
-                        to={{
-                          x: nodeRef.current.offsetLeft,
-                          y: nodeRef.current.offsetTop,
-                        }}
-                      />
-                    )}
-                    {/* Draw arrow to children if exists */}
-                    {hasChildren && (
-                      <Arrow
-                        from={{
-                          x: nodeRef.current.offsetLeft,
-                          y:
-                            nodeRef.current.offsetTop +
-                            nodeRef.current.offsetHeight,
-                        }}
-                        to={{
-                          x: nodeRef.current.offsetLeft + 25,
-                          y:
-                            nodeRef.current.offsetTop +
-                            nodeRef.current.offsetHeight +
-                            20,
-                        }}
-                      />
-                    )}
-                    <RoadMapBubble text={node} />
-                  </Col>
-                );
-              })}
-            </Row>
+            <div key={level} className="flex justify-center">
+              {levels[level].map((node) => (
+                <RoadMapBubble
+                  isDarkTheme={isDarkTheme}
+                  key={node}
+                  text={node}
+                  isHoveringRoadmap={isHoveringRoadmap}
+                />
+              ))}
+            </div>
           ))}
         </div>
       </div>
