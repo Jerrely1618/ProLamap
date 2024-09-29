@@ -1,0 +1,31 @@
+{
+    "python": {
+      "Variables": {
+        "Integers": [
+          {
+            "type": "text",
+            "simplify": false,
+            "content": "Integers are whole numbers without a decimal point, such as 1, 100, or -50. Python supports both positive and negative integers."
+          },
+          {
+            "type": "video",
+            "simplify": false,
+            "content": "https://placeholder.com/python-variables-integers"
+          }
+        ],
+        "Floats": [
+          {
+            "type": "text",
+            "simplify": true,
+            "content": "Floats represent numbers with decimal points like 1.5, -3.14, and 0.001."
+          },
+          {
+            "type": "video",
+            "simplify": false,
+            "content": "https://placeholder.com/python-variables-floats"
+          }
+        ]
+      }
+    }
+  }
+  

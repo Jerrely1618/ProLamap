@@ -45,16 +45,22 @@ const getLevels = (data) => {
   return levels;
 };
 
-const RoadMapBubble = ({ text, isHoveringRoadmap, isDarkTheme }) => {
+const RoadMapBubble = ({
+  text,
+  isHoveringRoadmap,
+  isDarkTheme,
+  onClick,
+  setShowWelcome,
+}) => {
   const [hovered, setHovered] = useState(false);
 
   return (
     <motion.button
-      className={`w-28 py-1.5 my-2 mx-2 rounded-xl shadow-md transition font-semibold text-xl
+      className={`w-32 py-1.5 my-2 mx-2 rounded-xl body-bold shadow-md transition font-semibold text-xl
         ${
           isDarkTheme
-            ? "bg-light-background text-light-text1"
-            : "bg-dark-background text-dark-text1"
+            ? "bg-light-background text-dark-background"
+            : "bg-dark-background text-light-background"
         } 
         ${
           hovered
@@ -80,13 +86,14 @@ const RoadMapBubble = ({ text, isHoveringRoadmap, isDarkTheme }) => {
           ease: "linear",
         },
       }}
+      onClick={() => (onClick(text), setShowWelcome(false))}
     >
       {text}
     </motion.button>
   );
 };
 
-const RoadMap = ({ isDarkTheme }) => {
+const RoadMap = ({ isDarkTheme, setSelectedTopic, setShowWelcome }) => {
   const levels = getLevels(roadmapData);
   const [scale, setScale] = useState(1);
   const [translate, setTranslate] = useState({
@@ -101,7 +108,7 @@ const RoadMap = ({ isDarkTheme }) => {
 
   useEffect(() => {
     const roadMapWidth = (window.innerWidth * 2) / 3;
-    const initialScale = Math.min(roadMapWidth / 650, window.innerHeight / 500);
+    const initialScale = Math.min(roadMapWidth / 720, window.innerHeight / 620);
     setScale(Math.max(0.5, Math.min(1.2, initialScale)));
   }, []);
 
@@ -110,13 +117,11 @@ const RoadMap = ({ isDarkTheme }) => {
     const zoomAmount = e.deltaY * -0.001;
     setScale((prevScale) => Math.max(0.5, Math.min(2, prevScale + zoomAmount)));
   };
-
   const handleTouchStart = (e) => {
     setIsPanning(true);
     lastTouchX.current = e.touches[0].clientX - translate.x;
     lastTouchY.current = e.touches[0].clientY - translate.y;
   };
-
   const handleTouchMove = (e) => {
     if (isPanning) {
       setTranslate({
@@ -179,6 +184,8 @@ const RoadMap = ({ isDarkTheme }) => {
                   key={node}
                   text={node}
                   isHoveringRoadmap={isHoveringRoadmap}
+                  onClick={setSelectedTopic}
+                  setShowWelcome={setShowWelcome}
                 />
               ))}
             </div>

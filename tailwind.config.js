@@ -8,18 +8,18 @@ export default {
     extend: {
       colors: {
         light: {
-          background: '#e2eff1', 
-          text1: '#65799b', 
-          text2: '#3490dc', 
+          background: '#F5EFFF', 
+          text1: '#A594F9', 
+          text2: '#A594F9', 
           primary: '#e2eff1', 
           secondary: '#555273', 
         },
         dark: {
-          background: '#1a202c',
-          text1: '#e2eff1', 
+          background: '#070F2B',
+          text1: '#9290C3', 
           text2: '#555273 ',
           primary: '#3b82f6',
-          secondary: '#f59e0b', 
+          secondary: '#535C91', 
         },
       },
     },
