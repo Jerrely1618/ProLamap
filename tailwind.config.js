@@ -21,6 +21,13 @@ export default {
           primary: '#3b82f6',
           secondary: '#535C91', 
         },
+        third:{
+          background: '#2E073F',
+          text1: '#2E073F',
+          text2: '#A594F9',
+          primary: '#2E073F',
+          secondary: '#AD49E1',
+        }
       },
     },
   },

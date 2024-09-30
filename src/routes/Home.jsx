@@ -1,10 +1,17 @@
 import { useState, useRef, useEffect } from "react";
-import { MoonIcon, SunIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import {
+  EyeIcon,
+  HomeIcon,
+  MoonIcon,
+  SunIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/solid";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 import RoadMap from "../components/RoadMap";
 import Select from "react-select";
 import Welcome from "../components/Welcome";
 import Content from "../components/Content";
+import { Switch } from "antd";
 
 export default function Home() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -13,7 +20,11 @@ export default function Home() {
   const [isDarkTheme, setIsDarkTheme] = useState(true);
   const dragRef = useRef(null);
   const [showWelcome, setShowWelcome] = useState(true);
+  const [selectedSubtopic, setSelectedSubtopic] = useState();
+  const [showSettings, setShowSettings] = useState(false);
+  const [isCodeOnly, setIsCodeOnly] = useState(false);
   const isDragging = useRef(false);
+
   const widthRef = useRef(width);
   const [selectedTopic, setSelectedTopic] = useState();
   const [selectedOption, setSelectedOption] = useState({
@@ -88,19 +99,28 @@ export default function Home() {
       {!isHidden && (
         <div
           ref={dragRef}
-          className={`p-3.5 shadow-lg flex flex-col justify-between ${
+          className={`py-3.5 pl-3.5 shadow-lg flex flex-col justify-between ${
             isDarkTheme ? "bg-dark-background" : "bg-light-background"
           }`}
           style={{ width: `${width}%`, height: "100vh" }}
         >
           {showWelcome ? (
-            <Welcome isDarkTheme={isDarkTheme} options={options} />
-          ) : (
-            <Content
+            <Welcome
               isDarkTheme={isDarkTheme}
-              selectedTopic={selectedTopic}
-              selectedCourse={selectedOption}
+              options={options}
+              setSelectedSubtopic={setSelectedSubtopic}
+              setShowWelcome={setShowWelcome}
+              setSelectedTopic={setSelectedTopic}
             />
+          ) : (
+            <div className="overflow-y-auto h-[calc(100vh-60px)] pr-2 scrollbar-left">
+              <Content
+                isDarkTheme={isDarkTheme}
+                selectedTopic={selectedTopic}
+                selectedSubtopic={selectedSubtopic}
+                selectedCourse={selectedOption}
+              />
+            </div>
           )}
           <Buttons
             handleExpand={handleExpand}
@@ -108,6 +128,9 @@ export default function Home() {
             isDarkTheme={isDarkTheme}
             handleHide={handleHide}
             toggleTheme={toggleTheme}
+            setShowWelcome={setShowWelcome}
+            showWelcome={showWelcome}
+            setShowSettings={setShowSettings}
           />
         </div>
       )}
@@ -200,6 +223,50 @@ export default function Home() {
           <ArrowRightIcon className="h-5 w-5" />
         </button>
       )}
+      {showSettings && (
+        <div className="absolute inset-0 flex items-center justify-center backdrop-blur-md bg-white/30 dark:bg-gray-800/70 z-50">
+          <div className="bg-white dark:bg-gray-800 border rounded shadow-lg p-6 w-96">
+            <div className="flex justify-between items-center">
+              <h2
+                className={`text-2xl body-bold ${
+                  isDarkTheme
+                    ? "text-light-background"
+                    : " text-dark-background "
+                }`}
+              >
+                Settings
+              </h2>
+              <button
+                onClick={() => setShowSettings(false)}
+                className={`p-2 rounded ${
+                  isDarkTheme
+                    ? "bg-dark-secondary text-dark-background"
+                    : "bg-light-secondary text-light-text1"
+                }`}
+              >
+                <XMarkIcon className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="flex flex-col space-y-2 mt-2">
+              <label className="flex items-center mt-4 px-5 justify-between">
+                <span
+                  className={` body-bold text-lg  ${
+                    isDarkTheme
+                      ? "text-light-background"
+                      : " text-dark-background "
+                  }`}
+                >
+                  Code-Only
+                </span>
+                <Switch
+                  checked={isCodeOnly}
+                  onChange={(checked) => setIsCodeOnly(checked)}
+                />
+              </label>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -210,47 +277,83 @@ function Buttons({
   isDarkTheme,
   handleHide,
   toggleTheme,
+  setShowWelcome,
+  showWelcome,
+  setShowSettings,
 }) {
+  const toggleSettings = () => {
+    setShowSettings((prev) => !prev);
+  };
+
   return (
-    <div className="flex justify-end space-x-2 mb-1">
-      <button
-        onClick={handleExpand}
-        className={`p-2 rounded ${
-          isDarkTheme
-            ? "bg-dark-secondary text-dark-background"
-            : "bg-light-secondary text-light-text1"
-        }`}
-      >
-        {isExpanded ? (
-          <ArrowLeftIcon className="h-5 w-5" />
-        ) : (
-          <ArrowRightIcon className="h-5 w-5" />
+    <div className="flex justify-between mb-1">
+      <div className="flex space-x-2">
+        <button
+          onClick={handleHide}
+          className={`p-2 rounded ${
+            isDarkTheme
+              ? "bg-dark-secondary text-dark-background"
+              : "bg-light-secondary text-light-text1"
+          }`}
+        >
+          <XMarkIcon className="h-5 w-5" />
+        </button>
+        {!showWelcome && (
+          <button
+            onClick={setShowWelcome}
+            className={`p-2 rounded ${
+              isDarkTheme
+                ? "bg-dark-secondary text-dark-background"
+                : "bg-light-secondary text-light-text1"
+            }`}
+          >
+            <HomeIcon className="h-5 w-5" />
+          </button>
         )}
-      </button>
-      <button
-        onClick={handleHide}
-        className={`p-2 rounded ${
-          isDarkTheme
-            ? "bg-dark-secondary text-dark-background"
-            : "bg-light-secondary text-light-text1"
-        }`}
-      >
-        <XMarkIcon className="h-5 w-5" />
-      </button>
-      <button
-        onClick={toggleTheme}
-        className={`p-2 rounded ${
-          isDarkTheme
-            ? "bg-dark-secondary text-dark-background"
-            : "bg-light-secondary text-light-text1"
-        }`}
-      >
-        {isDarkTheme ? (
-          <SunIcon className="h-5 w-5" />
-        ) : (
-          <MoonIcon className="h-5 w-5" />
+        <button
+          onClick={toggleTheme}
+          className={`p-2 rounded ${
+            isDarkTheme
+              ? "bg-dark-secondary text-dark-background"
+              : "bg-light-secondary text-light-text1"
+          }`}
+        >
+          {isDarkTheme ? (
+            <SunIcon className="h-5 w-5" />
+          ) : (
+            <MoonIcon className="h-5 w-5" />
+          )}
+        </button>
+      </div>
+
+      <div className="flex space-x-2">
+        {!showWelcome && (
+          <button
+            onClick={toggleSettings}
+            className={`p-2 rounded ${
+              isDarkTheme
+                ? "bg-dark-secondary text-dark-background"
+                : "bg-light-secondary text-light-text1"
+            }`}
+          >
+            <EyeIcon className="h-5 w-5" />
+          </button>
         )}
-      </button>
+        <button
+          onClick={handleExpand}
+          className={`p-2 rounded ${
+            isDarkTheme
+              ? "bg-dark-secondary text-dark-background"
+              : "bg-light-secondary text-light-text1"
+          }`}
+        >
+          {isExpanded ? (
+            <ArrowLeftIcon className="h-5 w-5" />
+          ) : (
+            <ArrowRightIcon className="h-5 w-5" />
+          )}
+        </button>
+      </div>
     </div>
   );
 }

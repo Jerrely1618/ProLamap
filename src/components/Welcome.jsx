@@ -1,6 +1,71 @@
+import React, { useEffect, useState } from "react";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
 
-export default function Welcome({ isDarkTheme, options }) {
+export default function Welcome({
+  isDarkTheme,
+  options,
+  setSelectedSubtopic,
+  setSelectedTopic,
+  setShowWelcome,
+}) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredTopics, setFilteredTopics] = useState([]);
+  const [contentData, setContentData] = useState(null);
+
+  useEffect(() => {
+    const fetchContentData = async () => {
+      try {
+        const response = await fetch("/contents.json");
+        const data = await response.json();
+        setContentData(data);
+      } catch (error) {
+        console.error("Error fetching content data:", error);
+      }
+    };
+
+    fetchContentData();
+  }, []);
+
+  const handleSearch = (event) => {
+    const value = event.target.value.toLowerCase();
+    setSearchTerm(value);
+    const results = [];
+    for (const language in contentData) {
+      const languageData = contentData[language];
+      const color = languageData.color;
+      for (const topic in languageData) {
+        if (topic === "color") continue;
+        if (topic.toLowerCase().includes(value)) {
+          results.push({ topic, language: capitalize(language), color });
+        }
+        for (const subtopic in languageData[topic]) {
+          if (subtopic.toLowerCase().includes(value)) {
+            results.push({
+              topic: subtopic,
+              language: capitalize(language),
+              color,
+              parentTopic: topic, // Add parentTopic to distinguish subtopics
+            });
+          }
+        }
+      }
+    }
+    setFilteredTopics(results);
+  };
+
+  const handleTopicClick = (item) => {
+    if (item.parentTopic) {
+      setSelectedTopic(capitalize(item.parentTopic));
+      setSelectedSubtopic(capitalize(item.topic));
+    } else {
+      setSelectedTopic(capitalize(item.topic));
+      setSelectedSubtopic("");
+    }
+    setShowWelcome(false);
+  };
+
+  const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+
   return (
     <div className="flex flex-col items-start p-4 h-screen justify-center">
       <h2
@@ -13,7 +78,7 @@ export default function Welcome({ isDarkTheme, options }) {
       <h1
         className={`text-8xl font-bold bubble ${
           isDarkTheme ? "text-dark-text1" : "text-light-secondary"
-        }`}
+        } `}
       >
         ProlaMap
       </h1>
@@ -38,6 +103,52 @@ export default function Welcome({ isDarkTheme, options }) {
             </span>
           ))}
         </div>
+      </div>
+
+      <input
+        type="text"
+        placeholder="Search topics or subtopics..."
+        value={searchTerm}
+        onChange={handleSearch}
+        className="mt-4 px-4 py-2 w-full text-lg border border-gray-300 rounded-t-md focus:outline-none focus:ring-2 focus:ring-blue-600"
+      />
+
+      <div className="w-full">
+        {filteredTopics.length !== 0 && (
+          <ul className="bg-red">
+            {filteredTopics.map((topic, index) => (
+              <li
+                key={index}
+                className={`flex ${
+                  index === filteredTopics.length - 1 ? "rounded-b-lg" : ""
+                }`}
+              >
+                <button
+                  onClick={() => handleTopicClick(topic)}
+                  className={`flex-grow py-2 px-4 w-full text-light-background body-bold text-left text-xl ${
+                    isDarkTheme ? "bg-dark-secondary " : "bg-dark-background"
+                  } hover:bg-blue-500 focus:bg-blue-500 transition-colors duration-200 ${
+                    index === filteredTopics.length - 1 ? "rounded-bl-lg" : ""
+                  }`}
+                >
+                  {topic.topic}
+                </button>
+                <button
+                  className={`py-2 px-4 body-bold text-sm ${
+                    index === filteredTopics.length - 1 ? "rounded-br-lg" : ""
+                  } ${
+                    isDarkTheme
+                      ? "text-dark-background"
+                      : "text-light-background"
+                  }`}
+                  style={{ backgroundColor: topic.color }}
+                >
+                  {topic.language}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       <style jsx>{`

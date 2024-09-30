@@ -1,7 +1,22 @@
 {
     "python": {
+      "color": "#F0A8D0",
       "Variables": {
         "Integers": [
+          {
+            "type": "text",
+            "simplify": true,
+            "content": "Integers are whole numbers without a decimal point, such as 1, 100, or -50. Python supports both positive and negative integers."
+          },
+          {"type":"info",
+          "title":"Random Integers",
+          "simplify":false,
+          "content": "This text is Important"
+          },
+          {"type":"code",
+          "simplify":false,
+          "content": "x = 5\ny = -3\nz = 0\nprint(x, y, z)"
+          },
           {
             "type": "text",
             "simplify": false,
@@ -10,7 +25,7 @@
           {
             "type": "video",
             "simplify": false,
-            "content": "https://placeholder.com/python-variables-integers"
+            "content": "https://www.youtube.com/watch?v=VRYRgA8Zbuo"
           }
         ],
         "Floats": [
