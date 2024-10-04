@@ -1,16 +1,21 @@
-import { CodeBlock } from "@atlaskit/code";
 import {
   ChevronDownIcon,
   ChevronUpIcon,
   InformationCircleIcon,
 } from "@heroicons/react/24/solid";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Collapsible from "react-collapsible";
 import ReactPlayer from "react-player";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import {
+  oneDark,
+  oneLight,
+} from "react-syntax-highlighter/dist/esm/styles/prism";
 
 export default function Content({
   isDarkTheme,
   selectedCourse,
+  isMediaOnly,
   selectedTopic,
   selectedSubtopic,
 }) {
@@ -69,40 +74,61 @@ export default function Content({
   );
 
   return (
-    <div className="mt-10 mx-5 flex flex-col">
-      <div className="sticky top-0 z-10 bg-light-background dark:bg-dark-background pt-4">
-        <h1 className="text-dark-text1 text-5xl body-bold">{selectedTopic}</h1>
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="px-5 w-full max-w-screen-lg ">
+        <h1
+          className={`text-white text-5xl body-bold transition-colors duration-300 text-center py-6 ${
+            isDarkTheme ? "bg-third-background" : "bg-dark-background"
+          }`}
+        >
+          {selectedTopic}
+        </h1>
 
-        <div className="mb-0.5 border-b border-dark-text1">
-          {steps.map((step, index) => (
-            <button
-              key={step}
-              onClick={() => setSelectedStep(step)}
-              className={`py-2 px-4 transition-colors duration-300 mt-10
+        <div className="flex flex-col md:flex-row-reverse">
+          <div
+            className={`md:w-1/4 w-full sticky transition-colors duration-300   top-0 z-10 ${
+              isDarkTheme ? "bg-dark-background" : "bg-light-background"
+            } border-b-light-background  border-b-[5px] md:border-b-0`}
+          >
+            <div className="flex md:flex-col  flex-row">
+              {steps.map((step, index) => (
+                <button
+                  key={step}
+                  onClick={() => setSelectedStep(step)}
+                  className={`py-5 px-4 transition-colors body-bold text-xl duration-300 text-left 
                 ${
                   selectedStep === step
-                    ? "bg-dark-text1 text-white"
+                    ? isDarkTheme
+                      ? "bg-third-background text-white"
+                      : "bg-dark-background text-white"
                     : "bg-light-background text-black"
                 }
-                ${index === 0 ? "rounded-tl" : ""}
-                ${index === steps.length - 1 ? "rounded-tr" : ""}
+                
+                ${
+                  index === steps.length - 1
+                    ? "rounded-tr md:rounded-br md:rounded-tr-none"
+                    : ""
+                }
               `}
-            >
-              {step}
-            </button>
-          ))}
-        </div>
-      </div>
+                >
+                  {step}
+                </button>
+              ))}
+            </div>
+          </div>
 
-      <div className="overflow-y-auto h-[calc(100vh-60px)] scrollbar-left">
-        <ContentForStep
-          step={selectedStep}
-          selectedCourse={selectedCourse}
-          selectedTopic={selectedTopic}
-          selectedSubtopic={selectedSubtopic}
-          contentData={contentData}
-          isDarkTheme={isDarkTheme}
-        />
+          <div className="content-section md:w-3/4 w-full mt-2 pr-0 md:pr-5 h-[calc(100vh-60px)]">
+            <ContentForStep
+              step={selectedStep}
+              selectedCourse={selectedCourse}
+              selectedTopic={selectedTopic}
+              selectedSubtopic={selectedSubtopic}
+              isMediaOnly={isMediaOnly}
+              contentData={contentData}
+              isDarkTheme={isDarkTheme}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -110,10 +136,12 @@ export default function Content({
 
 function ContentForStep({
   step,
+
   selectedCourse,
   selectedTopic,
   selectedSubtopic,
   contentData,
+  isMediaOnly,
   isDarkTheme,
 }) {
   const topicContent =
@@ -134,13 +162,13 @@ function ContentForStep({
     <div>
       {topicContent.map((item, index) => (
         <div
-          className={`body-medium text-xl py-2 ${
+          className={`body-medium text-xl  ${!isMediaOnly ? "py-2" : "py-0"} ${
             isDarkTheme ? "text-light-background" : "text-dark-background"
           }`}
           key={index}
         >
-          {item.type === "info" && (
-            <div className="mb-4">
+          {!isMediaOnly && item.type === "info" && (
+            <div>
               <Collapsible
                 open={isOpen}
                 onTriggerOpening={() => setIsOpen(true)}
@@ -152,7 +180,7 @@ function ContentForStep({
                     }`}
                   >
                     <div className="text-white rounded-full w-8 h-8 flex items-center justify-center mr-2">
-                      <InformationCircleIcon className="w-5 h-5" />
+                      <InformationCircleIcon className="w-8 h-8" />
                     </div>
                     <h2 className="text-lg text-light-background">
                       {item.title}
@@ -170,41 +198,52 @@ function ContentForStep({
                 }
               >
                 <div
-                  className={`py-3 px-2 text-light-background bg-third-secondary text-base rounded-b-lg ${
-                    isOpen ? "" : ""
-                  }`}
+                  className={`py-3 px-2 text-light-background bg-dark-text1 text-base rounded-b-lg`}
                 >
                   <p>{item.content}</p>
                 </div>
               </Collapsible>
             </div>
           )}
-          {item.type === "text" && <p>{item.content}</p>}
+          {item.type === "title" && (
+            <h2
+              className={`text-2xl body-bold  -mb-3 ${
+                isDarkTheme ? "text-light-background" : "text-dark-background"
+              } ${isMediaOnly ? "pb-2" : "pb-0"}`}
+            >
+              {item.content}
+            </h2>
+          )}
+          {!isMediaOnly && item.type === "text" && <p>{item.content}</p>}
           {item.type === "video" && (
-            <div className="video-container">
-              <ReactPlayer
-                url={item.content}
-                width="100%"
-                height="100%"
-                controls={true}
-                light={false}
-                playing={false}
-                config={{
-                  youtube: {
-                    playerVars: { showinfo: 1, rel: 0 },
-                  },
-                }}
-              />
+            <div className={`flex justify-center items-center pt-7`}>
+              <div className="w-full max-w-2xl aspect-video rounded-b">
+                <ReactPlayer
+                  url={item.content}
+                  width="100%"
+                  height="100%"
+                  controls={true}
+                  light={true}
+                  playing={false}
+                  config={{
+                    youtube: {
+                      playerVars: { showinfo: 1, rel: 0 },
+                    },
+                  }}
+                />
+              </div>
             </div>
           )}
-          {item.type === "code" && (
-            <div className="text-xl custom-codeblock">
-              <CodeBlock
-                language={selectedCourse}
-                showLineNumbers={false}
-                text={item.content}
-              />
-            </div>
+          {item.type === "code" && selectedCourse.value && (
+            <SyntaxHighlighter
+              language={selectedCourse.value}
+              showLineNumbers={true}
+              showInlineLineNumbers={false}
+              wrapLines={true}
+              style={isDarkTheme ? oneDark : oneLight}
+            >
+              {item.content}
+            </SyntaxHighlighter>
           )}
         </div>
       ))}

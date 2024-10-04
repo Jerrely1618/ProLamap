@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import {
+  Cog6ToothIcon,
   EyeIcon,
   HomeIcon,
+  InformationCircleIcon,
   MoonIcon,
   SunIcon,
   XMarkIcon,
@@ -11,8 +13,16 @@ import RoadMap from "../components/RoadMap";
 import Select from "react-select";
 import Welcome from "../components/Welcome";
 import Content from "../components/Content";
-import { Switch } from "antd";
-
+import { Switch, Tooltip } from "antd";
+const languages = [
+  { value: "python", label: "Python" },
+  {
+    value: "coming-soon",
+    label: "Coming Soon",
+    percentage: 0,
+    isDisabled: true,
+  },
+];
 export default function Home() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
@@ -20,39 +30,70 @@ export default function Home() {
   const [isDarkTheme, setIsDarkTheme] = useState(true);
   const dragRef = useRef(null);
   const [showWelcome, setShowWelcome] = useState(true);
+  const [isDraggable, setIsDraggable] = useState(true);
   const [selectedSubtopic, setSelectedSubtopic] = useState();
   const [showSettings, setShowSettings] = useState(false);
-  const [isCodeOnly, setIsCodeOnly] = useState(false);
+  const [isMediaOnly, setIsMediaOnly] = useState(false);
   const isDragging = useRef(false);
-
+  const settingsRef = useRef(null);
   const widthRef = useRef(width);
   const [selectedTopic, setSelectedTopic] = useState();
-  const [selectedOption, setSelectedOption] = useState({
-    value: "python",
-    label: "Python",
-    percentage: 70,
-  });
-  const options = [
-    { value: "python", label: "Python", percentage: 70 },
-    { value: "java", label: "Java", percentage: 20 },
-    { value: "javascript", label: "JavaScript", percentage: 60 },
-    { value: "csharp", label: "C#", percentage: 30 },
-    { value: "ruby", label: "Ruby", percentage: 40 },
-    { value: "typescript", label: "TypeScript", percentage: 50 },
-    { value: "go", label: "Go", percentage: 25 },
-    { value: "rust", label: "Rust", percentage: 15 },
-    {
-      value: "coming-soon",
-      label: "Coming Soon",
-      percentage: 0,
-      isDisabled: true,
-    },
-  ];
+  const [selectedOption, setSelectedOpt] = useState({});
+  const [options, setOptions] = useState([]);
+  const setAllOptionsInLocalStorage = (options) => {
+    localStorage.setItem("languageProgress", JSON.stringify(options));
+  };
+
+  const getProgressFromLocalStorage = (value) => {
+    const storedOptions =
+      JSON.parse(localStorage.getItem("languageProgress")) || [];
+    const option = storedOptions.find((option) => option.value === value);
+    return option ? option.progress : 0;
+  };
+  useEffect(() => {
+    const initialProgress = languages.map((option) => ({
+      ...option,
+      progress: getProgressFromLocalStorage(option.value),
+    }));
+    setOptions(initialProgress);
+  }, []);
+
+  useEffect(() => {
+    if (options.length > 0) {
+      setSelectedOption(options[0]);
+    }
+  }, [options]);
+  const setSelectedOption = (option) => {
+    setSelectedOpt(option);
+    const updatedOptions = options.map((opt) =>
+      opt.value === option.value ? { ...opt, progress: opt.progress } : opt
+    );
+    setAllOptionsInLocalStorage(updatedOptions);
+  };
+
+  useEffect(() => {
+    const lastSelected = JSON.parse(localStorage.getItem("lastSelectedOption"));
+    if (lastSelected) {
+      setSelectedOption(lastSelected);
+    } else if (options.length > 0) {
+      setSelectedOption(options[0]);
+    }
+  }, [options]);
   const handleMouseMove = (event) => {
     if (isDragging.current) {
       const newWidth = (event.clientX / window.innerWidth) * 100;
       widthRef.current = Math.max(40, Math.min(90, newWidth));
       dragRef.current.style.width = `${widthRef.current}%`;
+    }
+  };
+  const handleClickOutside = (event) => {
+    if (settingsRef.current && !settingsRef.current.contains(event.target)) {
+      setShowSettings(false);
+    }
+  };
+  const handleKeyDown = (event) => {
+    if (event.key === "Escape") {
+      setShowSettings(false);
     }
   };
   const handleMouseUp = () => {
@@ -93,13 +134,21 @@ export default function Home() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
 
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen transition-colors overflow-hidden duration-300">
       {!isHidden && (
         <div
           ref={dragRef}
-          className={`py-3.5 pl-3.5 shadow-lg flex flex-col justify-between ${
+          className={`pb-3.5 pl-3.5 transition-colors duration-300 shadow-lg flex flex-col justify-between ${
             isDarkTheme ? "bg-dark-background" : "bg-light-background"
           }`}
           style={{ width: `${width}%`, height: "100vh" }}
@@ -119,6 +168,7 @@ export default function Home() {
                 selectedTopic={selectedTopic}
                 selectedSubtopic={selectedSubtopic}
                 selectedCourse={selectedOption}
+                isMediaOnly={isMediaOnly}
               />
             </div>
           )}
@@ -130,7 +180,7 @@ export default function Home() {
             toggleTheme={toggleTheme}
             setShowWelcome={setShowWelcome}
             showWelcome={showWelcome}
-            setShowSettings={setShowSettings}
+            setIsMediaOnly={setIsMediaOnly}
           />
         </div>
       )}
@@ -144,7 +194,7 @@ export default function Home() {
 
       {!isExpanded && (
         <div
-          className={`flex-grow transition-all duration-300 flex flex-col ${
+          className={`flex-grow transition-all transition-colors duration-300  flex flex-col ${
             isDarkTheme
               ? "bg-dark-background text-dark-text1"
               : "bg-light-background text-light-text1"
@@ -193,14 +243,26 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex-grow flex items-center justify-center overflow-hidden">
+          <div className="flex-grow flex items-center justify-center transition-colors duration-300 overflow-hidden">
             <RoadMap
+              isDraggable={isDraggable}
               isDarkTheme={isDarkTheme}
               setShowWelcome={setShowWelcome}
               setSelectedTopic={setSelectedTopic}
+              selectedCourse={selectedOption}
             />
           </div>
 
+          <button
+            onClick={() => setShowSettings(true)}
+            className={`p-2 rounded absolute bottom-5 left-5 ${
+              isDarkTheme
+                ? "bg-dark-secondary text-dark-background"
+                : "bg-light-secondary text-light-text1"
+            }`}
+          >
+            <Cog6ToothIcon className="h-5 w-5" />
+          </button>
           <h1
             className={`text-2xl my-1 absolute bottom-5 right-5 ${
               isDarkTheme ? "text-dark-text1" : "text-dark-background"
@@ -225,15 +287,12 @@ export default function Home() {
       )}
       {showSettings && (
         <div className="absolute inset-0 flex items-center justify-center backdrop-blur-md bg-white/30 dark:bg-gray-800/70 z-50">
-          <div className="bg-white dark:bg-gray-800 border rounded shadow-lg p-6 w-96">
+          <div
+            ref={settingsRef}
+            className="bg-white dark:bg-gray-800 border rounded shadow-lg p-6 w-96"
+          >
             <div className="flex justify-between items-center">
-              <h2
-                className={`text-2xl body-bold ${
-                  isDarkTheme
-                    ? "text-light-background"
-                    : " text-dark-background "
-                }`}
-              >
+              <h2 className={`text-2xl body-bold text-light-background`}>
                 Settings
               </h2>
               <button
@@ -249,20 +308,17 @@ export default function Home() {
             </div>
             <div className="flex flex-col space-y-2 mt-2">
               <label className="flex items-center mt-4 px-5 justify-between">
-                <span
-                  className={` body-bold text-lg  ${
-                    isDarkTheme
-                      ? "text-light-background"
-                      : " text-dark-background "
-                  }`}
-                >
-                  Code-Only
+                <span className={` body-bold text-lg  text-light-background`}>
+                  Draggable
                 </span>
                 <Switch
-                  checked={isCodeOnly}
-                  onChange={(checked) => setIsCodeOnly(checked)}
+                  checked={isDraggable}
+                  onChange={(checked) => setIsDraggable(checked)}
                 />
               </label>
+              <div className="align-right pt-10">
+                <InformationCircleIcon className="text-white h-7 w-7" />
+              </div>
             </div>
           </div>
         </div>
@@ -279,80 +335,91 @@ function Buttons({
   toggleTheme,
   setShowWelcome,
   showWelcome,
-  setShowSettings,
+  setIsMediaOnly,
 }) {
   const toggleSettings = () => {
-    setShowSettings((prev) => !prev);
+    setIsMediaOnly((prev) => !prev);
   };
 
   return (
-    <div className="flex justify-between mb-1">
+    <div className="flex justify-between my-1 mt-3">
       <div className="flex space-x-2">
-        <button
-          onClick={handleHide}
-          className={`p-2 rounded ${
-            isDarkTheme
-              ? "bg-dark-secondary text-dark-background"
-              : "bg-light-secondary text-light-text1"
-          }`}
-        >
-          <XMarkIcon className="h-5 w-5" />
-        </button>
-        {!showWelcome && (
+        <Tooltip title="Exit" placement="top">
           <button
-            onClick={setShowWelcome}
+            onClick={handleHide}
             className={`p-2 rounded ${
               isDarkTheme
                 ? "bg-dark-secondary text-dark-background"
                 : "bg-light-secondary text-light-text1"
             }`}
           >
-            <HomeIcon className="h-5 w-5" />
+            <XMarkIcon className="h-5 w-5" />
           </button>
+        </Tooltip>
+        {!showWelcome && (
+          <Tooltip title="Home" placement="top">
+            <button
+              onClick={setShowWelcome}
+              className={`p-2 rounded ${
+                isDarkTheme
+                  ? "bg-dark-secondary text-dark-background"
+                  : "bg-light-secondary text-light-text1"
+              }`}
+            >
+              <HomeIcon className="h-5 w-5" />
+            </button>
+          </Tooltip>
         )}
-        <button
-          onClick={toggleTheme}
-          className={`p-2 rounded ${
-            isDarkTheme
-              ? "bg-dark-secondary text-dark-background"
-              : "bg-light-secondary text-light-text1"
-          }`}
-        >
-          {isDarkTheme ? (
-            <SunIcon className="h-5 w-5" />
-          ) : (
-            <MoonIcon className="h-5 w-5" />
-          )}
-        </button>
+
+        <Tooltip title="Theme Toggle" placement="top">
+          <button
+            onClick={toggleTheme}
+            className={`p-2 rounded ${
+              isDarkTheme
+                ? "bg-dark-secondary text-dark-background"
+                : "bg-light-secondary text-light-text1"
+            }`}
+          >
+            {isDarkTheme ? (
+              <SunIcon className="h-5 w-5" />
+            ) : (
+              <MoonIcon className="h-5 w-5" />
+            )}
+          </button>
+        </Tooltip>
       </div>
 
       <div className="flex space-x-2">
         {!showWelcome && (
+          <Tooltip title="Media-Only" placement="top">
+            <button
+              onClick={toggleSettings}
+              className={`p-2 rounded ${
+                isDarkTheme
+                  ? "bg-dark-secondary text-dark-background"
+                  : "bg-light-secondary text-light-text1"
+              }`}
+            >
+              <EyeIcon className="h-5 w-5" />
+            </button>
+          </Tooltip>
+        )}
+        <Tooltip title="Expand" placement="top">
           <button
-            onClick={toggleSettings}
+            onClick={handleExpand}
             className={`p-2 rounded ${
               isDarkTheme
                 ? "bg-dark-secondary text-dark-background"
                 : "bg-light-secondary text-light-text1"
             }`}
           >
-            <EyeIcon className="h-5 w-5" />
+            {isExpanded ? (
+              <ArrowLeftIcon className="h-5 w-5" />
+            ) : (
+              <ArrowRightIcon className="h-5 w-5" />
+            )}
           </button>
-        )}
-        <button
-          onClick={handleExpand}
-          className={`p-2 rounded ${
-            isDarkTheme
-              ? "bg-dark-secondary text-dark-background"
-              : "bg-light-secondary text-light-text1"
-          }`}
-        >
-          {isExpanded ? (
-            <ArrowLeftIcon className="h-5 w-5" />
-          ) : (
-            <ArrowRightIcon className="h-5 w-5" />
-          )}
-        </button>
+        </Tooltip>
       </div>
     </div>
   );
@@ -360,7 +427,7 @@ function Buttons({
 function Separation({ isDarkTheme, handleMouseDown }) {
   return (
     <div
-      className={`cursor-col-resize h-screen relative px-2
+      className={`cursor-col-resize h-screen relative px-2 transition-colors duration-300 
           ${isDarkTheme ? "bg-dark-background" : "bg-light-background"} `}
       onMouseDown={handleMouseDown}
     >

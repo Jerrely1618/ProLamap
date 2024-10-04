@@ -1,46 +1,67 @@
 {
-    "python": {
-      "color": "#F0A8D0",
-      "Variables": {
-        "Integers": [
-          {
-            "type": "text",
-            "simplify": true,
-            "content": "Integers are whole numbers without a decimal point, such as 1, 100, or -50. Python supports both positive and negative integers."
-          },
-          {"type":"info",
-          "title":"Random Integers",
-          "simplify":false,
-          "content": "This text is Important"
-          },
-          {"type":"code",
-          "simplify":false,
+  "python": {
+    "color": "#F0A8D0",
+    "Variables": {
+      "Integers": [
+        {
+          "type": "title",
+          "simplify": true,
+          "content": "Integers in Python"
+        },
+        {
+          "type": "text",
+          "simplify": true,
+          "content": "Integers are whole numbers without a decimal point. In Python, integers can be positive or negative. For example, 1, -50, and 100 are all integers."
+        },
+        {
+          "type": "info",
+          "title": "Random Integers",
+          "simplify": false,
+          "content": "Integers can represent values such as user input, results from operations, or random integers using libraries like `random`. Python's `random.randint()` can be used to generate random integers between two specified values."
+        },
+        {
+          "type": "code",
+          "simplify": false,
+          "content": "import random\n# Generate a random integer between 1 and 100\nrandom_int = random.randint(1, 100)\nprint(random_int)"
+        },
+        {
+          "type": "text",
+          "simplify": false,
+          "content": "The `random.randint(a, b)` function generates a random integer between `a` and `b` inclusive. This can be useful when creating games, simulations, or randomly selecting items from a list."
+        },
+        {
+          "type": "title",
+          "simplify": true,
+          "content": "Printing Integers"
+        },
+        {
+          "type": "code",
+          "simplify": false,
           "content": "x = 5\ny = -3\nz = 0\nprint(x, y, z)"
-          },
-          {
-            "type": "text",
-            "simplify": false,
-            "content": "Integers are whole numbers without a decimal point, such as 1, 100, or -50. Python supports both positive and negative integers."
-          },
-          {
-            "type": "video",
-            "simplify": false,
-            "content": "https://www.youtube.com/watch?v=VRYRgA8Zbuo"
-          }
-        ],
-        "Floats": [
-          {
-            "type": "text",
-            "simplify": true,
-            "content": "Floats represent numbers with decimal points like 1.5, -3.14, and 0.001."
-          },
-          {
-            "type": "video",
-            "simplify": false,
-            "content": "https://placeholder.com/python-variables-floats"
-          }
-        ]
-      }
+        },
+        {
+          "type": "text",
+          "simplify": false,
+          "content": "In this example, we define three integers: `x = 5`, `y = -3`, and `z = 0`. These are printed to show that Python handles both positive and negative integers, as well as zero."
+        },
+        {
+          "type": "video",
+          "simplify": false,
+          "content": "https://www.youtube.com/watch?v=VRYRgA8Zbuo"
+        }
+      ],
+      "Floats": [
+        {
+          "type": "text",
+          "simplify": true,
+          "content": "Floats represent numbers with decimal points like 1.5, -3.14, and 0.001."
+        },
+        {
+          "type": "video",
+          "simplify": false,
+          "content": "https://placeholder.com/python-variables-floats"
+        }
+      ]
     }
   }
-  
+}

@@ -11,13 +11,29 @@ export default function Welcome({
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredTopics, setFilteredTopics] = useState([]);
   const [contentData, setContentData] = useState(null);
-
+  const [topics, setTopics] = useState([]);
   useEffect(() => {
     const fetchContentData = async () => {
       try {
         const response = await fetch("/contents.json");
         const data = await response.json();
         setContentData(data);
+
+        const allTopics = [];
+        for (const language in data) {
+          const languageData = data[language];
+
+          for (const topic in languageData) {
+            if (topic === "color") continue;
+
+            allTopics.push(topic);
+
+            for (const subtopic in languageData[topic]) {
+              allTopics.push(subtopic);
+            }
+          }
+        }
+        setTopics(allTopics);
       } catch (error) {
         console.error("Error fetching content data:", error);
       }
@@ -44,7 +60,7 @@ export default function Welcome({
               topic: subtopic,
               language: capitalize(language),
               color,
-              parentTopic: topic, // Add parentTopic to distinguish subtopics
+              parentTopic: topic,
             });
           }
         }
@@ -76,7 +92,7 @@ export default function Welcome({
         Welcome to
       </h2>
       <h1
-        className={`text-8xl font-bold bubble ${
+        className={`text-8xl font-light bubble ${
           isDarkTheme ? "text-dark-text1" : "text-light-secondary"
         } `}
       >
@@ -85,23 +101,26 @@ export default function Welcome({
 
       <div className="overflow-hidden whitespace-nowrap body mt-5 ml-1.5 w-full">
         <div className="animate-marquee whitespace-nowrap flex">
-          {options.map((option, index) => (
+          {topics.map((topic, index) => (
             <span
               key={index}
               className={`mr-8 flex items-center font-bold ${
                 isDarkTheme ? "text-dark-secondary" : "text-dark-background"
               }`}
             >
-              {option.label === "Coming Soon" ? (
-                <span className="font-bold flex items-center">
-                  {option.label}
-                  <ArrowRightIcon className="h-5 w-5 pl-0.5" />
-                </span>
-              ) : (
-                option.label
-              )}
+              {topic}
             </span>
           ))}
+          <span
+            className={`mr-8 flex items-center font-bold ${
+              isDarkTheme ? "text-dark-secondary" : "text-dark-background"
+            }`}
+          >
+            <span className="font-bold flex items-center">
+              Learn Fast
+              <ArrowRightIcon className="h-5 w-5 pl-0.5" />
+            </span>
+          </span>
         </div>
       </div>
 

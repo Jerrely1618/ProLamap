@@ -1,0 +1,20 @@
+{
+    "python": {
+      "PEP8": [],
+      "Variables": ["Functions", "Arrays", "Binary"],
+      "Functions": ["Lambda", "Classes"],
+      "Arrays": ["Tuples", "Strings", "Stacks", "Sorting"],
+      "Classes": ["Sets", "Optional", "Dictionaries", "Heaps"],
+      "Sets": ["Algorithms"],
+      "Optional": ["Algorithms"],
+      "Dictionaries": ["Algorithms"],
+      "Heaps": ["Algorithms"],
+      "Algorithms": ["Sorting", "Recursion", "Graphs"],
+      "Sorting": ["Merge", "Quick"],
+      "Merge": ["Binary Search"],
+      "Quick": ["Binary Search"],
+      "Recursion": ["DFS/BFS"],
+      "Graphs": ["DFS/BFS"]
+    }
+  }
+  

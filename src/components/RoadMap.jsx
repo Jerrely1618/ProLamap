@@ -1,24 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 
-const roadmapData = {
-  PEP8: [],
-  Variables: ["Functions", "Arrays", "Binary"],
-  Functions: ["Lambda", "Classes"],
-  Arrays: ["Tuples", "Strings", "Stacks", "Sorting"],
-  Classes: ["Sets", "Optional", "Dictionaries", "Heaps"],
-  Sets: ["Algorithms"],
-  Optional: ["Algorithms"],
-  Dictionaries: ["Algorithms"],
-  Heaps: ["Algorithms"],
-  Algorithms: ["Sorting", "Recursion", "Graphs"],
-  Sorting: ["Merge", "Quick"],
-  Merge: ["Binary Search"],
-  Quick: ["Binary Search"],
-  Recursion: ["DFS/BFS"],
-  Graphs: ["DFS/BFS"],
-};
-
 const randomFloat = (min, max) => Math.random() * (max - min) + min;
 
 const getLevels = (data) => {
@@ -93,8 +75,13 @@ const RoadMapBubble = ({
   );
 };
 
-const RoadMap = ({ isDarkTheme, setSelectedTopic, setShowWelcome }) => {
-  const levels = getLevels(roadmapData);
+const RoadMap = ({
+  isDarkTheme,
+  setSelectedTopic,
+  setShowWelcome,
+  isDraggable,
+  selectedCourse,
+}) => {
   const [scale, setScale] = useState(1);
   const [translate, setTranslate] = useState({
     x: 0,
@@ -105,25 +92,51 @@ const RoadMap = ({ isDarkTheme, setSelectedTopic, setShowWelcome }) => {
   const [isHoveringRoadmap, setIsHoveringRoadmap] = useState(false);
   const lastTouchY = useRef(0);
   const lastTouchX = useRef(0);
+  const [levels, setLevels] = useState({});
+  const updateScale = () => {
+    const roadMapWidth = (window.innerWidth * 2) / 3;
+    const initialScale = Math.min(roadMapWidth / 850, window.innerHeight / 620);
+    setScale(Math.max(0.5, Math.min(1.2, initialScale)));
+  };
 
   useEffect(() => {
-    const roadMapWidth = (window.innerWidth * 2) / 3;
-    const initialScale = Math.min(roadMapWidth / 720, window.innerHeight / 620);
-    setScale(Math.max(0.5, Math.min(1.2, initialScale)));
+    updateScale();
+    window.addEventListener("resize", updateScale);
+    return () => {
+      window.removeEventListener("resize", updateScale);
+    };
   }, []);
+
+  useEffect(() => {
+    const fetchContentData = async () => {
+      try {
+        const response = await fetch("/topics.json");
+        const data = await response.json();
+        if (selectedCourse.value) {
+          const levelsData = getLevels(data[selectedCourse.value]);
+          setLevels(levelsData);
+        }
+      } catch (error) {
+        console.error("Error fetching content data:", error);
+      }
+    };
+
+    fetchContentData();
+  }, [selectedCourse]);
 
   const handleWheel = (e) => {
     e.preventDefault();
     const zoomAmount = e.deltaY * -0.001;
     setScale((prevScale) => Math.max(0.5, Math.min(2, prevScale + zoomAmount)));
   };
+
   const handleTouchStart = (e) => {
     setIsPanning(true);
     lastTouchX.current = e.touches[0].clientX - translate.x;
     lastTouchY.current = e.touches[0].clientY - translate.y;
   };
   const handleTouchMove = (e) => {
-    if (isPanning) {
+    if (isPanning && isDraggable) {
       setTranslate({
         x: e.touches[0].clientX - lastTouchX.current,
         y: e.touches[0].clientY - lastTouchY.current,
@@ -144,7 +157,7 @@ const RoadMap = ({ isDarkTheme, setSelectedTopic, setShowWelcome }) => {
   const handleMouseUp = () => setIsPanning(false);
 
   const handleMouseMove = (e) => {
-    if (isPanning) {
+    if (isPanning && isDraggable) {
       setTranslate({
         x: e.clientX - panStart.current.x,
         y: e.clientY - panStart.current.y,
@@ -162,7 +175,7 @@ const RoadMap = ({ isDarkTheme, setSelectedTopic, setShowWelcome }) => {
       }}
     >
       <div
-        className="w-full h-full cursor-grab"
+        className={`w-full h-full ${isDraggable ? "cursor-grab" : ""}`}
         onWheel={handleWheel}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
