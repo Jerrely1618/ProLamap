@@ -1,8 +1,12 @@
 import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  CheckIcon,
   ChevronDownIcon,
   ChevronUpIcon,
   InformationCircleIcon,
 } from "@heroicons/react/24/solid";
+import { Checkbox } from "antd";
 import { useEffect, useState } from "react";
 import Collapsible from "react-collapsible";
 import ReactPlayer from "react-player";
@@ -18,9 +22,47 @@ export default function Content({
   isMediaOnly,
   selectedTopic,
   selectedSubtopic,
+  setChange,
 }) {
   const [contentData, setContentData] = useState(null);
   const [selectedStep, setSelectedStep] = useState("");
+  const [isCompleted, setIsCompleted] = useState(false);
+  const toggleCompletion = () => {
+    const courseData = JSON.parse(localStorage.getItem("completed") || "{}");
+
+    if (!courseData[selectedCourse.value]) {
+      courseData[selectedCourse.value] = {};
+    }
+
+    if (!courseData[selectedCourse.value][selectedTopic]) {
+      courseData[selectedCourse.value][selectedTopic] = new Set();
+    }
+
+    let completedSubtopics = new Set(
+      courseData[selectedCourse.value][selectedTopic]
+    );
+
+    if (isCompleted) {
+      completedSubtopics.delete(selectedStep);
+    } else {
+      completedSubtopics.add(selectedStep);
+    }
+    courseData[selectedCourse.value][selectedTopic] =
+      Array.from(completedSubtopics);
+    localStorage.setItem("completed", JSON.stringify(courseData));
+
+    setIsCompleted((prev) => !prev);
+    setChange((prev) => !prev);
+  };
+
+  useEffect(() => {
+    const courseData = JSON.parse(localStorage.getItem("completed") || "{}");
+    const completedSubtopics = new Set(
+      courseData[selectedCourse.value]?.[selectedTopic] || []
+    );
+
+    setIsCompleted(completedSubtopics.has(selectedStep));
+  }, [selectedCourse.value, selectedTopic, selectedStep]);
 
   useEffect(() => {
     const fetchContentData = async () => {
@@ -72,48 +114,111 @@ export default function Content({
   const steps = Object.keys(
     contentData[selectedCourse.value][selectedTopic] || {}
   );
-
+  const handlePreviousStep = () => {
+    const currentIndex = steps.indexOf(selectedStep);
+    if (currentIndex > 0) {
+      setSelectedStep(steps[currentIndex - 1]);
+    }
+  };
+  const handleNextStep = () => {
+    const currentIndex = steps.indexOf(selectedStep);
+    if (currentIndex < steps.length - 1) {
+      setSelectedStep(steps[currentIndex + 1]);
+    }
+  };
   return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="px-5 w-full max-w-screen-lg ">
         <h1
-          className={`text-white text-5xl body-bold transition-colors duration-300 text-center py-6 ${
-            isDarkTheme ? "bg-third-background" : "bg-dark-background"
-          }`}
+          className={`${
+            isDarkTheme ? "text-white" : "text-third-background"
+          }  text-5xl body-bold transition-colors duration-300 text-left py-6 `}
         >
           {selectedTopic}
         </h1>
 
         <div className="flex flex-col md:flex-row-reverse">
           <div
-            className={`md:w-1/4 w-full sticky transition-colors duration-300   top-0 z-10 ${
+            className={`md:w-1/4 w-full sticky transition-colors duration-300 top-0 z-10 ${
               isDarkTheme ? "bg-dark-background" : "bg-light-background"
-            } border-b-light-background  border-b-[5px] md:border-b-0`}
+            } border-b-light-background border-b-[5px] md:border-b-0`}
           >
-            <div className="flex md:flex-col  flex-row">
-              {steps.map((step, index) => (
-                <button
-                  key={step}
-                  onClick={() => setSelectedStep(step)}
-                  className={`py-5 px-4 transition-colors body-bold text-xl duration-300 text-left 
-                ${
-                  selectedStep === step
-                    ? isDarkTheme
-                      ? "bg-third-background text-white"
-                      : "bg-dark-background text-white"
-                    : "bg-light-background text-black"
-                }
-                
-                ${
-                  index === steps.length - 1
-                    ? "rounded-tr md:rounded-br md:rounded-tr-none"
-                    : ""
-                }
-              `}
+            <div className="flex md:flex-col  h-full">
+              <div className="flex items-center justify-between">
+                <div
+                  className={`flex h-full ${
+                    isDarkTheme
+                      ? "bg-light-background text-black"
+                      : "bg-light-background text-light-text1"
+                  }`}
                 >
-                  {step}
+                  <button
+                    onClick={handlePreviousStep}
+                    className={`px-2 md:hidden `}
+                  >
+                    <ArrowLeftIcon className="h-5 w-5" />
+                  </button>
+                  <button
+                    onClick={handleNextStep}
+                    className={`px-2 md:hidden ${
+                      isDarkTheme
+                        ? "bg-light-background text-black"
+                        : "bg-light-background text-light-text1"
+                    }`}
+                  >
+                    <ArrowRightIcon className="h-5 w-5" />
+                  </button>
+                </div>
+
+                <div className="flex md:flex-col flex-row flex-grow">
+                  {steps.map((step, index) => (
+                    <button
+                      key={step}
+                      onClick={() => setSelectedStep(step)}
+                      className={`py-2 px-4 transition-colors body-bold text-base duration-300 text-left 
+              ${
+                selectedStep === step
+                  ? isDarkTheme
+                    ? "bg-light-background text-black"
+                    : "bg-light-background text-black"
+                  : "bg-third-background text-white"
+              }
+              ${
+                index === steps.length - 1
+                  ? "rounded-tr md:rounded-br md:rounded-tr-none"
+                  : ""
+              }
+            `}
+                    >
+                      {step}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-center ">
+                <button
+                  className={`md:mt-5 flex items-center ml-2 justify-center body-bold px-4 py-2 rounded transition-colors duration-300 ${
+                    isCompleted
+                      ? "bg-green-500 text-white"
+                      : "bg-gray-200 text-black"
+                  }`}
+                  onClick={toggleCompletion}
+                  style={{
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  {isCompleted ? (
+                    <CheckIcon className="h-5 w-5" />
+                  ) : (
+                    <div className="h-5 w-5 border border-gray-400 bg-gray-200 rounded-md" />
+                  )}
+                  <span className="hidden md:block ml-2">
+                    {isCompleted ? "Completed" : "Complete"}
+                  </span>
                 </button>
-              ))}
+              </div>
             </div>
           </div>
 
@@ -122,7 +227,7 @@ export default function Content({
               step={selectedStep}
               selectedCourse={selectedCourse}
               selectedTopic={selectedTopic}
-              selectedSubtopic={selectedSubtopic}
+              selectedSubtopic={selectedStep}
               isMediaOnly={isMediaOnly}
               contentData={contentData}
               isDarkTheme={isDarkTheme}
@@ -207,14 +312,16 @@ function ContentForStep({
           )}
           {item.type === "title" && (
             <h2
-              className={`text-2xl body-bold  -mb-3 ${
+              className={`text-xl body-bold  -mb-3 ${
                 isDarkTheme ? "text-light-background" : "text-dark-background"
               } ${isMediaOnly ? "pb-2" : "pb-0"}`}
             >
               {item.content}
             </h2>
           )}
-          {!isMediaOnly && item.type === "text" && <p>{item.content}</p>}
+          {!isMediaOnly && item.type === "text" && (
+            <p className="text-base">{item.content}</p>
+          )}
           {item.type === "video" && (
             <div className={`flex justify-center items-center pt-7`}>
               <div className="w-full max-w-2xl aspect-video rounded-b">

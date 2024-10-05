@@ -40,6 +40,7 @@ export default function Home() {
   const [selectedTopic, setSelectedTopic] = useState();
   const [selectedOption, setSelectedOpt] = useState({});
   const [options, setOptions] = useState([]);
+  const [change, setChange] = useState(false);
   const setAllOptionsInLocalStorage = (options) => {
     localStorage.setItem("languageProgress", JSON.stringify(options));
   };
@@ -166,9 +167,9 @@ export default function Home() {
               <Content
                 isDarkTheme={isDarkTheme}
                 selectedTopic={selectedTopic}
-                selectedSubtopic={selectedSubtopic}
                 selectedCourse={selectedOption}
                 isMediaOnly={isMediaOnly}
+                setChange={setChange}
               />
             </div>
           )}
@@ -245,6 +246,7 @@ export default function Home() {
 
           <div className="flex-grow flex items-center justify-center transition-colors duration-300 overflow-hidden">
             <RoadMap
+              change={change}
               isDraggable={isDraggable}
               isDarkTheme={isDarkTheme}
               setShowWelcome={setShowWelcome}
@@ -259,7 +261,7 @@ export default function Home() {
               isDarkTheme
                 ? "bg-dark-secondary text-dark-background"
                 : "bg-light-secondary text-light-text1"
-            }`}
+            } ${isHidden ? "left-16 bottom-4 " : ""}`}
           >
             <Cog6ToothIcon className="h-5 w-5" />
           </button>
@@ -276,7 +278,7 @@ export default function Home() {
       {isHidden && (
         <button
           onClick={() => setIsHidden(false)}
-          className={`absolute bottom-4 left-4 p-2 rounded ${
+          className={`absolute bottom-5 left-4 p-2 rounded ${
             isDarkTheme
               ? "bg-dark-secondary text-dark-background"
               : "bg-light-secondary text-light-text1"

@@ -33,24 +33,52 @@ const RoadMapBubble = ({
   isDarkTheme,
   onClick,
   setShowWelcome,
+  subtopics,
+  selectedCourse,
+  change,
 }) => {
   const [hovered, setHovered] = useState(false);
+  const [completedSubtopics, setCompletedSubtopics] = useState(new Set());
+
+  const updateCompletedSubtopics = () => {
+    const completedFromStorage = new Set(
+      JSON.parse(localStorage.getItem("completed") || "{}")?.[
+        selectedCourse.value
+      ]?.[text] || []
+    );
+    setCompletedSubtopics(completedFromStorage);
+  };
+
+  useEffect(() => {
+    updateCompletedSubtopics();
+  }, [selectedCourse.value, text]);
+
+  useEffect(() => {
+    updateCompletedSubtopics();
+  }, [change]);
+
+  const allCompleted = Object.keys(subtopics).every((subtopic) =>
+    completedSubtopics.has(subtopic)
+  );
 
   return (
     <motion.button
       className={`w-32 py-1.5 my-2 mx-2 rounded-xl body-bold shadow-md transition font-semibold text-xl
         ${
-          isDarkTheme
+          allCompleted
+            ? "text-white bg-green-500"
+            : isDarkTheme
             ? "bg-light-background text-dark-background"
             : "bg-dark-background text-light-background"
-        } 
+        }
         ${
           hovered
             ? isDarkTheme
               ? "bg-light-background"
               : "bg-dark-background"
             : ""
-        }`}
+        }
+      `}
       animate={{
         x: hovered || !isHoveringRoadmap ? 0 : randomFloat(-7, 7),
         y: hovered || !isHoveringRoadmap ? 0 : randomFloat(-7, 7),
@@ -71,6 +99,20 @@ const RoadMapBubble = ({
       onClick={() => (onClick(text), setShowWelcome(false))}
     >
       {text}
+
+      <div className="flex space-x-1 mt-2 items-center justify-center">
+        {Object.keys(subtopics).length > 0 &&
+          Object.keys(subtopics).map((subtopic) => (
+            <div
+              key={subtopic}
+              className={`w-3 h-3 rounded-full ${
+                completedSubtopics.has(subtopic)
+                  ? "bg-green-700"
+                  : "bg-gray-400"
+              }`}
+            />
+          ))}
+      </div>
     </motion.button>
   );
 };
@@ -81,6 +123,7 @@ const RoadMap = ({
   setShowWelcome,
   isDraggable,
   selectedCourse,
+  change,
 }) => {
   const [scale, setScale] = useState(1);
   const [translate, setTranslate] = useState({
@@ -88,6 +131,7 @@ const RoadMap = ({
     y: window.innerHeight / 5,
   });
   const [isPanning, setIsPanning] = useState(false);
+  const [topics, setTopics] = useState([]);
   const panStart = useRef({ x: 0, y: 0 });
   const [isHoveringRoadmap, setIsHoveringRoadmap] = useState(false);
   const lastTouchY = useRef(0);
@@ -96,7 +140,7 @@ const RoadMap = ({
   const updateScale = () => {
     const roadMapWidth = (window.innerWidth * 2) / 3;
     const initialScale = Math.min(roadMapWidth / 850, window.innerHeight / 620);
-    setScale(Math.max(0.5, Math.min(1.2, initialScale)));
+    setScale(Math.max(0.2, Math.min(1.2, initialScale)));
   };
 
   useEffect(() => {
@@ -119,6 +163,15 @@ const RoadMap = ({
       } catch (error) {
         console.error("Error fetching content data:", error);
       }
+      try {
+        const response = await fetch("/contents.json");
+        const data = await response.json();
+        if (selectedCourse.value) {
+          setTopics(data[selectedCourse.value]);
+        }
+      } catch (error) {
+        console.error("Error fetching topic data:", error);
+      }
     };
 
     fetchContentData();
@@ -127,7 +180,7 @@ const RoadMap = ({
   const handleWheel = (e) => {
     e.preventDefault();
     const zoomAmount = e.deltaY * -0.001;
-    setScale((prevScale) => Math.max(0.5, Math.min(2, prevScale + zoomAmount)));
+    setScale((prevScale) => Math.max(0.2, Math.min(2, prevScale + zoomAmount)));
   };
 
   const handleTouchStart = (e) => {
@@ -193,12 +246,15 @@ const RoadMap = ({
             <div key={level} className="flex justify-center">
               {levels[level].map((node) => (
                 <RoadMapBubble
+                  selectedCourse={selectedCourse}
+                  change={change}
                   isDarkTheme={isDarkTheme}
                   key={node}
                   text={node}
                   isHoveringRoadmap={isHoveringRoadmap}
                   onClick={setSelectedTopic}
                   setShowWelcome={setShowWelcome}
+                  subtopics={topics[node] || {}}
                 />
               ))}
             </div>

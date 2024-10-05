@@ -85,14 +85,14 @@ export default function Welcome({
   return (
     <div className="flex flex-col items-start p-4 h-screen justify-center">
       <h2
-        className={`text-4xl body font-semibold mb-1 ${
+        className={`md:text-4xl text-3xl sm:text-2xl body font-semibold mb-1 ${
           isDarkTheme ? "text-dark-secondary" : "text-dark-background"
         }`}
       >
         Welcome to
       </h2>
       <h1
-        className={`text-8xl font-light bubble ${
+        className={`md:text-8xl text-4xl sm:text-5xl font-light bubble ${
           isDarkTheme ? "text-dark-text1" : "text-light-secondary"
         } `}
       >
@@ -173,7 +173,7 @@ export default function Welcome({
       <style jsx>{`
         @keyframes marquee {
           0% {
-            transform: translateX(100%);
+            transform: translateX(10%);
           }
           100% {
             transform: translateX(-100%);
@@ -181,7 +181,7 @@ export default function Welcome({
         }
         .animate-marquee {
           display: inline-flex;
-          animation: marquee 20s linear infinite;
+          animation: marquee 45s linear infinite;
         }
       `}</style>
     </div>

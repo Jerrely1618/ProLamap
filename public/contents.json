@@ -1,6 +1,27 @@
 {
   "python": {
     "color": "#F0A8D0",
+    "PEP8":{"one": "two"},
+    "Functions":{"one": "two"},
+    "Arrays":{"one": "two"},
+    "Binary":{"one": "two"},
+    "Lambda":{"one": "two"},
+    "Classes":{"one": "two"},
+    "Tuples":{"one": "two"},
+    "Strings":{"one": "two"},
+    "Stacks":{"one": "two"},
+    "Sorting":{"one": "two"},
+    "Sets":{"one": "two"},
+    "Optional":{"one": "two"},
+    "Dictionaries":{"one": "two"},
+    "Heaps":{"one": "two"},
+    "Algorithms":{"one": "two"},
+    "Merge":{"one": "two"},
+    "Quick":{"one": "two"},
+    "Recursion":{"one": "two"},
+    "Graphs":{"one": "two"},
+    "DFS/BFS":{"one": "two"},
+    "Binary Search":{"one": "two"},
     "Variables": {
       "Integers": [
         {
