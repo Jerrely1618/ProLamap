@@ -1,87 +1,120 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
+import { Trie, serializeTrie, deserializeTrie } from "../utils/Trie";
 
 export default function Welcome({
   isDarkTheme,
-  options,
-  setSelectedSubtopic,
   setSelectedTopic,
   setShowWelcome,
 }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredTopics, setFilteredTopics] = useState([]);
-  const [contentData, setContentData] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
   const [topics, setTopics] = useState([]);
+  const [trie, setTrie] = useState(null);
+  const searchRef = useRef(null);
+  const listRef = useRef(null);
   useEffect(() => {
-    const fetchContentData = async () => {
-      try {
+    const cachedTrie = localStorage.getItem("searchTrie");
+
+    if (cachedTrie) {
+      const deserializedTrie = deserializeTrie(cachedTrie);
+      setTrie(deserializedTrie);
+      const allTopics = deserializedTrie.getAllTopics();
+      setTopics(allTopics);
+    } else {
+      const fetchContentData = async () => {
         const response = await fetch("/contents.json");
         const data = await response.json();
-        setContentData(data);
-
+        const newTrie = new Trie();
         const allTopics = [];
+
         for (const language in data) {
           const languageData = data[language];
+          const color = languageData.color;
 
           for (const topic in languageData) {
             if (topic === "color") continue;
-
             allTopics.push(topic);
+            newTrie.insert(topic, { topic, language, color });
 
             for (const subtopic in languageData[topic]) {
               allTopics.push(subtopic);
+              newTrie.insert(subtopic, {
+                topic: subtopic,
+                language,
+                color,
+                parentTopic: topic,
+              });
             }
           }
         }
-        setTopics(allTopics);
-      } catch (error) {
-        console.error("Error fetching content data:", error);
-      }
-    };
 
-    fetchContentData();
+        localStorage.setItem("searchTrie", serializeTrie(newTrie));
+        setTrie(newTrie);
+        setTopics(allTopics);
+      };
+
+      fetchContentData();
+    }
   }, []);
 
   const handleSearch = (event) => {
     const value = event.target.value.toLowerCase();
     setSearchTerm(value);
-    const results = [];
-    for (const language in contentData) {
-      const languageData = contentData[language];
-      const color = languageData.color;
-      for (const topic in languageData) {
-        if (topic === "color") continue;
-        if (topic.toLowerCase().includes(value)) {
-          results.push({ topic, language: capitalize(language), color });
-        }
-        for (const subtopic in languageData[topic]) {
-          if (subtopic.toLowerCase().includes(value)) {
-            results.push({
-              topic: subtopic,
-              language: capitalize(language),
-              color,
-              parentTopic: topic,
-            });
-          }
-        }
-      }
-    }
-    setFilteredTopics(results);
-  };
+    setSelectedIndex(-1);
 
+    if (trie) {
+      const results = trie.searchPrefix(value);
+      setFilteredTopics(results);
+    }
+  };
   const handleTopicClick = (item) => {
     if (item.parentTopic) {
       setSelectedTopic(capitalize(item.parentTopic));
-      setSelectedSubtopic(capitalize(item.topic));
     } else {
       setSelectedTopic(capitalize(item.topic));
-      setSelectedSubtopic("");
     }
     setShowWelcome(false);
   };
-
+  const handleKeyDown = (event) => {
+    if (event.key === "ArrowDown") {
+      setSelectedIndex((prevIndex) =>
+        prevIndex < filteredTopics.length - 1 ? prevIndex + 1 : prevIndex
+      );
+    } else if (event.key === "ArrowUp") {
+      setSelectedIndex((prevIndex) =>
+        prevIndex > 0 ? prevIndex - 1 : prevIndex
+      );
+    } else if (event.key === "Enter") {
+      if (selectedIndex >= 0 && selectedIndex < filteredTopics.length) {
+        handleTopicClick(filteredTopics[selectedIndex]);
+      }
+    }
+  };
+  useEffect(() => {
+    if (listRef.current && selectedIndex >= 0) {
+      const selectedItem = listRef.current.children[selectedIndex];
+      if (selectedItem) {
+        selectedItem.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    }
+  }, [selectedIndex]);
   const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setFilteredTopics([]);
+        setSearchTerm("");
+        setSelectedIndex(-1);
+      }
+    };
 
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   return (
     <div className="flex flex-col items-start p-4 h-screen justify-center">
       <h2
@@ -93,7 +126,7 @@ export default function Welcome({
       </h2>
       <h1
         className={`md:text-8xl text-4xl sm:text-5xl font-light bubble ${
-          isDarkTheme ? "text-dark-text1" : "text-light-secondary"
+          isDarkTheme ? "text-dark-secondary" : " text-third-text1"
         } `}
       >
         ProlaMap
@@ -124,50 +157,59 @@ export default function Welcome({
         </div>
       </div>
 
-      <input
-        type="text"
-        placeholder="Search topics or subtopics..."
-        value={searchTerm}
-        onChange={handleSearch}
-        className="mt-4 px-4 py-2 w-full text-lg border border-gray-300 rounded-t-md focus:outline-none focus:ring-2 focus:ring-blue-600"
-      />
-
       <div className="w-full">
-        {filteredTopics.length !== 0 && (
-          <ul className="bg-red">
-            {filteredTopics.map((topic, index) => (
-              <li
-                key={index}
-                className={`flex ${
-                  index === filteredTopics.length - 1 ? "rounded-b-lg" : ""
-                }`}
-              >
-                <button
-                  onClick={() => handleTopicClick(topic)}
-                  className={`flex-grow py-2 px-4 w-full text-light-background body-bold text-left text-xl ${
-                    isDarkTheme ? "bg-dark-secondary " : "bg-dark-background"
-                  } hover:bg-blue-500 focus:bg-blue-500 transition-colors duration-200 ${
-                    index === filteredTopics.length - 1 ? "rounded-bl-lg" : ""
-                  }`}
-                >
-                  {topic.topic}
-                </button>
-                <button
-                  className={`py-2 px-4 body-bold text-sm ${
-                    index === filteredTopics.length - 1 ? "rounded-br-lg" : ""
-                  } ${
-                    isDarkTheme
-                      ? "text-dark-background"
-                      : "text-light-background"
-                  }`}
-                  style={{ backgroundColor: topic.color }}
-                >
-                  {topic.language}
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
+        <div ref={searchRef}>
+          <input
+            type="text"
+            placeholder="Search topics or subtopics..."
+            value={searchTerm}
+            onChange={handleSearch}
+            onKeyDown={handleKeyDown}
+            className="mt-4 px-4 py-2 w-full text-lg border border-gray-300 rounded-t-md focus:outline-none "
+          />
+          <div className="w-full max-h-60 overflow-y-auto scrollbar-left">
+            {filteredTopics.length !== 0 && (
+              <ul ref={listRef} className="bg-red">
+                {filteredTopics.map((topic, index) => (
+                  <li
+                    key={index}
+                    className={`flex ${
+                      index === filteredTopics.length - 1 ? "rounded-b-lg" : ""
+                    }`}
+                  >
+                    <button
+                      onClick={() => handleTopicClick(topic)}
+                      className={`flex-grow py-2 px-4 w-full text-light-background body-bold text-left text-xl ${
+                        selectedIndex === index
+                          ? "bg-blue-300"
+                          : isDarkTheme
+                          ? "bg-dark-secondary"
+                          : "bg-dark-background"
+                      }  hover:bg-blue-500 focus:bg-blue-500 transition-colors duration-200 
+                      `}
+                    >
+                      {topic.topic}
+                    </button>
+                    <button
+                      className={`py-2 px-4 capitalize body-bold text-sm ${
+                        index === filteredTopics.length - 1
+                          ? "rounded-br-lg"
+                          : ""
+                      } ${
+                        isDarkTheme
+                          ? "text-dark-background"
+                          : "text-light-background"
+                      }`}
+                      style={{ backgroundColor: topic.color }}
+                    >
+                      {topic.language}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
       </div>
 
       <style jsx>{`

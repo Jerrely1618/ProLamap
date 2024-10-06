@@ -6,9 +6,10 @@ import {
   ChevronUpIcon,
   InformationCircleIcon,
 } from "@heroicons/react/24/solid";
-import { Checkbox } from "antd";
+import { Checkbox, Spin } from "antd";
 import { useEffect, useState } from "react";
 import Collapsible from "react-collapsible";
+import { ThreeDots } from "react-loader-spinner";
 import ReactPlayer from "react-player";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import {
@@ -35,24 +36,55 @@ export default function Content({
     }
 
     if (!courseData[selectedCourse.value][selectedTopic]) {
-      courseData[selectedCourse.value][selectedTopic] = new Set();
+      courseData[selectedCourse.value][selectedTopic] = [];
     }
 
     let completedSubtopics = new Set(
       courseData[selectedCourse.value][selectedTopic]
     );
-
     if (isCompleted) {
       completedSubtopics.delete(selectedStep);
     } else {
       completedSubtopics.add(selectedStep);
     }
+
     courseData[selectedCourse.value][selectedTopic] =
       Array.from(completedSubtopics);
+
     localStorage.setItem("completed", JSON.stringify(courseData));
 
     setIsCompleted((prev) => !prev);
     setChange((prev) => !prev);
+    updateProgress(courseData);
+  };
+
+  const updateProgress = (courseData) => {
+    let completedSubtopics = new Set();
+
+    for (const topic in courseData[selectedCourse.value]) {
+      if (topic === "progress") continue;
+      const subtopicData = courseData[selectedCourse.value][topic] || [];
+
+      subtopicData.forEach((subtopic) => completedSubtopics.add(subtopic));
+    }
+
+    const totalSubtopics = Object.keys(
+      contentData[selectedCourse.value] || {}
+    ).reduce((total, topic) => {
+      if (topic === "color") return total;
+      const subtopicKeys = Object.keys(
+        contentData[selectedCourse.value][topic] || {}
+      );
+      return total + subtopicKeys.length;
+    }, 0);
+
+    const totalCompleted = completedSubtopics.size;
+    const progress =
+      totalSubtopics > 0 ? (totalCompleted / totalSubtopics) * 100 : 0;
+
+    courseData[selectedCourse.value].progress = progress;
+
+    localStorage.setItem("completed", JSON.stringify(courseData));
   };
 
   useEffect(() => {
@@ -108,7 +140,19 @@ export default function Content({
   }, [selectedSubtopic, contentData, selectedCourse.value, selectedTopic]);
 
   if (!contentData) {
-    return <div>Loading...</div>;
+    return (
+      <div
+        className={`flex flex-col text-2xl items-center justify-center h-screen`}
+      >
+        <ThreeDots
+          height="80"
+          width="80"
+          color={"#2E073F"}
+          ariaLabel="loading"
+          visible={true}
+        />
+      </div>
+    );
   }
 
   const steps = Object.keys(
@@ -137,13 +181,13 @@ export default function Content({
           {selectedTopic}
         </h1>
 
-        <div className="flex flex-col md:flex-row-reverse">
+        <div className="flex flex-col md:flex-row-reverse h-screen ">
           <div
-            className={`md:w-1/4 w-full sticky transition-colors duration-300 top-0 z-10 ${
+            className={`md:w-1/4 w-full sticky transition-colors duration-300  z-10 ${
               isDarkTheme ? "bg-dark-background" : "bg-light-background"
-            } border-b-light-background border-b-[5px] md:border-b-0`}
+            }  h-full`}
           >
-            <div className="flex md:flex-col  h-full">
+            <div className="flex md:flex-col border-b-light-background border-b-[5px] md:border-b-0">
               <div className="flex items-center justify-between">
                 <div
                   className={`flex h-full ${
@@ -170,12 +214,12 @@ export default function Content({
                   </button>
                 </div>
 
-                <div className="flex md:flex-col flex-row flex-grow">
+                <div className="flex md:flex-col flex-row flex-grow h-full">
                   {steps.map((step, index) => (
                     <button
                       key={step}
                       onClick={() => setSelectedStep(step)}
-                      className={`py-2 px-4 transition-colors body-bold text-base duration-300 text-left 
+                      className={`py-2 px-4 transition-colors body-bold text-base duration-300 text-left
               ${
                 selectedStep === step
                   ? isDarkTheme
@@ -196,12 +240,12 @@ export default function Content({
                 </div>
               </div>
 
-              <div className="flex items-center justify-center ">
+              <div className="flex md:justify-center ">
                 <button
-                  className={`md:mt-5 flex items-center ml-2 justify-center body-bold px-4 py-2 rounded transition-colors duration-300 ${
+                  className={`md:mt-5 flex items-center ml-2 justify-center body-bold px-4 py-2 rounded-t md:rounded-b transition-colors duration-300 ${
                     isCompleted
                       ? "bg-green-500 text-white"
-                      : "bg-gray-200 text-black"
+                      : "bg-light-background text-black"
                   }`}
                   onClick={toggleCompletion}
                   style={{
@@ -212,7 +256,7 @@ export default function Content({
                   {isCompleted ? (
                     <CheckIcon className="h-5 w-5" />
                   ) : (
-                    <div className="h-5 w-5 border border-gray-400 bg-gray-200 rounded-md" />
+                    <div className="h-5 w-5 border border-light-background bg-gray-400 rounded-t-md" />
                   )}
                   <span className="hidden md:block ml-2">
                     {isCompleted ? "Completed" : "Complete"}
@@ -256,11 +300,27 @@ function ContentForStep({
   const [isOpen, setIsOpen] = useState(false);
 
   if (!Array.isArray(topicContent)) {
-    return <p>No content available for {step}</p>;
+    return (
+      <p
+        className={`text-3xl justify-center ${
+          isDarkTheme ? "text-white" : "text-dark-background"
+        }`}
+      >
+        Oooops, no content available for {step}.
+      </p>
+    );
   }
 
   if (topicContent.length === 0) {
-    return <p>No content available for {step}</p>;
+    return (
+      <p
+        className={`text-3xl justify-center ${
+          isDarkTheme ? "text-white" : "text-dark-background"
+        }`}
+      >
+        Oooops, no content available for {step}.
+      </p>
+    );
   }
 
   return (

@@ -7,6 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        redSpecial:'#2E073F',
         light: {
           background: '#F5EFFF', 
           text1: '#A594F9', 

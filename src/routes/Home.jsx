@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import {
+  ArrowsPointingInIcon,
   Cog6ToothIcon,
   EyeIcon,
   HomeIcon,
@@ -13,12 +14,12 @@ import RoadMap from "../components/RoadMap";
 import Select from "react-select";
 import Welcome from "../components/Welcome";
 import Content from "../components/Content";
-import { Switch, Tooltip } from "antd";
+import { Button, Switch, Tooltip } from "antd";
 const languages = [
   { value: "python", label: "Python" },
   {
     value: "coming-soon",
-    label: "Coming Soon",
+    label: "More Coming Soon",
     percentage: 0,
     isDisabled: true,
   },
@@ -28,50 +29,57 @@ export default function Home() {
   const [isHidden, setIsHidden] = useState(false);
   const [width, setWidth] = useState(40);
   const [isDarkTheme, setIsDarkTheme] = useState(true);
-  const dragRef = useRef(null);
   const [showWelcome, setShowWelcome] = useState(true);
   const [isDraggable, setIsDraggable] = useState(true);
-  const [selectedSubtopic, setSelectedSubtopic] = useState();
   const [showSettings, setShowSettings] = useState(false);
+  const [eliminateLanguage, setEliminateLanguage] = useState("python");
   const [isMediaOnly, setIsMediaOnly] = useState(false);
-  const isDragging = useRef(false);
-  const settingsRef = useRef(null);
-  const widthRef = useRef(width);
   const [selectedTopic, setSelectedTopic] = useState();
+  const [confirmDelete, setConfirmDelete] = useState("");
+  const [returnToCenter, setReturnToCenter] = useState(false);
   const [selectedOption, setSelectedOpt] = useState({});
   const [options, setOptions] = useState([]);
   const [change, setChange] = useState(false);
-  const setAllOptionsInLocalStorage = (options) => {
-    localStorage.setItem("languageProgress", JSON.stringify(options));
+  const [progressBarWidth, setProgressBarWidth] = useState(0);
+  const isDragging = useRef(false);
+  const settingsRef = useRef(null);
+  const widthRef = useRef(width);
+  const dragRef = useRef(null);
+  const getProgressFromLocalStorage = (value) => {
+    const storedOptions = JSON.parse(localStorage.getItem("completed")) || {};
+
+    if (typeof storedOptions !== "object" || !storedOptions[value]) {
+      return 0;
+    }
+
+    return storedOptions[value].progress || 0;
   };
 
-  const getProgressFromLocalStorage = (value) => {
-    const storedOptions =
-      JSON.parse(localStorage.getItem("languageProgress")) || [];
-    const option = storedOptions.find((option) => option.value === value);
-    return option ? option.progress : 0;
-  };
   useEffect(() => {
     const initialProgress = languages.map((option) => ({
       ...option,
       progress: getProgressFromLocalStorage(option.value),
     }));
     setOptions(initialProgress);
-  }, []);
 
-  useEffect(() => {
-    if (options.length > 0) {
-      setSelectedOption(options[0]);
+    const lastSelected = JSON.parse(localStorage.getItem("lastSelectedOption"));
+    if (lastSelected) {
+      setSelectedOpt(lastSelected);
+    } else if (initialProgress.length > 0) {
+      setSelectedOpt(initialProgress[0]);
     }
-  }, [options]);
+  }, [change]);
+  useEffect(() => {
+    if (selectedOption) {
+      const selectedProgress = getProgressFromLocalStorage(
+        selectedOption.value
+      );
+      setProgressBarWidth(selectedProgress);
+    }
+  }, [selectedOption]);
   const setSelectedOption = (option) => {
     setSelectedOpt(option);
-    const updatedOptions = options.map((opt) =>
-      opt.value === option.value ? { ...opt, progress: opt.progress } : opt
-    );
-    setAllOptionsInLocalStorage(updatedOptions);
   };
-
   useEffect(() => {
     const lastSelected = JSON.parse(localStorage.getItem("lastSelectedOption"));
     if (lastSelected) {
@@ -83,26 +91,28 @@ export default function Home() {
   const handleMouseMove = (event) => {
     if (isDragging.current) {
       const newWidth = (event.clientX / window.innerWidth) * 100;
-      widthRef.current = Math.max(40, Math.min(90, newWidth));
+      widthRef.current = Math.max(35, Math.min(100, newWidth));
+      dragRef.current.style.width = `${widthRef.current}%`;
+    }
+  };
+  const handleTouchMove = (event) => {
+    if (isDragging.current) {
+      const touch = event.touches[0];
+      const newWidth = (touch.clientX / window.innerWidth) * 100;
+      widthRef.current = Math.max(35, Math.min(100, newWidth));
       dragRef.current.style.width = `${widthRef.current}%`;
     }
   };
   const handleClickOutside = (event) => {
     if (settingsRef.current && !settingsRef.current.contains(event.target)) {
       setShowSettings(false);
+      setConfirmDelete("");
     }
   };
   const handleKeyDown = (event) => {
     if (event.key === "Escape") {
       setShowSettings(false);
-    }
-  };
-  const handleMouseUp = () => {
-    if (isDragging.current) {
-      isDragging.current = false;
-      setWidth(widthRef.current);
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
+      setConfirmDelete("");
     }
   };
   const toggleTheme = () => {
@@ -112,10 +122,27 @@ export default function Home() {
       return newTheme;
     });
   };
+  const handleMouseUp = () => {
+    if (isDragging.current) {
+      isDragging.current = false;
+      setWidth(widthRef.current);
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleMouseUp);
+    }
+  };
   const handleMouseDown = () => {
     isDragging.current = true;
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("touchmove", handleTouchMove);
+    document.addEventListener("touchend", handleMouseUp);
+  };
+  const handleTouchStart = () => {
+    isDragging.current = true;
+    document.addEventListener("touchmove", handleTouchMove);
+    document.addEventListener("touchend", handleMouseUp);
   };
   const handleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -128,13 +155,30 @@ export default function Home() {
   const handleOptionChange = (option) => {
     setSelectedOption(option);
   };
-  useEffect(() => {
-    const handleResize = () => {
-      setWidth((prevWidth) => Math.max(40, Math.min(90, prevWidth)));
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const handleDeleteLanguage = (language) => {
+    setConfirmDelete("lang");
+    setEliminateLanguage(language);
+  };
+  const handleConfirmDelete = () => {
+    setChange((prev) => !prev);
+    const completed = JSON.parse(localStorage.getItem("completed")) || {};
+    delete completed[eliminateLanguage];
+    localStorage.setItem("completed", JSON.stringify(completed));
+
+    setConfirmDelete("");
+  };
+  const handleCancelDelete = () => {
+    setConfirmDelete("");
+  };
+  const handleDeleteAllProgress = () => {
+    setConfirmDelete("all");
+  };
+  const handleComfirmDeleteAllProgress = () => {
+    setChange((prev) => !prev);
+    localStorage.removeItem("languageProgress");
+    localStorage.removeItem("completed");
+    setConfirmDelete("");
+  };
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleKeyDown);
@@ -144,6 +188,7 @@ export default function Home() {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
+
   return (
     <div className="flex h-screen transition-colors overflow-hidden duration-300">
       {!isHidden && (
@@ -158,7 +203,6 @@ export default function Home() {
             <Welcome
               isDarkTheme={isDarkTheme}
               options={options}
-              setSelectedSubtopic={setSelectedSubtopic}
               setShowWelcome={setShowWelcome}
               setSelectedTopic={setSelectedTopic}
             />
@@ -190,45 +234,52 @@ export default function Home() {
         <Separation
           isDarkTheme={isDarkTheme}
           handleMouseDown={handleMouseDown}
+          handleTouchStart={handleTouchStart}
         />
       )}
 
       {!isExpanded && (
         <div
-          className={`flex-grow transition-all transition-colors duration-300  flex flex-col ${
+          className={`flex flex-col flex-grow overflow-hidden transition-all transition-colors duration-300 ${
             isDarkTheme
               ? "bg-dark-background text-dark-text1"
               : "bg-light-background text-light-text1"
           }`}
           style={{
             backgroundImage: `
-              linear-gradient(90deg, ${
-                isDarkTheme ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)"
-              } 1px, transparent 1px),
-              linear-gradient(180deg, ${
-                isDarkTheme ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)"
-              } 1px, transparent 1px)
-            `,
+        linear-gradient(90deg, ${
+          isDarkTheme ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)"
+        } 1px, transparent 1px),
+        linear-gradient(180deg, ${
+          isDarkTheme ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)"
+        } 1px, transparent 1px)
+      `,
             backgroundSize: "20px 20px",
             position: "relative",
           }}
         >
-          <div className="flex items-center justify-between p-3 mx-5">
+          <div className="flex items-center justify-between p-3 mx-5 sm:mx-2 md:mx-4 lg:mx-5">
+            <Tooltip title="Settings" placement="top">
+              <button
+                onClick={() => setShowSettings(true)}
+                className={`p-2 rounded absolute top-[15px] left-[5px] bg-redSpecial text-white`}
+              >
+                <Cog6ToothIcon className="h-5 w-5" />
+              </button>
+            </Tooltip>
             {selectedOption && (
-              <div className="flex items-center mx-5 w-full">
+              <div className="flex items-center mx-5 w-full sm:mx-2">
                 <div
-                  className={`relative flex-grow h-4 rounded border-2 mx-2 ${
+                  className={`relative flex-grow h-4 rounded  mx-2 ${
                     isDarkTheme
-                      ? "bg-dark-background border-light-background"
-                      : "bg-light-background border-dark-background"
+                      ? "bg-light-background border-light-background"
+                      : "bg-third-background border-dark-background"
                   }`}
                 >
                   <div
                     id="progress-bar"
-                    className={`absolute h-full rounded ${
-                      isDarkTheme ? "bg-light-background" : "bg-dark-background"
-                    }`}
-                    style={{ width: `${selectedOption.percentage}%` }}
+                    className={`absolute h-full rounded bg-green-500`}
+                    style={{ width: `${progressBarWidth}%` }}
                   />
                 </div>
               </div>
@@ -244,7 +295,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex-grow flex items-center justify-center transition-colors duration-300 overflow-hidden">
+          <div className="flex items-center h-full justify-center transition-colors duration-300 max-w-full">
             <RoadMap
               change={change}
               isDraggable={isDraggable}
@@ -252,22 +303,26 @@ export default function Home() {
               setShowWelcome={setShowWelcome}
               setSelectedTopic={setSelectedTopic}
               selectedCourse={selectedOption}
+              returnToCenter={returnToCenter}
+              setIsHidden={setIsHidden}
             />
           </div>
 
-          <button
-            onClick={() => setShowSettings(true)}
-            className={`p-2 rounded absolute bottom-5 left-5 ${
-              isDarkTheme
-                ? "bg-dark-secondary text-dark-background"
-                : "bg-light-secondary text-light-text1"
-            } ${isHidden ? "left-16 bottom-4 " : ""}`}
-          >
-            <Cog6ToothIcon className="h-5 w-5" />
-          </button>
+          <Tooltip title="Center Roadmap" placement="top">
+            <button
+              onClick={setReturnToCenter}
+              className={`p-2 rounded absolute  bottom-[17px] left-5 ${
+                isDarkTheme
+                  ? "bg-dark-secondary text-dark-background"
+                  : "bg-light-text1  text-light-secondary"
+              }  ${isHidden ? "left-[60px] bottom-4 " : ""}`}
+            >
+              <ArrowsPointingInIcon className="h-5 w-5" />
+            </button>
+          </Tooltip>
           <h1
-            className={`text-2xl my-1 absolute bottom-5 right-5 ${
-              isDarkTheme ? "text-dark-text1" : "text-dark-background"
+            className={`text-2xl my-1 absolute bottom-[17px] right-10 ${
+              isDarkTheme ? "text-dark-secondary" : "text-light-secondary"
             } body`}
           >
             ProlaMap
@@ -288,39 +343,95 @@ export default function Home() {
         </button>
       )}
       {showSettings && (
-        <div className="absolute inset-0 flex items-center justify-center backdrop-blur-md bg-white/30 dark:bg-gray-800/70 z-50">
+        <div className="absolute inset-0 flex items-center  justify-center backdrop-blur-md bg-white/30 dark:bg-gray-800/70 z-50">
           <div
             ref={settingsRef}
-            className="bg-white dark:bg-gray-800 border rounded shadow-lg p-6 w-96"
+            className="bg-white dark:bg-gray-800 border min-h-[365px] rounded shadow-lg p-6 w-96"
           >
             <div className="flex justify-between items-center">
               <h2 className={`text-2xl body-bold text-light-background`}>
                 Settings
               </h2>
+
               <button
                 onClick={() => setShowSettings(false)}
-                className={`p-2 rounded ${
-                  isDarkTheme
-                    ? "bg-dark-secondary text-dark-background"
-                    : "bg-light-secondary text-light-text1"
+                className={`p-2 rounded bg-redSpecial ${
+                  isDarkTheme ? " text-light-background" : "text-light-text1"
                 }`}
               >
                 <XMarkIcon className="h-5 w-5" />
               </button>
             </div>
-            <div className="flex flex-col space-y-2 mt-2">
-              <label className="flex items-center mt-4 px-5 justify-between">
-                <span className={` body-bold text-lg  text-light-background`}>
-                  Draggable
-                </span>
-                <Switch
-                  checked={isDraggable}
-                  onChange={(checked) => setIsDraggable(checked)}
-                />
-              </label>
-              <div className="align-right pt-10">
-                <InformationCircleIcon className="text-white h-7 w-7" />
-              </div>
+            <div
+              className={`${
+                confirmDelete ? "my-24 justify-center items-center" : ""
+              }`}
+            >
+              {confirmDelete ? (
+                <div className="flex flex-col justify-center items-center mt-5">
+                  <p className="text-white text-2xl ">Are you sure?</p>
+                  <div className="mt-3 flex space-x-4">
+                    <Button
+                      className="bg-red-500 text-white"
+                      type="primary"
+                      onClick={
+                        confirmDelete === "lang"
+                          ? handleConfirmDelete
+                          : handleComfirmDeleteAllProgress
+                      }
+                    >
+                      Yes
+                    </Button>
+                    <Button onClick={handleCancelDelete}>No</Button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="flex flex-col mt-4">
+                    <label className="flex items-center justify-between mt-4">
+                      <span
+                        className={`body-bold text-lg text-light-background`}
+                      >
+                        Draggable
+                      </span>
+                      <Switch
+                        checked={isDraggable}
+                        onChange={(checked) => setIsDraggable(checked)}
+                      />
+                    </label>
+                    <div className="mt-28 flex items-center justify-between">
+                      <select
+                        onChange={(e) => setEliminateLanguage(e.target.value)}
+                        className="border rounded-sm flex-grow py-1 mr-2"
+                      >
+                        {languages.map(
+                          (lang) =>
+                            lang.label !== "More Coming Soon" && (
+                              <option key={lang.value} value={lang.value}>
+                                {lang.label}
+                              </option>
+                            )
+                        )}
+                      </select>
+                      <Button
+                        onClick={() => handleDeleteLanguage(eliminateLanguage)}
+                        className="bg-redSpecial text-white"
+                      >
+                        Delete Progress
+                      </Button>
+                    </div>
+                    <Button
+                      onClick={handleDeleteAllProgress}
+                      className="bg-redSpecial text-white mt-2"
+                    >
+                      Delete All Progress
+                    </Button>
+                  </div>
+                  <div className="flex  justify-center pt-3">
+                    <InformationCircleIcon className="text-white h-7 w-7" />
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -344,16 +455,12 @@ function Buttons({
   };
 
   return (
-    <div className="flex justify-between my-1 mt-3">
+    <div className="flex justify-between my-1 mt-3 mr-3">
       <div className="flex space-x-2">
         <Tooltip title="Exit" placement="top">
           <button
             onClick={handleHide}
-            className={`p-2 rounded ${
-              isDarkTheme
-                ? "bg-dark-secondary text-dark-background"
-                : "bg-light-secondary text-light-text1"
-            }`}
+            className={`p-2 rounded bg-redSpecial text-white `}
           >
             <XMarkIcon className="h-5 w-5" />
           </button>
@@ -365,7 +472,7 @@ function Buttons({
               className={`p-2 rounded ${
                 isDarkTheme
                   ? "bg-dark-secondary text-dark-background"
-                  : "bg-light-secondary text-light-text1"
+                  : "bg-light-text1  text-light-secondary"
               }`}
             >
               <HomeIcon className="h-5 w-5" />
@@ -379,7 +486,7 @@ function Buttons({
             className={`p-2 rounded ${
               isDarkTheme
                 ? "bg-dark-secondary text-dark-background"
-                : "bg-light-secondary text-light-text1"
+                : "bg-light-text1  text-light-secondary"
             }`}
           >
             {isDarkTheme ? (
@@ -399,7 +506,7 @@ function Buttons({
               className={`p-2 rounded ${
                 isDarkTheme
                   ? "bg-dark-secondary text-dark-background"
-                  : "bg-light-secondary text-light-text1"
+                  : "bg-light-text1  text-light-secondary"
               }`}
             >
               <EyeIcon className="h-5 w-5" />
@@ -412,7 +519,7 @@ function Buttons({
             className={`p-2 rounded ${
               isDarkTheme
                 ? "bg-dark-secondary text-dark-background"
-                : "bg-light-secondary text-light-text1"
+                : "bg-light-text1  text-light-secondary"
             }`}
           >
             {isExpanded ? (
@@ -426,12 +533,13 @@ function Buttons({
     </div>
   );
 }
-function Separation({ isDarkTheme, handleMouseDown }) {
+function Separation({ isDarkTheme, handleMouseDown, handleTouchStart }) {
   return (
     <div
       className={`cursor-col-resize h-screen relative px-2 transition-colors duration-300 
           ${isDarkTheme ? "bg-dark-background" : "bg-light-background"} `}
       onMouseDown={handleMouseDown}
+      onTouchStart={handleTouchStart}
     >
       <svg
         className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
@@ -511,12 +619,14 @@ function Selection({
             }`}
           >
             {props.data.label}
-            <div className="w-full h-1 mt-1 bg-gray-300">
-              <div
-                className={`h-full bg-dark-secondary rounded `}
-                style={{ width: `${props.data.percentage}%` }}
-              />
-            </div>
+            {props.data.label != "More Coming Soon" && (
+              <div className="w-full h-1 mt-1 bg-gray-300">
+                <div
+                  className={`h-full bg-dark-secondary rounded `}
+                  style={{ width: `${props.data.percentage}%` }}
+                />
+              </div>
+            )}
           </div>
         ),
       }}

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 
 const randomFloat = (min, max) => Math.random() * (max - min) + min;
@@ -36,6 +36,7 @@ const RoadMapBubble = ({
   subtopics,
   selectedCourse,
   change,
+  setIsHidden,
 }) => {
   const [hovered, setHovered] = useState(false);
   const [completedSubtopics, setCompletedSubtopics] = useState(new Set());
@@ -51,11 +52,7 @@ const RoadMapBubble = ({
 
   useEffect(() => {
     updateCompletedSubtopics();
-  }, [selectedCourse.value, text]);
-
-  useEffect(() => {
-    updateCompletedSubtopics();
-  }, [change]);
+  }, [selectedCourse.value, text, change]);
 
   const allCompleted = Object.keys(subtopics).every((subtopic) =>
     completedSubtopics.has(subtopic)
@@ -69,15 +66,9 @@ const RoadMapBubble = ({
             ? "text-white bg-green-500"
             : isDarkTheme
             ? "bg-light-background text-dark-background"
-            : "bg-dark-background text-light-background"
+            : "bg-third-background text-light-background"
         }
-        ${
-          hovered
-            ? isDarkTheme
-              ? "bg-light-background"
-              : "bg-dark-background"
-            : ""
-        }
+        
       `}
       animate={{
         x: hovered || !isHoveringRoadmap ? 0 : randomFloat(-7, 7),
@@ -96,7 +87,7 @@ const RoadMapBubble = ({
           ease: "linear",
         },
       }}
-      onClick={() => (onClick(text), setShowWelcome(false))}
+      onClick={() => (onClick(text), setShowWelcome(false), setIsHidden(false))}
     >
       {text}
 
@@ -120,8 +111,10 @@ const RoadMapBubble = ({
 const RoadMap = ({
   isDarkTheme,
   setSelectedTopic,
+  returnToCenter,
   setShowWelcome,
   isDraggable,
+  setIsHidden,
   selectedCourse,
   change,
 }) => {
@@ -140,8 +133,17 @@ const RoadMap = ({
   const updateScale = () => {
     const roadMapWidth = (window.innerWidth * 2) / 3;
     const initialScale = Math.min(roadMapWidth / 850, window.innerHeight / 620);
-    setScale(Math.max(0.2, Math.min(1.2, initialScale)));
+    setScale(Math.max(0.2, Math.min(1.1, initialScale)));
   };
+  useEffect(() => {
+    if (returnToCenter) {
+      setScale(1);
+      setTranslate({
+        x: 0,
+        y: window.innerHeight / 5,
+      });
+    }
+  }, [returnToCenter]);
 
   useEffect(() => {
     updateScale();
@@ -220,7 +222,7 @@ const RoadMap = ({
 
   return (
     <div
-      className="w-full h-full items-center justify-center"
+      className="w-full h-full items-center justify-center overflow-hidden"
       onMouseEnter={() => setIsHoveringRoadmap(true)}
       onMouseLeave={() => {
         setIsPanning(false);
@@ -241,7 +243,7 @@ const RoadMap = ({
           transition: isPanning ? "none" : "transform 0.2s ease",
         }}
       >
-        <div className="grid gap-4" style={{ overflow: "hidden" }}>
+        <div className="grid gap-4">
           {Object.keys(levels).map((level) => (
             <div key={level} className="flex justify-center">
               {levels[level].map((node) => (
@@ -249,6 +251,7 @@ const RoadMap = ({
                   selectedCourse={selectedCourse}
                   change={change}
                   isDarkTheme={isDarkTheme}
+                  setIsHidden={setIsHidden}
                   key={node}
                   text={node}
                   isHoveringRoadmap={isHoveringRoadmap}
