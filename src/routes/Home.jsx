@@ -355,7 +355,7 @@ export default function Home() {
 
               <button
                 onClick={() => setShowSettings(false)}
-                className={`p-2 rounded bg-redSpecial ${
+                className={`p-2 rounded bg-redSpecial hover:bg-red-800 ${
                   isDarkTheme ? " text-light-background" : "text-light-text1"
                 }`}
               >
@@ -372,7 +372,7 @@ export default function Home() {
                   <p className="text-white text-2xl ">Are you sure?</p>
                   <div className="mt-3 flex space-x-4">
                     <Button
-                      className="bg-red-500 text-white"
+                      className="bg-red-800 text-white"
                       type="primary"
                       onClick={
                         confirmDelete === "lang"
@@ -402,7 +402,7 @@ export default function Home() {
                     <div className="mt-28 flex items-center justify-between">
                       <select
                         onChange={(e) => setEliminateLanguage(e.target.value)}
-                        className="border rounded-sm flex-grow py-1 mr-2"
+                        className="border rounded-md text-xl flex-grow py-1 px-2 mr-2"
                       >
                         {languages.map(
                           (lang) =>
@@ -413,23 +413,25 @@ export default function Home() {
                             )
                         )}
                       </select>
-                      <Button
+                      <button
                         onClick={() => handleDeleteLanguage(eliminateLanguage)}
-                        className="bg-redSpecial text-white"
+                        className="bg-redSpecial text-lg body-bold text-white rounded-lg p-2 hover:bg-red-800"
                       >
                         Delete Progress
-                      </Button>
+                      </button>
                     </div>
-                    <Button
+                    <button
                       onClick={handleDeleteAllProgress}
-                      className="bg-redSpecial text-white mt-2"
+                      className="bg-redSpecial text-lg body-bold text-white mt-2 rounded-lg p-2 hover:bg-red-800"
                     >
                       Delete All Progress
-                    </Button>
+                    </button>
                   </div>
-                  <div className="flex  justify-center pt-3">
-                    <InformationCircleIcon className="text-white h-7 w-7" />
-                  </div>
+                  <Tooltip title="Info" placement="bottom">
+                    <div className="flex  justify-center pt-3 ">
+                      <InformationCircleIcon className="text-white h-7 w-7" />
+                    </div>
+                  </Tooltip>
                 </>
               )}
             </div>
@@ -460,7 +462,7 @@ function Buttons({
         <Tooltip title="Exit" placement="top">
           <button
             onClick={handleHide}
-            className={`p-2 rounded bg-redSpecial text-white `}
+            className={`p-2 rounded bg-redSpecial text-white hover:bg-red-800`}
           >
             <XMarkIcon className="h-5 w-5" />
           </button>
