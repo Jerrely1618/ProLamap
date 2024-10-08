@@ -6,7 +6,7 @@ import {
   ChevronUpIcon,
   InformationCircleIcon,
 } from "@heroicons/react/24/solid";
-import { Checkbox, Spin } from "antd";
+import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import Collapsible from "react-collapsible";
 import { ThreeDots } from "react-loader-spinner";
@@ -102,29 +102,29 @@ export default function Content({
         const response = await fetch("/contents.json");
         const data = await response.json();
         setContentData(data);
-
-        if (
-          data[selectedCourse.value] &&
-          data[selectedCourse.value][selectedTopic]
-        ) {
-          if (selectedSubtopic) {
-            const subtopicData = data[selectedCourse.value][selectedTopic];
-            const stepKeys = Object.keys(subtopicData);
-            setSelectedStep(stepKeys.length > 0 ? stepKeys[0] : "");
-          } else {
-            const topicKeys = Object.keys(
-              data[selectedCourse.value][selectedTopic]
-            );
-            setSelectedStep(topicKeys.length > 0 ? topicKeys[0] : "");
-          }
-        }
       } catch (error) {
         console.error("Error fetching content data:", error);
       }
     };
 
     fetchContentData();
-  }, [selectedCourse.value, selectedTopic, selectedSubtopic]);
+  }, []);
+
+  useEffect(() => {
+    if (contentData && selectedCourse.value && selectedTopic) {
+      const topicData = contentData[selectedCourse.value]?.[selectedTopic];
+      if (topicData) {
+        if (selectedSubtopic) {
+          const subtopicData = topicData[selectedSubtopic];
+          const steps = Object.keys(subtopicData || {});
+          setSelectedStep(steps.length > 0 ? steps[0] : "");
+        } else {
+          const topicKeys = Object.keys(topicData || {});
+          setSelectedStep(topicKeys.length > 0 ? topicKeys[0] : "");
+        }
+      }
+    }
+  }, [selectedCourse.value, selectedTopic, selectedSubtopic, contentData]);
 
   useEffect(() => {
     if (selectedSubtopic && contentData) {
@@ -285,7 +285,6 @@ export default function Content({
 
 function ContentForStep({
   step,
-
   selectedCourse,
   selectedTopic,
   selectedSubtopic,
@@ -417,3 +416,26 @@ function ContentForStep({
     </div>
   );
 }
+
+Content.propTypes = {
+  isDarkTheme: PropTypes.bool.isRequired,
+  selectedCourse: PropTypes.shape({
+    value: PropTypes.string.isRequired,
+  }).isRequired,
+  isMediaOnly: PropTypes.bool.isRequired,
+  selectedTopic: PropTypes.string.isRequired,
+  selectedSubtopic: PropTypes.string,
+  setChange: PropTypes.func.isRequired,
+};
+
+ContentForStep.propTypes = {
+  step: PropTypes.string.isRequired,
+  selectedCourse: PropTypes.shape({
+    value: PropTypes.string.isRequired,
+  }).isRequired,
+  selectedTopic: PropTypes.string.isRequired,
+  selectedSubtopic: PropTypes.string,
+  contentData: PropTypes.object.isRequired,
+  isMediaOnly: PropTypes.bool.isRequired,
+  isDarkTheme: PropTypes.bool.isRequired,
+};

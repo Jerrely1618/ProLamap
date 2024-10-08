@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
 import {
   ArrowsPointingInIcon,
   Cog6ToothIcon,
@@ -570,7 +571,7 @@ function Selection({
       value={selectedOption}
       onChange={(option) => setSelectedOption(option)}
       styles={{
-        control: (provided, state) => ({
+        control: (provided) => ({
           ...provided,
           backgroundColor: "transparent",
           cursor: "pointer",
@@ -588,7 +589,7 @@ function Selection({
           color: isDarkTheme ? "#e2eff1" : "#1a202c",
         }),
         indicatorSeparator: () => null,
-        dropdownIndicator: (provided, state) => ({
+        dropdownIndicator: (provided) => ({
           ...provided,
         }),
         menu: (provided) => ({
@@ -635,3 +636,30 @@ function Selection({
     />
   );
 }
+Buttons.propTypes = {
+  handleExpand: PropTypes.func.isRequired,
+  isExpanded: PropTypes.bool.isRequired,
+  isDarkTheme: PropTypes.bool.isRequired,
+  handleHide: PropTypes.func.isRequired,
+  toggleTheme: PropTypes.func.isRequired,
+  setShowWelcome: PropTypes.func.isRequired,
+  showWelcome: PropTypes.bool.isRequired,
+  setIsMediaOnly: PropTypes.func.isRequired,
+};
+Separation.propTypes = {
+  isDarkTheme: PropTypes.bool.isRequired,
+  handleMouseDown: PropTypes.func.isRequired,
+  handleTouchStart: PropTypes.func.isRequired,
+};
+Selection.propTypes = {
+  selectedOption: PropTypes.object.isRequired,
+  setSelectedOption: PropTypes.func.isRequired,
+  isDarkTheme: PropTypes.bool.isRequired,
+  options: PropTypes.array.isRequired,
+  innerProps: PropTypes.object,
+  isFocused: PropTypes.bool,
+  data: PropTypes.shape({
+    label: PropTypes.string,
+    percentage: PropTypes.number,
+  }),
+};

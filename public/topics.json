@@ -1,20 +1,34 @@
 {
-    "python": {
-      "PEP8": [],
-      "Variables": ["Functions", "Arrays", "Binary"],
-      "Functions": ["Lambda", "Classes"],
-      "Arrays": ["Tuples", "Strings", "Stacks", "Sorting"],
-      "Classes": ["Sets", "Optional", "Dictionaries", "Heaps"],
-      "Sets": ["Algorithms"],
-      "Optional": ["Algorithms"],
-      "Dictionaries": ["Algorithms"],
-      "Heaps": ["Algorithms"],
-      "Algorithms": ["Sorting", "Recursion", "Graphs"],
-      "Sorting": ["Merge", "Quick"],
-      "Merge": ["Binary Search"],
-      "Quick": ["Binary Search"],
-      "Recursion": ["DFS/BFS"],
-      "Graphs": ["DFS/BFS"]
-    }
+  "python": {
+    "PEP8": [],
+    "Basics": ["Control Flow", "Functions"],
+    "Functions": ["Classes", "Recursion", "Lambda", "Exception Handling"],
+    "Classes": ["Arrays", "Strings", "Tuples", "Sets", "Dictionaries"],
+    "Recursion": ["Algorithms", "Graphs"],
+    "Algorithms": ["Graphs"],
+    "Arrays": ["File Handling", "Common Libraries"],
+    "Graphs": [],
+    "Dictionaries": ["File Handling", "Common Libraries", "Optional"],
+    "Sets": ["File Handling", "Common Libraries", "Optional"],
+    "Heaps": ["File Handling", "Common Libraries", "Optional"],
+    "Tuples": ["File Handling", "Common Libraries", "Optional"],
+    "Strings": ["File Handling", "Common Libraries", "Optional"],
+    "Lambda": [],
+    "File Handling": [
+      "Decorators & Generators",
+      "Context Manager",
+      "Regular Expressions"
+    ],
+    "Common Libraries": [
+      "Decorators & Generators",
+      "Context Manager",
+      "Regular Expressions"
+    ],
+    "Decorators & Generators": ["Map, Filter, Reduce"],
+    "Context Manager": ["Map, Filter, Reduce"],
+    "Regular Expressions": ["Map, Filter, Reduce"],
+    "Map, Filter, Reduce": ["Async", "Testing"],
+    "Async": [],
+    "Testing": []
   }
-  
+}

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
+import PropTypes from "prop-types";
 
 const randomFloat = (min, max) => Math.random() * (max - min) + min;
 
@@ -60,7 +61,7 @@ const RoadMapBubble = ({
 
   return (
     <motion.button
-      className={`w-32 py-1.5 my-2 mx-2 rounded-xl body-bold shadow-md transition font-semibold text-xl
+      className={`w-32 py-1.5 my-2 mx-2 rounded-xl body-bold shadow-md transition font-semibold items-center justify-center text-xl
         ${
           allCompleted
             ? "text-white bg-green-500"
@@ -91,12 +92,12 @@ const RoadMapBubble = ({
     >
       {text}
 
-      <div className="flex space-x-1 mt-2 items-center justify-center">
+      <div className="flex flex-wrap px-5 mt-0.5 items-center justify-center">
         {Object.keys(subtopics).length > 0 &&
           Object.keys(subtopics).map((subtopic) => (
             <div
               key={subtopic}
-              className={`w-3 h-3 rounded-full ${
+              className={`w-3 h-3 rounded-full mx-0.5 my-0.5 ${
                 completedSubtopics.has(subtopic)
                   ? "bg-green-700"
                   : "bg-gray-400"
@@ -118,7 +119,7 @@ const RoadMap = ({
   selectedCourse,
   change,
 }) => {
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(0.85);
   const [translate, setTranslate] = useState({
     x: 0,
     y: window.innerHeight / 5,
@@ -132,12 +133,12 @@ const RoadMap = ({
   const [levels, setLevels] = useState({});
   const updateScale = () => {
     const roadMapWidth = (window.innerWidth * 2) / 3;
-    const initialScale = Math.min(roadMapWidth / 850, window.innerHeight / 620);
+    const initialScale = Math.min(roadMapWidth / 890, window.innerHeight / 650);
     setScale(Math.max(0.2, Math.min(1.1, initialScale)));
   };
   useEffect(() => {
     if (returnToCenter) {
-      setScale(1);
+      setScale(0.85);
       setTranslate({
         x: 0,
         y: window.innerHeight / 5,
@@ -245,7 +246,13 @@ const RoadMap = ({
       >
         <div className="grid gap-4">
           {Object.keys(levels).map((level) => (
-            <div key={level} className="flex justify-center">
+            <div
+              key={level}
+              className="flex justify-center my-1 space-x-5"
+              style={{
+                textShadow: "10px 10px 10px rgba(0, 0, 0, 1)",
+              }}
+            >
               {levels[level].map((node) => (
                 <RoadMapBubble
                   selectedCourse={selectedCourse}
@@ -268,4 +275,26 @@ const RoadMap = ({
   );
 };
 
+RoadMapBubble.propTypes = {
+  text: PropTypes.string.isRequired,
+  isHoveringRoadmap: PropTypes.bool.isRequired,
+  isDarkTheme: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
+  setShowWelcome: PropTypes.func.isRequired,
+  subtopics: PropTypes.object.isRequired,
+  selectedCourse: PropTypes.object.isRequired,
+  change: PropTypes.any.isRequired,
+  setIsHidden: PropTypes.func.isRequired,
+};
+
+RoadMap.propTypes = {
+  isDarkTheme: PropTypes.bool.isRequired,
+  setSelectedTopic: PropTypes.func.isRequired,
+  returnToCenter: PropTypes.bool.isRequired,
+  setShowWelcome: PropTypes.func.isRequired,
+  isDraggable: PropTypes.bool.isRequired,
+  setIsHidden: PropTypes.func.isRequired,
+  selectedCourse: PropTypes.object.isRequired,
+  change: PropTypes.any.isRequired,
+};
 export default RoadMap;

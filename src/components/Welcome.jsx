@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import { Trie, serializeTrie, deserializeTrie } from "../utils/Trie";
+import PropTypes from "prop-types";
 
 export default function Welcome({
   isDarkTheme,
@@ -126,8 +127,8 @@ export default function Welcome({
       </h2>
       <h1
         className={`md:text-8xl text-4xl sm:text-5xl font-light bubble ${
-          isDarkTheme ? "text-dark-secondary" : " text-third-text1"
-        } `}
+          isDarkTheme ? "text-dark-secondary" : "text-third-text1"
+        }`}
       >
         ProlaMap
       </h1>
@@ -212,7 +213,7 @@ export default function Welcome({
         </div>
       </div>
 
-      <style jsx>{`
+      <style jsx="true">{`
         @keyframes marquee {
           0% {
             transform: translateX(10%);
@@ -229,3 +230,9 @@ export default function Welcome({
     </div>
   );
 }
+
+Welcome.propTypes = {
+  isDarkTheme: PropTypes.bool.isRequired,
+  setSelectedTopic: PropTypes.func.isRequired,
+  setShowWelcome: PropTypes.func.isRequired,
+};
