@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@atlaskit/code": "^15.6.1",
+    "@headlessui/react": "^2.1.9",
     "@heroicons/react": "^2.1.5",
     "antd": "^5.20.6",
     "d3": "^7.9.0",

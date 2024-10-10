@@ -1,6 +1,7 @@
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  Bars4Icon,
   CheckIcon,
   ChevronDownIcon,
   ChevronUpIcon,
@@ -28,6 +29,8 @@ export default function Content({
   const [contentData, setContentData] = useState(null);
   const [selectedStep, setSelectedStep] = useState("");
   const [isCompleted, setIsCompleted] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const toggleCompletion = () => {
     const courseData = JSON.parse(localStorage.getItem("completed") || "{}");
 
@@ -86,6 +89,18 @@ export default function Content({
 
     localStorage.setItem("completed", JSON.stringify(courseData));
   };
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsMenuOpen(false);
+      }
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const courseData = JSON.parse(localStorage.getItem("completed") || "{}");
@@ -171,24 +186,37 @@ export default function Content({
     }
   };
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      <div className="px-5 w-full max-w-screen-lg ">
-        <h1
-          className={`${
-            isDarkTheme ? "text-white" : "text-third-background"
-          }  text-5xl body-bold transition-colors duration-300 text-left py-6 `}
-        >
-          {selectedTopic}
-        </h1>
-
-        <div className="flex flex-col md:flex-row-reverse h-screen ">
+    <div className="h-full">
+      {isMenuOpen ? (
+        <div className="">
+          <div className="flex flex-col h-full bg-red mb-14">
+            {steps.map((step, index) => (
+              <button
+                key={index}
+                onClick={() => setSelectedStep(step)}
+                className={`py-10 px-4 h-full transition-colors body-bold text-base duration-300 text-left flex-grow ${
+                  selectedStep === step
+                    ? isDarkTheme
+                      ? "bg-light-background text-black"
+                      : "bg-light-background text-black"
+                    : "bg-third-background text-white"
+                }`}
+              >
+                {step}
+              </button>
+            ))}
+          </div>
           <div
-            className={`md:w-1/4 w-full sticky transition-colors duration-300  z-10 ${
+            className={` w-full  transition-colors duration-300 ${
               isDarkTheme ? "bg-dark-background" : "bg-light-background"
-            }  h-full`}
+            }`}
           >
-            <div className="flex md:flex-col border-b-light-background border-b-[5px] md:border-b-0">
-              <div className="flex items-center justify-between">
+            <div
+              className={`flex fixed bottom-0 w-full  ${
+                isCompleted ? "border-b-green-500" : "border-b-light-background"
+              } border-b-[5px] md:border-b-0`}
+            >
+              <div className="flex items-center justify-between w-auto">
                 <div
                   className={`flex h-full ${
                     isDarkTheme
@@ -196,53 +224,23 @@ export default function Content({
                       : "bg-light-background text-light-text1"
                   }`}
                 >
-                  <button
-                    onClick={handlePreviousStep}
-                    className={`px-2 md:hidden `}
-                  >
+                  <button onClick={handlePreviousStep} className="px-4">
                     <ArrowLeftIcon className="h-5 w-5" />
                   </button>
-                  <button
-                    onClick={handleNextStep}
-                    className={`px-2 md:hidden ${
-                      isDarkTheme
-                        ? "bg-light-background text-black"
-                        : "bg-light-background text-light-text1"
-                    }`}
-                  >
+                  <button onClick={handleNextStep} className="px-4">
                     <ArrowRightIcon className="h-5 w-5" />
                   </button>
                 </div>
-
-                <div className="flex md:flex-col flex-row flex-grow h-full">
-                  {steps.map((step, index) => (
-                    <button
-                      key={step}
-                      onClick={() => setSelectedStep(step)}
-                      className={`py-2 px-4 transition-colors body-bold text-base duration-300 text-left
-              ${
-                selectedStep === step
-                  ? isDarkTheme
-                    ? "bg-light-background text-black"
-                    : "bg-light-background text-black"
-                  : "bg-third-background text-white"
-              }
-              ${
-                index === steps.length - 1
-                  ? "rounded-tr md:rounded-br md:rounded-tr-none"
-                  : ""
-              }
-            `}
-                    >
-                      {step}
-                    </button>
-                  ))}
-                </div>
               </div>
-
-              <div className="flex md:justify-center ">
+              <div className="h-auto w-full py-3 px-4 items-center justify-center bg-white transition-colors body-bold text-base duration-300 text-left flex-grow">
+                <Bars4Icon
+                  className="h-6 w-6 cursor-pointer "
+                  onClick={() => setIsMenuOpen((prev) => !prev)}
+                />
+              </div>
+              <div className="flex md:justify-center">
                 <button
-                  className={`md:mt-5 flex items-center ml-2 justify-center body-bold px-4 py-2 rounded-t md:rounded-b transition-colors duration-300 ${
+                  className={`md:mt-5 flex items-center justify-center body-bold px-5 py-2 md:rounded transition-colors duration-300 ${
                     isCompleted
                       ? "bg-green-500 text-white"
                       : "bg-light-background text-black"
@@ -265,20 +263,120 @@ export default function Content({
               </div>
             </div>
           </div>
+        </div>
+      ) : (
+        <div className="pr-2">
+          <h1
+            className={`${
+              isDarkTheme ? "text-white" : "text-third-background"
+            } text-5xl body-bold transition-colors duration-300 text-left py-6 px-4`}
+          >
+            {selectedTopic}
+          </h1>
 
-          <div className="content-section md:w-3/4 w-full mt-2 pr-0 md:pr-5 h-[calc(100vh-60px)]">
-            <ContentForStep
-              step={selectedStep}
-              selectedCourse={selectedCourse}
-              selectedTopic={selectedTopic}
-              selectedSubtopic={selectedStep}
-              isMediaOnly={isMediaOnly}
-              contentData={contentData}
-              isDarkTheme={isDarkTheme}
-            />
+          <div className="flex flex-col md:flex-row h-screen">
+            <div className="content-section px-5 md:w-3/4 w-full ">
+              <ContentForStep
+                step={selectedStep}
+                selectedCourse={selectedCourse}
+                selectedTopic={selectedTopic}
+                selectedSubtopic={selectedStep}
+                isMediaOnly={isMediaOnly}
+                contentData={contentData}
+                isDarkTheme={isDarkTheme}
+              />
+            </div>
+            <div
+              className={`md:w-1/4 w-full  transition-colors duration-300 ${
+                isDarkTheme ? "bg-dark-background" : "bg-light-background"
+              } h-full `}
+            >
+              <div
+                className={`flex md:flex-col md:relative fixed bottom-0 w-full overflow-auto ${
+                  isCompleted
+                    ? "border-b-green-500"
+                    : "border-b-light-background"
+                } border-b-[5px] md:border-b-0`}
+              >
+                <div className="flex items-center justify-between w-auto">
+                  <div
+                    className={`flex h-full ${
+                      isDarkTheme
+                        ? "bg-light-background text-black"
+                        : "bg-light-background text-light-text1"
+                    }`}
+                  >
+                    <button
+                      onClick={handlePreviousStep}
+                      className="px-4 md:hidden"
+                    >
+                      <ArrowLeftIcon className="h-5 w-5" />
+                    </button>
+                    <button onClick={handleNextStep} className="px-4 md:hidden">
+                      <ArrowRightIcon className="h-5 w-5" />
+                    </button>
+                  </div>
+                </div>
+
+                {windowWidth < 768 ? (
+                  <div className="h-auto cursor-pointer w-auto py-3 px-4 items-center justify-center bg-white transition-colors body-bold text-base duration-300 text-left flex-grow">
+                    <Bars4Icon
+                      className="h-6 w-6 cursor-pointer"
+                      onClick={() => setIsMenuOpen((prev) => !prev)}
+                    />
+                  </div>
+                ) : (
+                  <div className="flex md:flex-col flex-grow h-full  w-auto">
+                    {steps.map((step, index) => (
+                      <button
+                        key={step}
+                        onClick={() => setSelectedStep(step)}
+                        className={`md:py-5 px-4 transition-colors body-bold text-base duration-300 text-left flex-grow ${
+                          selectedStep === step
+                            ? isDarkTheme
+                              ? "bg-light-background text-black"
+                              : "bg-light-background text-black"
+                            : "bg-third-background text-white"
+                        } ${
+                          index === steps.length - 1
+                            ? "rounded-tr md:rounded-br md:rounded-tr-none"
+                            : "md:border-b"
+                        }`}
+                      >
+                        {step}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                <div className="flex md:justify-center">
+                  <button
+                    className={`md:mt-5 flex items-center justify-center body-bold px-5 py-2 md:rounded transition-colors duration-300 ${
+                      isCompleted
+                        ? "bg-green-500 text-white"
+                        : "bg-light-background text-black"
+                    }`}
+                    onClick={toggleCompletion}
+                    style={{
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {isCompleted ? (
+                      <CheckIcon className="h-5 w-5" />
+                    ) : (
+                      <div className="h-5 w-5 border border-light-background bg-gray-400 rounded-t-md" />
+                    )}
+                    <span className="hidden md:block ml-2">
+                      {isCompleted ? "Completed" : "Complete"}
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -326,7 +424,7 @@ function ContentForStep({
     <div>
       {topicContent.map((item, index) => (
         <div
-          className={`body-medium text-xl  ${!isMediaOnly ? "py-2" : "py-0"} ${
+          className={`body-medium text-xl  ${
             isDarkTheme ? "text-light-background" : "text-dark-background"
           }`}
           key={index}
@@ -373,7 +471,7 @@ function ContentForStep({
             <h2
               className={`text-xl body-bold  -mb-3 ${
                 isDarkTheme ? "text-light-background" : "text-dark-background"
-              } ${isMediaOnly ? "pb-2" : "pb-0"}`}
+              } `}
             >
               {item.content}
             </h2>

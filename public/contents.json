@@ -5,96 +5,75 @@
       "Principals": [
         {
           "type": "text",
-          "simplify": false,
+
           "content": "PEP 8 is the style guide for Python code."
         }
       ],
       "Line Length": [
         {
           "type": "text",
-          "simplify": false,
+
           "content": "Limit all lines to a maximum of 79 characters."
         }
       ],
       "Comments": [
         {
           "type": "text",
-          "simplify": false,
+
           "content": "Use comments to explain code, following the guidelines for single-line and multi-line comments."
         }
       ],
       "Naming Conventions": [
         {
           "type": "text",
-          "simplify": false,
+
           "content": "Use descriptive names for variables, functions, and classes."
         }
       ],
       "Imports": [
         {
           "type": "text",
-          "simplify": false,
+
           "content": "Imports should usually be on separate lines."
         }
       ],
       "Blank Lines": [
         {
           "type": "text",
-          "simplify": false,
+
           "content": "Use blank lines to separate functions and classes."
         }
       ],
       "Indentation": [
         {
           "type": "text",
-          "simplify": false,
+
           "content": "Use 4 spaces per indentation level."
         }
       ],
       "Whitespace in Expressions": [
         {
           "type": "text",
-          "simplify": false,
+
           "content": "Avoid extraneous whitespace in expressions and statements."
         }
       ],
       "Imports Formatting": [
         {
           "type": "text",
-          "simplify": false,
+
           "content": "Imports should be grouped and ordered in a specific manner."
         }
       ],
       "Functions Formatting": [
         {
           "type": "text",
-          "simplify": false,
+
           "content": "Use a consistent style for defining functions."
         }
       ]
     },
     "Basics": {
-      "Variables": {
-        "Definition": [
-          {
-            "type": "title",
-            "simplify": true,
-            "content": "Variables in Python"
-          },
-          {
-            "type": "info",
-            "simplify": false,
-            "content": "A named location to store data."
-          }
-        ],
-        "Syntax": [
-          {
-            "type": "code",
-            "simplify": false,
-            "content": "x = 10"
-          }
-        ]
-      },
       "Data Types": {
         "Integers": {
           "Definition": [
@@ -105,14 +84,14 @@
             },
             {
               "type": "info",
-              "simplify": false,
+
               "content": "Whole numbers."
             }
           ],
           "Example": [
             {
               "type": "code",
-              "simplify": false,
+
               "content": "x = 5"
             }
           ]
@@ -126,14 +105,14 @@
             },
             {
               "type": "info",
-              "simplify": false,
+
               "content": "Numbers with decimal points."
             }
           ],
           "Example": [
             {
               "type": "code",
-              "simplify": false,
+
               "content": "x = 5.0"
             }
           ]
@@ -147,14 +126,14 @@
             },
             {
               "type": "info",
-              "simplify": false,
+
               "content": "A sequence of characters."
             }
           ],
           "Example": [
             {
               "type": "code",
-              "simplify": false,
+
               "content": "x = 'Hello'"
             }
           ]
@@ -168,35 +147,53 @@
             },
             {
               "type": "info",
-              "simplify": false,
+
               "content": "True or False values."
             }
           ],
           "Example": [
             {
               "type": "code",
-              "simplify": false,
+
               "content": "x = True"
             }
           ]
         }
       },
-      "Comments": {
-        "Single-line": [
+      "Variables": {
+        "Definition": [
           {
-            "type": "code",
-            "simplify": false,
-            "content": "# This is a comment"
+            "type": "title",
+            "simplify": true,
+            "content": "Variables in Python"
+          },
+          {
+            "type": "info",
+
+            "content": "A named location to store data."
           }
         ],
-        "Multi-line": [
+        "Syntax": [
           {
             "type": "code",
-            "simplify": false,
-            "content": "\"\"\" This is a multi-line comment \"\"\""
+
+            "content": "x = 10"
           }
         ]
-      }
+      },
+      "Comments": [
+        { "type": "title", "content": "Single-line" },
+        {
+          "type": "code",
+          "content": "# This is a comment"
+        },
+        { "type": "title", "content": "Multi-line" },
+        {
+          "type": "code",
+
+          "content": "\"\"\" This is a multi-line comment \"\"\""
+        }
+      ]
     },
     "Control Flow": {
       "If Statement": {
@@ -208,14 +205,14 @@
           },
           {
             "type": "info",
-            "simplify": false,
+
             "content": "Used for conditional execution."
           }
         ],
         "Syntax": [
           {
             "type": "code",
-            "simplify": false,
+
             "content": "if condition:\n    # code"
           }
         ]
@@ -229,14 +226,14 @@
           },
           {
             "type": "info",
-            "simplify": false,
+
             "content": "Iterates over a sequence."
           }
         ],
         "Syntax": [
           {
             "type": "code",
-            "simplify": false,
+
             "content": "for item in iterable:\n    # code"
           }
         ]
@@ -250,14 +247,14 @@
           },
           {
             "type": "info",
-            "simplify": false,
+
             "content": "Repeats as long as a condition is True."
           }
         ],
         "Syntax": [
           {
             "type": "code",
-            "simplify": false,
+
             "content": "while condition:\n    # code"
           }
         ]
@@ -268,14 +265,14 @@
         "Syntax": [
           {
             "type": "code",
-            "simplify": false,
+
             "content": "def function_name(parameters):\n    # code"
           }
         ],
         "Example": [
           {
             "type": "code",
-            "simplify": false,
+
             "content": "def greet(name):\n    return f'Hello, {name}'"
           }
         ]
@@ -289,21 +286,21 @@
           },
           {
             "type": "info",
-            "simplify": false,
+
             "content": "An anonymous function."
           }
         ],
         "Syntax": [
           {
             "type": "code",
-            "simplify": false,
+
             "content": "lambda arguments: expression"
           }
         ],
         "Example": [
           {
             "type": "code",
-            "simplify": false,
+
             "content": "square = lambda x: x ** 2"
           }
         ]
@@ -318,21 +315,21 @@
         },
         {
           "type": "info",
-          "simplify": false,
+
           "content": "Blueprint for creating objects."
         }
       ],
       "Syntax": [
         {
           "type": "code",
-          "simplify": false,
+
           "content": "class MyClass:\n    def __init__(self):\n        # code"
         }
       ],
       "Example": [
         {
           "type": "code",
-          "simplify": false,
+
           "content": "class Dog:\n    def __init__(self, name):\n        self.name = name"
         }
       ]
@@ -346,21 +343,21 @@
         },
         {
           "type": "info",
-          "simplify": false,
+
           "content": "A function that calls itself."
         }
       ],
       "Syntax": [
         {
           "type": "code",
-          "simplify": false,
+
           "content": "def recursive_function():\n    # base case\n    # recursive case"
         }
       ],
       "Example": [
         {
           "type": "code",
-          "simplify": false,
+
           "content": "def factorial(n):\n    if n == 0:\n        return 1\n    else:\n        return n * factorial(n - 1)"
         }
       ]
@@ -374,21 +371,21 @@
         },
         {
           "type": "info",
-          "simplify": false,
+
           "content": "Parameters that can be omitted."
         }
       ],
       "Syntax": [
         {
           "type": "code",
-          "simplify": false,
+
           "content": "def function_name(param1, param2=default_value):\n    # code"
         }
       ],
       "Example": [
         {
           "type": "code",
-          "simplify": false,
+
           "content": "def greet(name='World'):\n    return f'Hello, {name}'"
         }
       ]
@@ -402,14 +399,14 @@
         },
         {
           "type": "info",
-          "simplify": false,
+
           "content": "A set of steps to solve a problem."
         }
       ],
       "Example": [
         {
           "type": "code",
-          "simplify": false,
+
           "content": "def binary_search(arr, target):\n    left, right = 0, len(arr) - 1\n    while left <= right:\n        mid = (left + right) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    return -1"
         }
       ]
@@ -423,21 +420,21 @@
         },
         {
           "type": "info",
-          "simplify": false,
+
           "content": "Mechanism to handle errors."
         }
       ],
       "Syntax": [
         {
           "type": "code",
-          "simplify": false,
+
           "content": "try:\n    # code that may raise an exception\nexcept ExceptionType:\n    # code to handle exception"
         }
       ],
       "Example": [
         {
           "type": "code",
-          "simplify": false,
+
           "content": "try:\n    result = 10 / 0\nexcept ZeroDivisionError:\n    print('Cannot divide by zero!')"
         }
       ]
@@ -451,14 +448,14 @@
         },
         {
           "type": "info",
-          "simplify": false,
+
           "content": "Frequently used libraries in Python programming."
         }
       ],
       "Examples": [
         {
           "type": "text",
-          "simplify": false,
+
           "content": "1. NumPy: for numerical operations.\n2. Pandas: for data manipulation.\n3. Matplotlib: for plotting graphs.\n4. Requests: for making HTTP requests."
         }
       ]
@@ -472,14 +469,14 @@
         },
         {
           "type": "info",
-          "simplify": false,
+
           "content": "A sequence of characters."
         }
       ],
       "Methods": [
         {
           "type": "text",
-          "simplify": false,
+
           "content": "Common string methods include .upper(), .lower(), .strip(), and .replace()."
         }
       ]
@@ -493,14 +490,14 @@
         },
         {
           "type": "info",
-          "simplify": false,
+
           "content": "Immutable sequences."
         }
       ],
       "Syntax": [
         {
           "type": "code",
-          "simplify": false,
+
           "content": "my_tuple = (1, 2, 3)"
         }
       ]
@@ -514,14 +511,14 @@
         },
         {
           "type": "info",
-          "simplify": false,
+
           "content": "Ordered collections of items."
         }
       ],
       "Example": [
         {
           "type": "code",
-          "simplify": false,
+
           "content": "import array\nmy_array = array.array('i', [1, 2, 3])"
         }
       ]
@@ -535,14 +532,14 @@
         },
         {
           "type": "info",
-          "simplify": false,
+
           "content": "A collection of nodes and edges."
         }
       ],
       "Example": [
         {
           "type": "code",
-          "simplify": false,
+
           "content": "class Graph:\n    def __init__(self):\n        self.graph = {}\n    def add_edge(self, u, v):\n        if u in self.graph:\n            self.graph[u].append(v)\n        else:\n            self.graph[u] = [v]"
         }
       ]
@@ -556,14 +553,14 @@
         },
         {
           "type": "info",
-          "simplify": false,
+
           "content": "A collection of key-value pairs."
         }
       ],
       "Syntax": [
         {
           "type": "code",
-          "simplify": false,
+
           "content": "my_dict = {'key': 'value'}"
         }
       ]
@@ -577,14 +574,14 @@
         },
         {
           "type": "info",
-          "simplify": false,
+
           "content": "An unordered collection of unique elements."
         }
       ],
       "Syntax": [
         {
           "type": "code",
-          "simplify": false,
+
           "content": "my_set = {1, 2, 3}"
         }
       ]
@@ -598,14 +595,14 @@
         },
         {
           "type": "info",
-          "simplify": false,
+
           "content": "A special tree-based data structure."
         }
       ],
       "Example": [
         {
           "type": "code",
-          "simplify": false,
+
           "content": "import heapq\nmy_heap = []\nheapq.heappush(my_heap, 5)\nheapq.heappush(my_heap, 3)\nheapq.heappop(my_heap)  # returns 3"
         }
       ]
@@ -619,14 +616,14 @@
         },
         {
           "type": "info",
-          "simplify": false,
+
           "content": "Reading from and writing to files."
         }
       ],
       "Syntax": [
         {
           "type": "code",
-          "simplify": false,
+
           "content": "with open('file.txt', 'r') as file:\n    content = file.read()"
         }
       ]
@@ -641,14 +638,14 @@
           },
           {
             "type": "info",
-            "simplify": false,
+
             "content": "A function that modifies another function."
           }
         ],
         "Example": [
           {
             "type": "code",
-            "simplify": false,
+
             "content": "def decorator_function(original_function):\n    def wrapper_function():\n        print('Wrapper executed before {}'.format(original_function.__name__))\n        return original_function()\n    return wrapper_function"
           }
         ]
@@ -662,21 +659,21 @@
           },
           {
             "type": "info",
-            "simplify": false,
+
             "content": "A function that returns an iterator."
           }
         ],
         "Syntax": [
           {
             "type": "code",
-            "simplify": false,
+
             "content": "def generator_function():\n    yield value"
           }
         ],
         "Example": [
           {
             "type": "code",
-            "simplify": false,
+
             "content": "def count_up_to(n):\n    count = 1\n    while count <= n:\n        yield count\n        count += 1"
           }
         ]
@@ -691,14 +688,14 @@
         },
         {
           "type": "info",
-          "simplify": false,
+
           "content": "Manages resources efficiently."
         }
       ],
       "Example": [
         {
           "type": "code",
-          "simplify": false,
+
           "content": "with open('file.txt', 'w') as file:\n    file.write('Hello, World!')"
         }
       ]
@@ -712,14 +709,14 @@
         },
         {
           "type": "info",
-          "simplify": false,
+
           "content": "A sequence of characters that define a search pattern."
         }
       ],
       "Example": [
         {
           "type": "code",
-          "simplify": false,
+
           "content": "import re\npattern = r'\\d+'\nresult = re.findall(pattern, 'There are 2 apples and 3 oranges.')"
         }
       ]
@@ -734,14 +731,14 @@
           },
           {
             "type": "info",
-            "simplify": false,
+
             "content": "Applies a function to all items in an iterable."
           }
         ],
         "Example": [
           {
             "type": "code",
-            "simplify": false,
+
             "content": "result = list(map(lambda x: x**2, [1, 2, 3]))  # [1, 4, 9]"
           }
         ]
@@ -755,14 +752,14 @@
           },
           {
             "type": "info",
-            "simplify": false,
+
             "content": "Filters elements in an iterable."
           }
         ],
         "Example": [
           {
             "type": "code",
-            "simplify": false,
+
             "content": "result = list(filter(lambda x: x > 0, [-1, 0, 1, 2]))  # [1, 2]"
           }
         ]
@@ -776,14 +773,14 @@
           },
           {
             "type": "info",
-            "simplify": false,
+
             "content": "Applies a rolling computation to sequential pairs."
           }
         ],
         "Example": [
           {
             "type": "code",
-            "simplify": false,
+
             "content": "from functools import reduce\nresult = reduce(lambda x, y: x + y, [1, 2, 3, 4])  # 10"
           }
         ]
@@ -798,14 +795,14 @@
         },
         {
           "type": "info",
-          "simplify": false,
+
           "content": "Enables asynchronous programming."
         }
       ],
       "Example": [
         {
           "type": "code",
-          "simplify": false,
+
           "content": "import asyncio\nasync def main():\n    await asyncio.sleep(1)\nasyncio.run(main())"
         }
       ]
@@ -819,14 +816,14 @@
         },
         {
           "type": "info",
-          "simplify": false,
+
           "content": "Ensures code correctness."
         }
       ],
       "Example": [
         {
           "type": "code",
-          "simplify": false,
+
           "content": "import unittest\nclass TestMathOperations(unittest.TestCase):\n    def test_add(self):\n        self.assertEqual(1 + 1, 2)\nif __name__ == '__main__':\n    unittest.main()"
         }
       ]

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import {
   ArrowsPointingInIcon,
@@ -91,19 +91,24 @@ export default function Home() {
   }, [options]);
   const handleMouseMove = (event) => {
     if (isDragging.current) {
-      const newWidth = (event.clientX / window.innerWidth) * 100;
-      widthRef.current = Math.max(35, Math.min(100, newWidth));
-      dragRef.current.style.width = `${widthRef.current}%`;
+      handleDrag(event.clientX);
     }
   };
+
   const handleTouchMove = (event) => {
     if (isDragging.current) {
       const touch = event.touches[0];
-      const newWidth = (touch.clientX / window.innerWidth) * 100;
-      widthRef.current = Math.max(35, Math.min(100, newWidth));
-      dragRef.current.style.width = `${widthRef.current}%`;
+      handleDrag(touch.clientX);
     }
   };
+
+  const handleDrag = useCallback((clientX) => {
+    const newWidth = (clientX / window.innerWidth) * 100;
+    if (newWidth >= 35 && newWidth <= 100) {
+      widthRef.current = newWidth;
+      dragRef.current.style.width = `${widthRef.current}%`;
+    }
+  }, []);
   const handleClickOutside = (event) => {
     if (settingsRef.current && !settingsRef.current.contains(event.target)) {
       setShowSettings(false);
@@ -133,6 +138,7 @@ export default function Home() {
       document.removeEventListener("touchend", handleMouseUp);
     }
   };
+
   const handleMouseDown = () => {
     isDragging.current = true;
     document.addEventListener("mousemove", handleMouseMove);
@@ -181,6 +187,15 @@ export default function Home() {
     setConfirmDelete("");
   };
   useEffect(() => {
+    const updateWidth = () => {
+      if (dragRef.current) {
+        dragRef.current.style.width = `${width}%`;
+      }
+    };
+
+    updateWidth();
+  }, [width]);
+  useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleKeyDown);
 
@@ -195,39 +210,42 @@ export default function Home() {
       {!isHidden && (
         <div
           ref={dragRef}
-          className={`pb-3.5 pl-3.5 transition-colors duration-300 shadow-lg flex flex-col justify-between ${
+          className={`transition-colors duration-300 shadow-lg flex flex-col md:flex-col justify-between ${
             isDarkTheme ? "bg-dark-background" : "bg-light-background"
           }`}
           style={{ width: `${width}%`, height: "100vh" }}
         >
-          {showWelcome ? (
-            <Welcome
-              isDarkTheme={isDarkTheme}
-              options={options}
-              setShowWelcome={setShowWelcome}
-              setSelectedTopic={setSelectedTopic}
-            />
-          ) : (
-            <div className="overflow-y-auto h-[calc(100vh-60px)] pr-2 scrollbar-left">
-              <Content
+          <div className="flex flex-col-reverse md:flex-col h-full">
+            {showWelcome ? (
+              <Welcome
                 isDarkTheme={isDarkTheme}
-                selectedTopic={selectedTopic}
-                selectedCourse={selectedOption}
-                isMediaOnly={isMediaOnly}
-                setChange={setChange}
+                options={options}
+                setShowWelcome={setShowWelcome}
+                setSelectedTopic={setSelectedTopic}
               />
-            </div>
-          )}
-          <Buttons
-            handleExpand={handleExpand}
-            isExpanded={isExpanded}
-            isDarkTheme={isDarkTheme}
-            handleHide={handleHide}
-            toggleTheme={toggleTheme}
-            setShowWelcome={setShowWelcome}
-            showWelcome={showWelcome}
-            setIsMediaOnly={setIsMediaOnly}
-          />
+            ) : (
+              <div className="overflow-y-auto h-[calc(100vh-60px)]  scrollbar-left">
+                <Content
+                  isDarkTheme={isDarkTheme}
+                  selectedTopic={selectedTopic}
+                  selectedCourse={selectedOption}
+                  isMediaOnly={isMediaOnly}
+                  setChange={setChange}
+                />
+              </div>
+            )}
+
+            <Buttons
+              handleExpand={handleExpand}
+              isExpanded={isExpanded}
+              isDarkTheme={isDarkTheme}
+              handleHide={handleHide}
+              toggleTheme={toggleTheme}
+              setShowWelcome={setShowWelcome}
+              showWelcome={showWelcome}
+              setIsMediaOnly={setIsMediaOnly}
+            />
+          </div>
         </div>
       )}
 
@@ -312,7 +330,7 @@ export default function Home() {
           <Tooltip title="Center Roadmap" placement="top">
             <button
               onClick={setReturnToCenter}
-              className={`p-2 rounded absolute  bottom-[17px] left-5 ${
+              className={`p-2 rounded absolute  bottom-[14px] left-5 ${
                 isDarkTheme
                   ? "bg-dark-secondary text-dark-background"
                   : "bg-light-text1  text-light-secondary"
@@ -458,7 +476,7 @@ function Buttons({
   };
 
   return (
-    <div className="flex justify-between my-1 mt-3 mr-3">
+    <div className="flex justify-between mb-4 md:mb-0 px-4 md:py-0 mt-4 py-auto">
       <div className="flex space-x-2">
         <Tooltip title="Exit" placement="top">
           <button
