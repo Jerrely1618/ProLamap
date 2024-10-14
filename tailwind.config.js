@@ -20,7 +20,7 @@ export default {
           text1: '#9290C3', 
           text2: '#555273 ',
           primary: '#3b82f6',
-          secondary: '#535C91', 
+          secondary: '#9290C3', 
         },
         third:{
           background: '#2E073F',

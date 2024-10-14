@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
-import PropTypes from "prop-types";
+import { useState, useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import PropTypes from 'prop-types';
 
 const randomFloat = (min, max) => Math.random() * (max - min) + min;
 
@@ -44,7 +44,7 @@ const RoadMapBubble = ({
 
   const updateCompletedSubtopics = () => {
     const completedFromStorage = new Set(
-      JSON.parse(localStorage.getItem("completed") || "{}")?.[
+      JSON.parse(localStorage.getItem('completed') || '{}')?.[
         selectedCourse.value
       ]?.[text] || []
     );
@@ -64,10 +64,10 @@ const RoadMapBubble = ({
       className={`w-32 py-1.5 my-2 mx-2 rounded-xl body-bold shadow-md transition font-semibold items-center justify-center text-xl
         ${
           allCompleted
-            ? "text-white bg-green-500"
+            ? 'text-white bg-green-500'
             : isDarkTheme
-            ? "bg-light-background text-dark-background"
-            : "bg-third-background text-light-background"
+            ? 'bg-light-background text-dark-background'
+            : 'bg-third-background text-light-background'
         }
         
       `}
@@ -76,8 +76,8 @@ const RoadMapBubble = ({
         y: hovered || !isHoveringRoadmap ? 0 : randomFloat(-7, 7),
       }}
       transition={{
-        x: { repeat: Infinity, duration: randomFloat(0.5, 1), ease: "linear" },
-        y: { repeat: Infinity, duration: randomFloat(0.5, 1), ease: "linear" },
+        x: { repeat: Infinity, duration: randomFloat(0.5, 1), ease: 'linear' },
+        y: { repeat: Infinity, duration: randomFloat(0.5, 1), ease: 'linear' },
       }}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
@@ -85,7 +85,7 @@ const RoadMapBubble = ({
         scale: 1.15,
         transition: {
           duration: 0.05,
-          ease: "linear",
+          ease: 'linear',
         },
       }}
       onClick={() => (onClick(text), setShowWelcome(false), setIsHidden(false))}
@@ -99,8 +99,8 @@ const RoadMapBubble = ({
               key={subtopic}
               className={`w-3 h-3 rounded-full mx-0.5 my-0.5 ${
                 completedSubtopics.has(subtopic)
-                  ? "bg-green-700"
-                  : "bg-gray-400"
+                  ? 'bg-green-700'
+                  : 'bg-gray-400'
               }`}
             />
           ))}
@@ -133,12 +133,15 @@ const RoadMap = ({
   const [levels, setLevels] = useState({});
   const updateScale = () => {
     const roadMapWidth = (window.innerWidth * 2) / 3;
-    const initialScale = Math.min(roadMapWidth / 890, window.innerHeight / 650);
+    const initialScale = Math.min(
+      roadMapWidth / 1050,
+      window.innerHeight / 1200
+    );
     setScale(Math.max(0.2, Math.min(1.1, initialScale)));
   };
   useEffect(() => {
     if (returnToCenter) {
-      setScale(0.85);
+      updateScale();
       setTranslate({
         x: 0,
         y: window.innerHeight / 5,
@@ -148,32 +151,32 @@ const RoadMap = ({
 
   useEffect(() => {
     updateScale();
-    window.addEventListener("resize", updateScale);
+    window.addEventListener('resize', updateScale);
     return () => {
-      window.removeEventListener("resize", updateScale);
+      window.removeEventListener('resize', updateScale);
     };
   }, []);
 
   useEffect(() => {
     const fetchContentData = async () => {
       try {
-        const response = await fetch("/topics.json");
+        const response = await fetch('/topics.json');
         const data = await response.json();
         if (selectedCourse.value) {
           const levelsData = getLevels(data[selectedCourse.value]);
           setLevels(levelsData);
         }
       } catch (error) {
-        console.error("Error fetching content data:", error);
+        console.error('Error fetching content data:', error);
       }
       try {
-        const response = await fetch("/contents.json");
+        const response = await fetch('/contents.json');
         const data = await response.json();
         if (selectedCourse.value) {
           setTopics(data[selectedCourse.value]);
         }
       } catch (error) {
-        console.error("Error fetching topic data:", error);
+        console.error('Error fetching topic data:', error);
       }
     };
 
@@ -231,7 +234,7 @@ const RoadMap = ({
       }}
     >
       <div
-        className={`w-full h-full ${isDraggable ? "cursor-grab" : ""}`}
+        className={`w-full h-full ${isDraggable ? 'cursor-grab' : ''}`}
         onWheel={handleWheel}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
@@ -241,7 +244,7 @@ const RoadMap = ({
         onTouchEnd={handleTouchEnd}
         style={{
           transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`,
-          transition: isPanning ? "none" : "transform 0.2s ease",
+          transition: isPanning ? 'none' : 'transform 0.2s ease',
         }}
       >
         <div className="grid gap-4">
@@ -250,7 +253,7 @@ const RoadMap = ({
               key={level}
               className="flex justify-center my-1 space-x-5"
               style={{
-                textShadow: "10px 10px 10px rgba(0, 0, 0, 1)",
+                textShadow: '10px 10px 10px rgba(0, 0, 0, 1)',
               }}
             >
               {levels[level].map((node) => (
@@ -286,11 +289,13 @@ RoadMapBubble.propTypes = {
   change: PropTypes.any.isRequired,
   setIsHidden: PropTypes.func.isRequired,
 };
-
 RoadMap.propTypes = {
   isDarkTheme: PropTypes.bool.isRequired,
   setSelectedTopic: PropTypes.func.isRequired,
-  returnToCenter: PropTypes.bool.isRequired,
+  returnToCenter: PropTypes.oneOfType([
+    PropTypes.object.isRequired,
+    PropTypes.bool.isRequired,
+  ]).isRequired,
   setShowWelcome: PropTypes.func.isRequired,
   isDraggable: PropTypes.bool.isRequired,
   setIsHidden: PropTypes.func.isRequired,

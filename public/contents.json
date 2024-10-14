@@ -4,841 +4,372 @@
     "PEP8": {
       "Principals": [
         {
+          "type": "title",
+          "content": "Principles of Python Coding Style"
+        },
+        {
           "type": "text",
-
-          "content": "PEP 8 is the style guide for Python code."
+          "content": "After reading this guide, you will know how to write clean and maintainable Python code. But before that, let's understand why it is important to follow a coding style guide. The priciples that will come up over and over on the PEP8 guidelines and that every good pythoners follows. They are:"
+        },
+        {
+          "type": "text",
+          "content": "- Readability\n- Consistency\n- Maintainability"
+        },
+        {
+          "type": "title",
+          "content": "Readability"
+        },
+        {
+          "type": "text",
+          "content": "Keeping things clear and easy to read is one of the most important aspect of writing code, and python syntax provides generous ways of keeping that true."
+        },
+        {
+          "type": "code",
+          "content": "# Shorter lines improves readability\napples, pears, oranges, bananas,\\\n peaches, coconuts, tomatoes = 1, 2, 3, 4, 5, 6, 7"
+        },
+        {
+          "type": "title",
+          "content": "Consistency"
+        },
+        {
+          "type": "text",
+          "content": "While coding in a team, it is important to keep our code consitent making it easier to read and the codebase organized."
+        },
+        {
+          "type": "code",
+          "content": "#Consistency of using tabs or spaces\n# Using tabs\ndef example_function():\n\tif True:\n\t\tprint('This is tab indented')\n\n# Using spaces\ndef another_function():\n    if True:\n        print('This is space indented')"
+        },
+        {
+          "type": "title",
+          "content": "Maintainability"
+        },
+        {
+          "type": "text",
+          "content": "In order to expand, maintining the codebase is crucial. By setting a correct foundating with the help of syntax we are able to make future work easier on us."
+        },
+        {
+          "type": "code",
+          "content": "# Function with single responsabilities\ndef calculate_rectangle_area(length, width):\n    return length * width\n\ndef calculate_circle_area(radius):\n    return 3.14 * radius ** 2\n\n# Main function\nif __name__ == '__main__':\n    print('Rectangle area:', calculate_rectangle_area(5, 10))\n    print('Circle area:', calculate_circle_area(7))"
+        },
+        {
+          "type": "title",
+          "content": "Video"
+        },
+        {
+          "type": "video",
+          "content": "https://www.youtube.com/watch?v=wKECxtmbvYQ"
         }
       ],
       "Line Length": [
         {
+          "type": "title",
+          "content": "Limit Length"
+        },
+        {
           "type": "text",
-
-          "content": "Limit all lines to a maximum of 79 characters."
+          "content": "By default, the maximum number of characters you can have in a line is **79**.\n"
+        },
+        {
+          "type": "code",
+          "content": "# Default max length 79 characters:\nprint(\"I'll be back.\")  # A classic line from 'The Terminator.'"
+        },
+        {
+          "type": "text",
+          "content": "This can increase up to **99 characters** when a team agrees on it."
+        },
+        {
+          "type": "code",
+          "content": "# Max length 99 characters:\nprint(\"Here's looking at you, kid.\")  # A quote from 'Casablanca.'"
+        },
+        {
+          "type": "text",
+          "content": "For comments and docstrings, the maximum character limit is **72 characters**."
+        },
+        {
+          "type": "code",
+          "content": "# Comments/Docstrings 72 characters:\n# Life is like a box of chocolates; you never know what you get."
+        },
+        {
+          "type": "title",
+          "content": "Line Breaks"
+        },
+        {
+          "type": "text",
+          "content": "A way to solve the line length problem is to use **backslashes or parentheses** to break lines. There are more ways to do so, but these are the most common ones. The other ones are described in the other titles."
+        },
+        {
+          "type": "code",
+          "content": "# Using Backslashes\napples, pears, oranges, bananas, \\\n peaches, coconuts, tomatoes = 1, 2, 3, 4, 5, 6, 7\n\n# Using Parentheses\n(apples, pears, oranges, bananas, \n peaches, coconuts, tomatoes) = 1, 2, 3, 4, 5, 6, 7"
         }
       ],
       "Comments": [
         {
+          "type": "title",
+          "content": "Comments"
+        },
+        {
           "type": "text",
-
-          "content": "Use comments to explain code, following the guidelines for single-line and multi-line comments."
+          "content": "Comments in python like in any other language helps document your code. #s in this case are your primary friend when making comments since its how they start.\n\n\n The comments should be clear and concise, for anyone to understand and of course in english so anyone in the worldwide community of coders can understand it."
+        },
+        {
+          "type": "code",
+          "content": "# Inline comments\n left = right + 1 # Closing the window"
+        },
+        {
+          "type": "info",
+          "title": "Useful comments",
+          "content": "While having comments is great for documentation, overusing them or using them incorrectly can be **worse** than not having code.\n\n For that reason, currently the best way to document your code is by **naming and defining** functions and variables for what they do instead of arbitery names."
+        },
+        {
+          "type": "title",
+          "content": "Docstrings"
+        },
+        {
+          "type": "text",
+          "content": "Docstrings are the **official** way to document our code. We can use either **\"\"\"** or **'''** to create them."
+        },
+        {
+          "type": "code",
+          "content": "\"\"\"\nA string representing two numbers added together.\n\nParameters:\n    expression (str): (e.g., '2 + 3').\nReturns:\n    float: The addition of the two numbers.\n\"\"\"\ndef string_to_addition(expression: str) -> float:\n    num1, num2 = map(float, expression.split('+'))\n    return num1 + num2"
         }
       ],
       "Naming Conventions": [
         {
+          "type": "title",
+          "content": "Naming Conventions"
+        },
+        {
           "type": "text",
-
-          "content": "Use descriptive names for variables, functions, and classes."
+          "content": "The best way to document your code will always be throught the names you gives to your variables, functions, and classes. They are best when they are **descriptive** and below are a few examples of how to name them."
+        },
+        {
+          "type": "code",
+          "content": "# Underscore:\nuser_age = 2\n\n# Camel case:\nuserAge = 2"
+        },
+        {
+          "type": "info",
+          "title": "Underscore or Camel Case",
+          "content": "As stated at the begging of this guide, **consistency** is key when writing code. So, it is about **sticking** with your choice wether it's camel case or underscore, keep it consistent throught your codebase."
+        },
+        {
+          "type": "title",
+          "content": "Functions:"
+        },
+        {
+          "type": "code",
+          "content": "# Naming functions:\ndef calculate_area(radius):\n    return 3.14 * radius ** 2\n\n# Bad naming for functions:\ndef func1(r):\n    return 3.14 * r ** 2"
+        },
+        {
+          "type": "title",
+          "content": "Variables:"
+        },
+        {
+          "type": "code",
+          "content": "# Naming variables:\nuser_age = 25\n\n# Bad naming for variables:\nx = 25"
+        },
+        {
+          "type": "title",
+          "content": "Classes:"
+        },
+        {
+          "type": "code",
+          "content": "# Naming classes:\nclass Dog:\n    def bark(self):\n        return \"Woof!\"\n\n# Bad naming for classes:\nclass A:\n    def b(self):\n        return \"Woof!\""
         }
       ],
       "Imports": [
         {
           "type": "text",
-
           "content": "Imports should usually be on separate lines."
         }
       ],
       "Blank Lines": [
         {
           "type": "text",
-
           "content": "Use blank lines to separate functions and classes."
         }
       ],
       "Indentation": [
         {
           "type": "text",
-
           "content": "Use 4 spaces per indentation level."
         }
       ],
       "Whitespace in Expressions": [
         {
           "type": "text",
-
           "content": "Avoid extraneous whitespace in expressions and statements."
-        }
-      ],
-      "Imports Formatting": [
-        {
-          "type": "text",
-
-          "content": "Imports should be grouped and ordered in a specific manner."
         }
       ],
       "Functions Formatting": [
         {
           "type": "text",
-
           "content": "Use a consistent style for defining functions."
         }
       ]
     },
     "Basics": {
-      "Data Types": {
-        "Integers": {
-          "Definition": [
-            {
-              "type": "title",
-              "simplify": true,
-              "content": "Integers in Python"
-            },
-            {
-              "type": "info",
-
-              "content": "Whole numbers."
-            }
-          ],
-          "Example": [
-            {
-              "type": "code",
-
-              "content": "x = 5"
-            }
-          ]
-        },
-        "Floats": {
-          "Definition": [
-            {
-              "type": "title",
-              "simplify": true,
-              "content": "Floats in Python"
-            },
-            {
-              "type": "info",
-
-              "content": "Numbers with decimal points."
-            }
-          ],
-          "Example": [
-            {
-              "type": "code",
-
-              "content": "x = 5.0"
-            }
-          ]
-        },
-        "Strings": {
-          "Definition": [
-            {
-              "type": "title",
-              "simplify": true,
-              "content": "Strings in Python"
-            },
-            {
-              "type": "info",
-
-              "content": "A sequence of characters."
-            }
-          ],
-          "Example": [
-            {
-              "type": "code",
-
-              "content": "x = 'Hello'"
-            }
-          ]
-        },
-        "Booleans": {
-          "Definition": [
-            {
-              "type": "title",
-              "simplify": true,
-              "content": "Booleans in Python"
-            },
-            {
-              "type": "info",
-
-              "content": "True or False values."
-            }
-          ],
-          "Example": [
-            {
-              "type": "code",
-
-              "content": "x = True"
-            }
-          ]
-        }
-      },
-      "Variables": {
-        "Definition": [
-          {
-            "type": "title",
-            "simplify": true,
-            "content": "Variables in Python"
-          },
-          {
-            "type": "info",
-
-            "content": "A named location to store data."
-          }
-        ],
-        "Syntax": [
-          {
-            "type": "code",
-
-            "content": "x = 10"
-          }
-        ]
-      },
-      "Comments": [
-        { "type": "title", "content": "Single-line" },
-        {
-          "type": "code",
-          "content": "# This is a comment"
-        },
-        { "type": "title", "content": "Multi-line" },
-        {
-          "type": "code",
-
-          "content": "\"\"\" This is a multi-line comment \"\"\""
-        }
-      ]
-    },
-    "Control Flow": {
-      "If Statement": {
-        "Definition": [
-          {
-            "type": "title",
-            "simplify": true,
-            "content": "If Statements in Python"
-          },
-          {
-            "type": "info",
-
-            "content": "Used for conditional execution."
-          }
-        ],
-        "Syntax": [
-          {
-            "type": "code",
-
-            "content": "if condition:\n    # code"
-          }
-        ]
-      },
-      "For Loop": {
-        "Definition": [
-          {
-            "type": "title",
-            "simplify": true,
-            "content": "For Loops in Python"
-          },
-          {
-            "type": "info",
-
-            "content": "Iterates over a sequence."
-          }
-        ],
-        "Syntax": [
-          {
-            "type": "code",
-
-            "content": "for item in iterable:\n    # code"
-          }
-        ]
-      },
-      "While Loop": {
-        "Definition": [
-          {
-            "type": "title",
-            "simplify": true,
-            "content": "While Loops in Python"
-          },
-          {
-            "type": "info",
-
-            "content": "Repeats as long as a condition is True."
-          }
-        ],
-        "Syntax": [
-          {
-            "type": "code",
-
-            "content": "while condition:\n    # code"
-          }
-        ]
-      }
+      "Data Types": [],
+      "Scope": [],
+      "Operations": [],
+      "Comparison": [],
+      "Control Flow": []
     },
     "Functions": {
-      "Defining a Function": {
-        "Syntax": [
-          {
-            "type": "code",
-
-            "content": "def function_name(parameters):\n    # code"
-          }
-        ],
-        "Example": [
-          {
-            "type": "code",
-
-            "content": "def greet(name):\n    return f'Hello, {name}'"
-          }
-        ]
-      },
-      "Lambda Function": {
-        "Definition": [
-          {
-            "type": "title",
-            "simplify": true,
-            "content": "Lambda Functions in Python"
-          },
-          {
-            "type": "info",
-
-            "content": "An anonymous function."
-          }
-        ],
-        "Syntax": [
-          {
-            "type": "code",
-
-            "content": "lambda arguments: expression"
-          }
-        ],
-        "Example": [
-          {
-            "type": "code",
-
-            "content": "square = lambda x: x ** 2"
-          }
-        ]
-      }
+      "General": [],
+      "Intitialization": [],
+      "Args & Kwargs": [],
+      "Keywords": [],
+      "Decorators": [],
+      "Closures": [],
+      "Annotations": []
+    },
+    "Trees": {
+      "General": [],
+      "Traversals": [],
+      "Red-Black Tree": [],
+      "AVL Tree": [],
+      "Binary Tree": [],
+      "N-ary Tree": [],
+      "Balanced Tree": []
+    },
+    "Tries": {
+      "General": []
     },
     "Classes": {
-      "Definition": [
-        {
-          "type": "title",
-          "simplify": true,
-          "content": "Classes in Python"
-        },
-        {
-          "type": "info",
-
-          "content": "Blueprint for creating objects."
-        }
-      ],
-      "Syntax": [
-        {
-          "type": "code",
-
-          "content": "class MyClass:\n    def __init__(self):\n        # code"
-        }
-      ],
-      "Example": [
-        {
-          "type": "code",
-
-          "content": "class Dog:\n    def __init__(self, name):\n        self.name = name"
-        }
-      ]
+      "General": [],
+      "Constructor": [],
+      "Variables": [],
+      "Methods": [],
+      "Decorators": [],
+      "Magic Methods": []
     },
     "Recursion": {
-      "Definition": [
-        {
-          "type": "title",
-          "simplify": true,
-          "content": "Recursion in Python"
-        },
-        {
-          "type": "info",
-
-          "content": "A function that calls itself."
-        }
-      ],
-      "Syntax": [
-        {
-          "type": "code",
-
-          "content": "def recursive_function():\n    # base case\n    # recursive case"
-        }
-      ],
-      "Example": [
-        {
-          "type": "code",
-
-          "content": "def factorial(n):\n    if n == 0:\n        return 1\n    else:\n        return n * factorial(n - 1)"
-        }
-      ]
+      "General": [],
+      "To Iteration": [],
+      "Stack": []
     },
-    "Optional": {
-      "Definition": [
-        {
-          "type": "title",
-          "simplify": true,
-          "content": "Optional Parameters in Python"
-        },
-        {
-          "type": "info",
-
-          "content": "Parameters that can be omitted."
-        }
-      ],
-      "Syntax": [
-        {
-          "type": "code",
-
-          "content": "def function_name(param1, param2=default_value):\n    # code"
-        }
-      ],
-      "Example": [
-        {
-          "type": "code",
-
-          "content": "def greet(name='World'):\n    return f'Hello, {name}'"
-        }
-      ]
+    "Typing": {
+      "Optional": [],
+      "Typing": []
     },
     "Algorithms": {
-      "Definition": [
-        {
-          "type": "title",
-          "simplify": true,
-          "content": "Algorithms in Python"
-        },
-        {
-          "type": "info",
-
-          "content": "A set of steps to solve a problem."
-        }
-      ],
-      "Example": [
-        {
-          "type": "code",
-
-          "content": "def binary_search(arr, target):\n    left, right = 0, len(arr) - 1\n    while left <= right:\n        mid = (left + right) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    return -1"
-        }
-      ]
+      "Binary Search": [],
+      "Dijiikstra": [],
+      "Cycle Detection": [],
+      "Fast and Slow Pointers": [],
+      "Topological Sort": [],
+      "Prism's Algorithm": [],
+      "Kruskal's Algorithm": []
     },
     "Exception Handling": {
-      "Definition": [
-        {
-          "type": "title",
-          "simplify": true,
-          "content": "Exception Handling in Python"
-        },
-        {
-          "type": "info",
-
-          "content": "Mechanism to handle errors."
-        }
-      ],
-      "Syntax": [
-        {
-          "type": "code",
-
-          "content": "try:\n    # code that may raise an exception\nexcept ExceptionType:\n    # code to handle exception"
-        }
-      ],
-      "Example": [
-        {
-          "type": "code",
-
-          "content": "try:\n    result = 10 / 0\nexcept ZeroDivisionError:\n    print('Cannot divide by zero!')"
-        }
-      ]
+      "General": [],
+      "Common/Built-in": [],
+      "Custom": []
     },
     "Common Libraries": {
-      "Definition": [
-        {
-          "type": "title",
-          "simplify": true,
-          "content": "Common Libraries in Python"
-        },
-        {
-          "type": "info",
-
-          "content": "Frequently used libraries in Python programming."
-        }
-      ],
-      "Examples": [
-        {
-          "type": "text",
-
-          "content": "1. NumPy: for numerical operations.\n2. Pandas: for data manipulation.\n3. Matplotlib: for plotting graphs.\n4. Requests: for making HTTP requests."
-        }
-      ]
+      "Numpy": [],
+      "Pandas": [],
+      "Matplotlib": [],
+      "Requests": [],
+      "OpenCV": [],
+      "Scikit-learn": []
     },
     "Strings": {
-      "Definition": [
-        {
-          "type": "title",
-          "simplify": true,
-          "content": "Strings in Python"
-        },
-        {
-          "type": "info",
-
-          "content": "A sequence of characters."
-        }
-      ],
-      "Methods": [
-        {
-          "type": "text",
-
-          "content": "Common string methods include .upper(), .lower(), .strip(), and .replace()."
-        }
-      ]
+      "General": [],
+      "Methods": [],
+      "Formatting": [],
+      "Raw Strings": [],
+      "Indexing": []
     },
     "Tuples": {
-      "Definition": [
-        {
-          "type": "title",
-          "simplify": true,
-          "content": "Tuples in Python"
-        },
-        {
-          "type": "info",
-
-          "content": "Immutable sequences."
-        }
-      ],
-      "Syntax": [
-        {
-          "type": "code",
-
-          "content": "my_tuple = (1, 2, 3)"
-        }
-      ]
+      "General": [],
+      "Intitialization": [],
+      "Indexing": [],
+      "Operations": [],
+      "Loops": [],
+      "Methods": []
     },
     "Arrays": {
-      "Definition": [
-        {
-          "type": "title",
-          "simplify": true,
-          "content": "Arrays in Python"
-        },
-        {
-          "type": "info",
-
-          "content": "Ordered collections of items."
-        }
-      ],
-      "Example": [
-        {
-          "type": "code",
-
-          "content": "import array\nmy_array = array.array('i', [1, 2, 3])"
-        }
-      ]
+      "General": [],
+      "Intitialization": [],
+      "Sorting": [],
+      "Operations": [],
+      "Indexing": [],
+      "Loops": [],
+      "Multidimensional": [],
+      "Time/Space Complexity": []
     },
     "Graphs": {
-      "Definition": [
-        {
-          "type": "title",
-          "simplify": true,
-          "content": "Graphs in Python"
-        },
-        {
-          "type": "info",
-
-          "content": "A collection of nodes and edges."
-        }
-      ],
-      "Example": [
-        {
-          "type": "code",
-
-          "content": "class Graph:\n    def __init__(self):\n        self.graph = {}\n    def add_edge(self, u, v):\n        if u in self.graph:\n            self.graph[u].append(v)\n        else:\n            self.graph[u] = [v]"
-        }
-      ]
+      "Matrix": [],
+      "Adjeacency List": [],
+      "DFS": [],
+      "BFS": []
     },
     "Dictionaries": {
-      "Definition": [
-        {
-          "type": "title",
-          "simplify": true,
-          "content": "Dictionaries in Python"
-        },
-        {
-          "type": "info",
-
-          "content": "A collection of key-value pairs."
-        }
-      ],
-      "Syntax": [
-        {
-          "type": "code",
-
-          "content": "my_dict = {'key': 'value'}"
-        }
-      ]
+      "General": [],
+      "Intitialization": [],
+      "DefaultDict": [],
+      "Indexing": [],
+      "Functions": [],
+      "Methods": [],
+      "Loops": [],
+      "Time/Space Complexity": []
     },
     "Sets": {
-      "Definition": [
-        {
-          "type": "title",
-          "simplify": true,
-          "content": "Sets in Python"
-        },
-        {
-          "type": "info",
-
-          "content": "An unordered collection of unique elements."
-        }
-      ],
-      "Syntax": [
-        {
-          "type": "code",
-
-          "content": "my_set = {1, 2, 3}"
-        }
-      ]
+      "General": [],
+      "Intitialization": [],
+      "Set Operations": [],
+      "Functions": [],
+      "Forzenset": [],
+      "Loops": [],
+      "Comparasions": [],
+      "Time/Space Complexity": []
     },
     "Heaps": {
-      "Definition": [
-        {
-          "type": "title",
-          "simplify": true,
-          "content": "Heaps in Python"
-        },
-        {
-          "type": "info",
-
-          "content": "A special tree-based data structure."
-        }
-      ],
-      "Example": [
-        {
-          "type": "code",
-
-          "content": "import heapq\nmy_heap = []\nheapq.heappush(my_heap, 5)\nheapq.heappush(my_heap, 3)\nheapq.heappop(my_heap)  # returns 3"
-        }
-      ]
+      "General": [],
+      "Intitialization": [],
+      "Min-Max Heap": [],
+      "Operations": [],
+      "Time/Space Complexity": []
     },
     "File Handling": {
-      "Definition": [
-        {
-          "type": "title",
-          "simplify": true,
-          "content": "File Handling in Python"
-        },
-        {
-          "type": "info",
-
-          "content": "Reading from and writing to files."
-        }
-      ],
-      "Syntax": [
-        {
-          "type": "code",
-
-          "content": "with open('file.txt', 'r') as file:\n    content = file.read()"
-        }
-      ]
+      "General": [],
+      "Methods": [],
+      "Modes": []
     },
     "Decorators & Generators": {
-      "Decorators": {
-        "Definition": [
-          {
-            "type": "title",
-            "simplify": true,
-            "content": "Decorators in Python"
-          },
-          {
-            "type": "info",
-
-            "content": "A function that modifies another function."
-          }
-        ],
-        "Example": [
-          {
-            "type": "code",
-
-            "content": "def decorator_function(original_function):\n    def wrapper_function():\n        print('Wrapper executed before {}'.format(original_function.__name__))\n        return original_function()\n    return wrapper_function"
-          }
-        ]
-      },
-      "Generators": {
-        "Definition": [
-          {
-            "type": "title",
-            "simplify": true,
-            "content": "Generators in Python"
-          },
-          {
-            "type": "info",
-
-            "content": "A function that returns an iterator."
-          }
-        ],
-        "Syntax": [
-          {
-            "type": "code",
-
-            "content": "def generator_function():\n    yield value"
-          }
-        ],
-        "Example": [
-          {
-            "type": "code",
-
-            "content": "def count_up_to(n):\n    count = 1\n    while count <= n:\n        yield count\n        count += 1"
-          }
-        ]
-      }
+      "Decorators": [],
+      "Generators": [],
+      "Yield": [],
+      "Iterators": []
     },
     "Context Manager": {
-      "Definition": [
-        {
-          "type": "title",
-          "simplify": true,
-          "content": "Context Manager in Python"
-        },
-        {
-          "type": "info",
-
-          "content": "Manages resources efficiently."
-        }
-      ],
-      "Example": [
-        {
-          "type": "code",
-
-          "content": "with open('file.txt', 'w') as file:\n    file.write('Hello, World!')"
-        }
-      ]
+      "General": [],
+      "Contextlib": []
     },
     "Regular Expressions": {
-      "Definition": [
-        {
-          "type": "title",
-          "simplify": true,
-          "content": "Regular Expressions in Python"
-        },
-        {
-          "type": "info",
-
-          "content": "A sequence of characters that define a search pattern."
-        }
-      ],
-      "Example": [
-        {
-          "type": "code",
-
-          "content": "import re\npattern = r'\\d+'\nresult = re.findall(pattern, 'There are 2 apples and 3 oranges.')"
-        }
-      ]
+      "General": [],
+      "Methods": [],
+      "Compile, groups, and Capture": [],
+      "Flags": []
     },
     "Map, Filter, Reduce": {
-      "Map": {
-        "Definition": [
-          {
-            "type": "title",
-            "simplify": true,
-            "content": "Map in Python"
-          },
-          {
-            "type": "info",
-
-            "content": "Applies a function to all items in an iterable."
-          }
-        ],
-        "Example": [
-          {
-            "type": "code",
-
-            "content": "result = list(map(lambda x: x**2, [1, 2, 3]))  # [1, 4, 9]"
-          }
-        ]
-      },
-      "Filter": {
-        "Definition": [
-          {
-            "type": "title",
-            "simplify": true,
-            "content": "Filter in Python"
-          },
-          {
-            "type": "info",
-
-            "content": "Filters elements in an iterable."
-          }
-        ],
-        "Example": [
-          {
-            "type": "code",
-
-            "content": "result = list(filter(lambda x: x > 0, [-1, 0, 1, 2]))  # [1, 2]"
-          }
-        ]
-      },
-      "Reduce": {
-        "Definition": [
-          {
-            "type": "title",
-            "simplify": true,
-            "content": "Reduce in Python"
-          },
-          {
-            "type": "info",
-
-            "content": "Applies a rolling computation to sequential pairs."
-          }
-        ],
-        "Example": [
-          {
-            "type": "code",
-
-            "content": "from functools import reduce\nresult = reduce(lambda x, y: x + y, [1, 2, 3, 4])  # 10"
-          }
-        ]
-      }
+      "General": []
     },
     "Async": {
-      "Definition": [
-        {
-          "type": "title",
-          "simplify": true,
-          "content": "Async in Python"
-        },
-        {
-          "type": "info",
-
-          "content": "Enables asynchronous programming."
-        }
-      ],
-      "Example": [
-        {
-          "type": "code",
-
-          "content": "import asyncio\nasync def main():\n    await asyncio.sleep(1)\nasyncio.run(main())"
-        }
-      ]
+      "General": [],
+      "Cocurrent": [],
+      "Exceptions": [],
+      "Examples": []
     },
     "Testing": {
-      "Definition": [
-        {
-          "type": "title",
-          "simplify": true,
-          "content": "Testing in Python"
-        },
-        {
-          "type": "info",
-
-          "content": "Ensures code correctness."
-        }
-      ],
-      "Example": [
-        {
-          "type": "code",
-
-          "content": "import unittest\nclass TestMathOperations(unittest.TestCase):\n    def test_add(self):\n        self.assertEqual(1 + 1, 2)\nif __name__ == '__main__':\n    unittest.main()"
-        }
-      ]
+      "Unitttest": [],
+      "Pytest": [],
+      "MagicMock": []
     },
     "Lambda": {
-      "Definition": "A lambda function is an anonymous function defined using the lambda keyword. It can take any number of arguments but can only have one expression.",
-      "Example": {
-        "Syntax": "add = lambda x, y: x + y",
-        "Result": "result = add(3, 5)  # result is 8"
-      },
-      "Usage": "Lambda functions are often used in places where you need a simple function for a short period, such as with functions like map(), filter(), and sorted().",
-      "Example with map()": {
-        "Syntax": "squared = list(map(lambda x: x**2, [1, 2, 3, 4]))",
-        "Result": "[1, 4, 9, 16]"
-      }
+      "General": [],
+      "Examples": []
     }
   }
 }

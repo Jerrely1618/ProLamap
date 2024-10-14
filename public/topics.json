@@ -1,34 +1,34 @@
 {
   "python": {
     "PEP8": [],
-    "Basics": ["Control Flow", "Functions"],
-    "Functions": ["Classes", "Recursion", "Lambda", "Exception Handling"],
-    "Classes": ["Arrays", "Strings", "Tuples", "Sets", "Dictionaries"],
-    "Recursion": ["Algorithms", "Graphs"],
-    "Algorithms": ["Graphs"],
-    "Arrays": ["File Handling", "Common Libraries"],
-    "Graphs": [],
-    "Dictionaries": ["File Handling", "Common Libraries", "Optional"],
-    "Sets": ["File Handling", "Common Libraries", "Optional"],
-    "Heaps": ["File Handling", "Common Libraries", "Optional"],
-    "Tuples": ["File Handling", "Common Libraries", "Optional"],
-    "Strings": ["File Handling", "Common Libraries", "Optional"],
+    "Basics": ["Classes", "Functions"],
+    "Functions": ["Algorithms", "Recursion"],
+    "Classes": ["Arrays", "Tuples", "Sets", "Dictionaries"],
+    "Recursion": ["Graphs", "Lambda"],
+    "Algorithms": ["Graphs", "Lambda"],
+    "Arrays": ["Strings", "Map, Filter, Reduce", "Heaps"],
+    "Graphs": ["Tries", "Trees"],
+    "Dictionaries": ["Tries", "Trees"],
+    "Sets": ["Tries", "Trees"],
+    "Heaps": ["Tries", "Trees"],
+    "Tuples": ["Tries", "Trees"],
+    "Strings": ["Tries", "Trees"],
     "Lambda": [],
-    "File Handling": [
+    "Typing": [],
+    "Exception Handling": ["Async", "Testing"],
+    "File Handling": ["Async", "Testing"],
+    "Common Libraries": [],
+    "Decorators & Generators": ["File Handling", "Exception Handling"],
+    "Context Manager": ["File Handling", "Exception Handling"],
+    "Regular Expressions": ["File Handling", "Exception Handling"],
+    "Map, Filter, Reduce": [
       "Decorators & Generators",
       "Context Manager",
       "Regular Expressions"
     ],
-    "Common Libraries": [
-      "Decorators & Generators",
-      "Context Manager",
-      "Regular Expressions"
-    ],
-    "Decorators & Generators": ["Map, Filter, Reduce"],
-    "Context Manager": ["Map, Filter, Reduce"],
-    "Regular Expressions": ["Map, Filter, Reduce"],
-    "Map, Filter, Reduce": ["Async", "Testing"],
-    "Async": [],
-    "Testing": []
+    "Tries": ["Map, Filter, Reduce", "Typing"],
+    "Trees": ["Map, Filter, Reduce", "Typing"],
+    "Async": ["Common Libraries"],
+    "Testing": ["Common Libraries"]
   }
 }
