@@ -1,30 +1,27 @@
-import { useState, useRef, useEffect, useCallback } from "react";
-import PropTypes from "prop-types";
+import { useState, useRef, useEffect, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import {
   ArrowsPointingInIcon,
   Cog6ToothIcon,
-  EyeIcon,
-  HomeIcon,
   InformationCircleIcon,
-  MoonIcon,
-  SunIcon,
   XMarkIcon,
-} from "@heroicons/react/24/solid";
-import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
-import RoadMap from "../components/RoadMap";
-import Select from "react-select";
-import Welcome from "../components/Welcome";
-import Content from "../components/Content";
-import { Button, Switch, Tooltip } from "antd";
+} from '@heroicons/react/24/solid';
+import { ArrowRightIcon } from '@heroicons/react/24/outline';
+import RoadMap from '../components/RoadMap';
+import Select from 'react-select';
+import Welcome from '../components/Welcome';
+import Content from '../components/Content';
+import { Button, Switch, Tooltip } from 'antd';
 const languages = [
-  { value: "python", label: "Python" },
+  { value: 'python', label: 'Python' },
   {
-    value: "coming-soon",
-    label: "More Coming Soon",
+    value: 'coming-soon',
+    label: 'More Coming Soon',
     percentage: 0,
     isDisabled: true,
   },
 ];
+
 export default function Home() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
@@ -33,10 +30,10 @@ export default function Home() {
   const [showWelcome, setShowWelcome] = useState(true);
   const [isDraggable, setIsDraggable] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
-  const [eliminateLanguage, setEliminateLanguage] = useState("python");
+  const [eliminateLanguage, setEliminateLanguage] = useState('python');
   const [isMediaOnly, setIsMediaOnly] = useState(false);
   const [selectedTopic, setSelectedTopic] = useState();
-  const [confirmDelete, setConfirmDelete] = useState("");
+  const [confirmDelete, setConfirmDelete] = useState('');
   const [returnToCenter, setReturnToCenter] = useState(false);
   const [selectedOption, setSelectedOpt] = useState({});
   const [options, setOptions] = useState([]);
@@ -53,7 +50,7 @@ export default function Home() {
     }));
     setOptions(initialProgress);
 
-    const lastSelected = JSON.parse(localStorage.getItem("lastSelectedOption"));
+    const lastSelected = JSON.parse(localStorage.getItem('lastSelectedOption'));
     if (lastSelected) {
       setSelectedOpt(lastSelected);
     } else if (initialProgress.length > 0) {
@@ -68,9 +65,8 @@ export default function Home() {
       setProgressBarWidth(selectedProgress);
     }
   }, [selectedOption]);
-
   useEffect(() => {
-    const lastSelected = JSON.parse(localStorage.getItem("lastSelectedOption"));
+    const lastSelected = JSON.parse(localStorage.getItem('lastSelectedOption'));
     if (lastSelected) {
       setSelectedOption(lastSelected);
     } else if (options.length > 0) {
@@ -87,21 +83,22 @@ export default function Home() {
     updateWidth();
   }, [width]);
   useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
+
   const setSelectedOption = (option) => {
     setSelectedOpt(option);
   };
   const getProgressFromLocalStorage = (value) => {
-    const storedOptions = JSON.parse(localStorage.getItem("completed")) || {};
+    const storedOptions = JSON.parse(localStorage.getItem('completed')) || {};
 
-    if (typeof storedOptions !== "object" || !storedOptions[value]) {
+    if (typeof storedOptions !== 'object' || !storedOptions[value]) {
       return 0;
     }
 
@@ -130,42 +127,42 @@ export default function Home() {
   const handleClickOutside = (event) => {
     if (settingsRef.current && !settingsRef.current.contains(event.target)) {
       setShowSettings(false);
-      setConfirmDelete("");
+      setConfirmDelete('');
     }
   };
   const handleKeyDown = (event) => {
-    if (event.key === "Escape") {
+    if (event.key === 'Escape') {
       setShowSettings(false);
-      setConfirmDelete("");
+      setConfirmDelete('');
     }
   };
   const toggleTheme = () => {
     setIsDarkTheme((prev) => {
       const newTheme = !prev;
-      document.documentElement.classList.toggle("dark", newTheme);
+      document.documentElement.classList.toggle('dark', newTheme);
       return newTheme;
     });
   };
   const handleMouseUp = () => {
     if (isDragging.current) {
       isDragging.current = false;
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-      document.removeEventListener("touchmove", handleTouchMove);
-      document.removeEventListener("touchend", handleMouseUp);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleMouseUp);
     }
   };
   const handleMouseDown = () => {
     isDragging.current = true;
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
-    document.addEventListener("touchmove", handleTouchMove);
-    document.addEventListener("touchend", handleMouseUp);
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('touchmove', handleTouchMove);
+    document.addEventListener('touchend', handleMouseUp);
   };
   const handleTouchStart = () => {
     isDragging.current = true;
-    document.addEventListener("touchmove", handleTouchMove);
-    document.addEventListener("touchend", handleMouseUp);
+    document.addEventListener('touchmove', handleTouchMove);
+    document.addEventListener('touchend', handleMouseUp);
   };
   const handleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -179,28 +176,28 @@ export default function Home() {
     setSelectedOption(option);
   };
   const handleDeleteLanguage = (language) => {
-    setConfirmDelete("lang");
+    setConfirmDelete('lang');
     setEliminateLanguage(language);
   };
   const handleConfirmDelete = () => {
     setChange((prev) => !prev);
-    const completed = JSON.parse(localStorage.getItem("completed")) || {};
+    const completed = JSON.parse(localStorage.getItem('completed')) || {};
     delete completed[eliminateLanguage];
-    localStorage.setItem("completed", JSON.stringify(completed));
+    localStorage.setItem('completed', JSON.stringify(completed));
 
-    setConfirmDelete("");
+    setConfirmDelete('');
   };
   const handleCancelDelete = () => {
-    setConfirmDelete("");
+    setConfirmDelete('');
   };
   const handleDeleteAllProgress = () => {
-    setConfirmDelete("all");
+    setConfirmDelete('all');
   };
   const handleComfirmDeleteAllProgress = () => {
     setChange((prev) => !prev);
-    localStorage.removeItem("languageProgress");
-    localStorage.removeItem("completed");
-    setConfirmDelete("");
+    localStorage.removeItem('languageProgress');
+    localStorage.removeItem('completed');
+    setConfirmDelete('');
   };
 
   return (
@@ -209,9 +206,9 @@ export default function Home() {
         <div
           ref={dragRef}
           className={`flex flex-col flex-grow h-full transition-colors duration-300 shadow-lg ${
-            isDarkTheme ? "bg-dark-background" : "bg-light-background"
+            isDarkTheme ? 'bg-dark-background' : 'bg-light-background'
           }`}
-          style={{ width: `${width}%`, height: "100vh" }}
+          style={{ width: `${width}%`, height: '100vh' }}
         >
           {showWelcome ? (
             <div className="flex-grow flex flex-col-reverse md:flex-col h-full w-full">
@@ -221,6 +218,7 @@ export default function Home() {
                 setShowWelcome={setShowWelcome}
                 setSelectedTopic={setSelectedTopic}
                 handleExpand={handleExpand}
+                width={width}
                 isExpanded={isExpanded}
                 handleHide={handleHide}
                 toggleTheme={toggleTheme}
@@ -237,7 +235,7 @@ export default function Home() {
                 isMediaOnly={isMediaOnly}
                 setChange={setChange}
                 width={width}
-                style={{ width: "100%" }}
+                style={{ width: '100%' }}
                 handleExpand={handleExpand}
                 isExpanded={isExpanded}
                 handleHide={handleHide}
@@ -261,39 +259,39 @@ export default function Home() {
         <div
           className={`flex flex-col flex-grow overflow-hidden transition-all transition-colors duration-300 ${
             isDarkTheme
-              ? "bg-dark-background text-dark-text1"
-              : "bg-light-background text-light-text1"
+              ? 'bg-dark-background text-dark-text1'
+              : 'bg-light-background text-light-text1'
           }`}
           style={{
             width: `${100 - width}%`,
             backgroundImage: `
         linear-gradient(90deg, ${
-          isDarkTheme ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)"
+          isDarkTheme ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
         } 1px, transparent 1px),
         linear-gradient(180deg, ${
-          isDarkTheme ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)"
+          isDarkTheme ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
         } 1px, transparent 1px)
       `,
-            backgroundSize: "20px 20px",
-            position: "relative",
+            backgroundSize: '20px 20px',
+            position: 'relative',
           }}
         >
-          <div className="flex items-center justify-between p-3 mx-5 sm:mx-2 md:mx-4 lg:mx-5">
+          <div className="flex z-10 items-center justify-between  p-3 mx-5 sm:mx-2 md:mx-4 lg:mx-5">
             <Tooltip title="Settings" placement="top">
               <button
                 onClick={() => setShowSettings(true)}
-                className={`p-2 rounded absolute top-[15px] left-[5px] bg-redSpecial text-white`}
+                className={`p-2 rounded z-10 absolute top-[15px] left-[5px] bg-redSpecial text-white`}
               >
                 <Cog6ToothIcon className="h-5 w-5" />
               </button>
             </Tooltip>
             {selectedOption && (
-              <div className="flex items-center mx-5 w-full sm:mx-2">
+              <div className="flex items-center z-10 mx-5 w-full sm:mx-2">
                 <div
                   className={`relative flex-grow h-4 rounded  mx-2 ${
                     isDarkTheme
-                      ? "bg-light-background border-light-background"
-                      : "bg-third-background border-dark-background"
+                      ? 'bg-light-background border-light-background'
+                      : 'bg-third-background border-dark-background'
                   }`}
                 >
                   <div
@@ -317,6 +315,7 @@ export default function Home() {
 
           <div className="flex items-center h-full justify-center transition-colors duration-300 max-w-full">
             <RoadMap
+              width={100 - width}
               change={change}
               isDraggable={isDraggable}
               isDarkTheme={isDarkTheme}
@@ -333,16 +332,16 @@ export default function Home() {
               onClick={setReturnToCenter}
               className={`p-2 rounded absolute  bottom-[14px] left-5 ${
                 isDarkTheme
-                  ? "bg-dark-secondary text-dark-background"
-                  : "bg-light-text1  text-light-secondary"
-              }  ${isHidden ? "left-[60px] bottom-4 " : ""}`}
+                  ? 'bg-dark-secondary text-dark-background'
+                  : 'bg-light-text1  text-light-secondary'
+              }  ${isHidden ? 'left-[60px] bottom-4 ' : ''}`}
             >
               <ArrowsPointingInIcon className="h-5 w-5" />
             </button>
           </Tooltip>
           <h1
             className={`text-2xl my-1 absolute bottom-[17px] right-10 ${
-              isDarkTheme ? "text-dark-secondary" : "text-light-secondary"
+              isDarkTheme ? 'text-dark-secondary' : 'text-light-secondary'
             } body`}
           >
             ProlaDict
@@ -354,8 +353,8 @@ export default function Home() {
           onClick={() => setIsHidden(false)}
           className={`absolute bottom-5 left-4 p-2 rounded ${
             isDarkTheme
-              ? "bg-dark-secondary text-dark-background"
-              : "bg-light-secondary text-light-text1"
+              ? 'bg-dark-secondary text-dark-background'
+              : 'bg-light-secondary text-light-text1'
           }`}
         >
           <ArrowRightIcon className="h-5 w-5" />
@@ -375,7 +374,7 @@ export default function Home() {
               <button
                 onClick={() => setShowSettings(false)}
                 className={`p-2 rounded bg-redSpecial hover:bg-red-800 ${
-                  isDarkTheme ? " text-light-background" : "text-light-text1"
+                  isDarkTheme ? ' text-light-background' : 'text-light-text1'
                 }`}
               >
                 <XMarkIcon className="h-5 w-5" />
@@ -383,7 +382,7 @@ export default function Home() {
             </div>
             <div
               className={`${
-                confirmDelete ? "my-24 justify-center items-center" : ""
+                confirmDelete ? 'my-24 justify-center items-center' : ''
               }`}
             >
               {confirmDelete ? (
@@ -394,7 +393,7 @@ export default function Home() {
                       className="bg-red-800 text-white"
                       type="primary"
                       onClick={
-                        confirmDelete === "lang"
+                        confirmDelete === 'lang'
                           ? handleConfirmDelete
                           : handleComfirmDeleteAllProgress
                       }
@@ -425,7 +424,7 @@ export default function Home() {
                       >
                         {languages.map(
                           (lang) =>
-                            lang.label !== "More Coming Soon" && (
+                            lang.label !== 'More Coming Soon' && (
                               <option key={lang.value} value={lang.value}>
                                 {lang.label}
                               </option>
@@ -464,7 +463,7 @@ function Separation({ isDarkTheme, handleMouseDown, handleTouchStart }) {
   return (
     <div
       className={`cursor-col-resize h-screen relative px-2 transition-colors duration-300 
-          ${isDarkTheme ? "bg-dark-background" : "bg-light-background"} `}
+          ${isDarkTheme ? 'bg-dark-background' : 'bg-light-background'} `}
       onMouseDown={handleMouseDown}
       onTouchStart={handleTouchStart}
     >
@@ -497,20 +496,20 @@ function Selection({
       styles={{
         control: (provided) => ({
           ...provided,
-          backgroundColor: "transparent",
-          cursor: "pointer",
-          border: "none",
-          boxShadow: "none",
+          backgroundColor: 'transparent',
+          cursor: 'pointer',
+          border: 'none',
+          boxShadow: 'none',
         }),
         singleValue: (provided) => ({
           ...provided,
-          display: "flex",
-          justifyContent: "space-between",
-          fontSize: "1.5rem",
-          margin: "0rem",
-          padding: "0rem",
-          fontWeight: "bold",
-          color: isDarkTheme ? "#e2eff1" : "#1a202c",
+          display: 'flex',
+          justifyContent: 'space-between',
+          fontSize: '1.5rem',
+          margin: '0rem',
+          padding: '0rem',
+          fontWeight: 'bold',
+          color: isDarkTheme ? '#e2eff1' : '#1a202c',
         }),
         indicatorSeparator: () => null,
         dropdownIndicator: (provided) => ({
@@ -518,19 +517,19 @@ function Selection({
         }),
         menu: (provided) => ({
           ...provided,
-          backgroundColor: "transparent",
+          backgroundColor: 'transparent',
           marginTop: 0,
           marginBottom: 0,
-          borderBottomLeftRadius: "8px",
-          borderBottomRightRadius: "8px",
-          borderTopRadius: "0px",
-          overflow: "hidden",
+          borderBottomLeftRadius: '8px',
+          borderBottomRightRadius: '8px',
+          borderTopRadius: '0px',
+          overflow: 'hidden',
         }),
         menuList: (provided) => ({
           ...provided,
           paddingTop: 0,
           paddingBottom: 0,
-          backgroundColor: "transparent",
+          backgroundColor: 'transparent',
         }),
       }}
       components={{
@@ -539,14 +538,14 @@ function Selection({
             {...props.innerProps}
             className={`p-2 cursor-pointer font-bold ${
               props.isFocused
-                ? "bg-gray-200 text-light-text1"
+                ? 'bg-gray-200 text-light-text1'
                 : isDarkTheme
-                ? "bg-light-background text-light-text1"
-                : " bg-dark-background text-light-background"
+                ? 'bg-light-background text-light-text1'
+                : ' bg-dark-background text-light-background'
             }`}
           >
             {props.data.label}
-            {props.data.label != "More Coming Soon" && (
+            {props.data.label != 'More Coming Soon' && (
               <div className="w-full h-1 mt-1 bg-gray-300">
                 <div
                   className={`h-full bg-dark-secondary rounded `}

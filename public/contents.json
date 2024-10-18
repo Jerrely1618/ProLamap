@@ -4,7 +4,7 @@
     "PEP8": {
       "Principals": [
         {
-          "type": "title",
+          "type": "mainTitle",
           "content": "Principles of Python Coding Style"
         },
         {
@@ -25,7 +25,7 @@
         },
         {
           "type": "code",
-          "content": "# Shorter lines improves readability\napples, pears, oranges, bananas,\\\n peaches, coconuts, tomatoes = 1, 2, 3, 4, 5, 6, 7"
+          "content": "# Shorter lines improves readability\napples, pears, oranges, bananas,\\\n    peaches, coconuts, tomatoes = 1, 2, 3, 4, 5, 6, 7"
         },
         {
           "type": "title",
@@ -58,9 +58,17 @@
         {
           "type": "video",
           "content": "https://www.youtube.com/watch?v=wKECxtmbvYQ"
+        },
+        {
+          "type": "depth",
+          "content": "  1. [PEP 8](https://peps.python.org/pep-0008/#function-annotations) | Style Guide for Python Code"
         }
       ],
       "Line Length": [
+        {
+          "type": "mainTitle",
+          "content": "Line Length"
+        },
         {
           "type": "title",
           "content": "Limit Length"
@@ -104,7 +112,7 @@
       ],
       "Comments": [
         {
-          "type": "title",
+          "type": "mainTitle",
           "content": "Comments"
         },
         {
@@ -135,7 +143,7 @@
       ],
       "Naming Conventions": [
         {
-          "type": "title",
+          "type": "mainTitle",
           "content": "Naming Conventions"
         },
         {
@@ -178,41 +186,288 @@
       ],
       "Imports": [
         {
-          "type": "text",
-          "content": "Imports should usually be on separate lines."
-        }
-      ],
-      "Blank Lines": [
+          "type": "mainTitle",
+          "content": "Imports"
+        },
+        {
+          "type": "title",
+          "content": "Order of Imports"
+        },
         {
           "type": "text",
-          "content": "Use blank lines to separate functions and classes."
+          "content": "Import each library in its own line instead of importing all at the same time in the same line separated with a comma. While allow and in some cases necessary, best practice is to **import** each library in its **own line**."
+        },
+        {
+          "type": "code",
+          "content": "# Bad\nimport math,sys,os\n\n# Goodimport math\nimport sys\nimport os\n"
+        },
+        {
+          "type": "title",
+          "content": "Format"
+        },
+        {
+          "type": "text",
+          "content": "Import should be at the **top of the file**, and follow the following order:\n- Standard library imports\n- Related third party imports\n- Local application/library specific imports\n"
+        },
+        {
+          "type": "text",
+          "content": "Be **explicit** in your imports, avoid using * to import everything from a library. This can make it harder to understand where a function or class comes from."
+        },
+        {
+          "type": "code",
+          "content": "# Order\nimport math                        # Standard\nimport numpy as np                 # External/Third-party\nfrom myVehicleModule import Car    # Local\n\n# Avoid\nfrom math import *"
         }
       ],
       "Indentation": [
         {
+          "type": "mainTitle",
+          "content": "Indentation"
+        },
+        {
           "type": "text",
-          "content": "Use 4 spaces per indentation level."
+          "content": "In addition to having indentation to dictate the flow of our program and scopes of our functions, it is also useful to mantain the limit of the line length. The **standard** is to use **4 spaces** for indentation."
+        },
+        {
+          "type": "code",
+          "content": "# Align variable inputs\ndef function_with_multiple_variable_inputs(\n        variable1, variable2, variable3\n        variable4, variable5, variable6):\n    return (\n        variable1 + variable2 + variable3 +\n        variable4 + variable5 + variable6\n    )\n\n# Break\nfunction_with_multiple_variable_inputs(\n    \"one_in\", \"two_in\", \"three_in\",\n    \"four_in\", \"five_in\", \"six_in\")\n\n# Partial Break\nfunction_with_multiple_variable_inputs(\"one_in\", \"two_in\", \"three_in\",\n                                       \"four_in\", \"five_in\", \"six_in\")"
+        },
+        {
+          "type": "info",
+          "title": "Tabs or Spaces",
+          "content": "While tabs are also a way to indent your code, the **standard** is to use **spaces**. Consistency is key as said in the beggining of this guide, so it is important to stick with the choice you make."
+        },
+        {
+          "type": "title",
+          "content": "Others"
+        },
+        {
+          "type": "text",
+          "content": "In conditionals like the if statement below there are moments where the length limit will be broken and in those cases you have two option either **\"break and align\"** or \"**\"break and move\"**\".\n Similarly, with lists or a number of variables group in a function we have two options as well, either break and align or simply *break*. The code below will make this clearer:"
+        },
+        {
+          "type": "code",
+          "content": "# Break and align\nif (variable1 == \"one\" and variable2 == \"two\" and\n    variable3 == \"three\" and variable4 == \"four\"):\n    print(\"All variables are correct\")\n# Break and move\nif (variable1 == \"one\" and variable2 == \"two\"\n        and variable3 == \"three\" and variable4 == \"four\"):\n    print(\"All variables are correct\")\n\n# Break and align\nlong_list = [\n    0, 1, 2,\n    3, 4, 5,\n    ]\n# Break\nlong_list = [\n    0, 1, 2,\n    3, 4, 5,\n]"
         }
       ],
       "Whitespace in Expressions": [
         {
+          "type": "mainTitle",
+          "content": "Whitespaces"
+        },
+        {
+          "type": "title",
+          "content": "Basic Suggestions"
+        },
+        {
           "type": "text",
-          "content": "Avoid extraneous whitespace in expressions and statements."
+          "content": "Whitespaces brings up back to one of the **principles** from the beginning —Readability. We want to make our codebase *readible* and to do we introduce whitespaces only when necessary, so around signs and to separate concepts (like PEMDAS in an equation)."
+        },
+        {
+          "type": "code",
+          "content": "# Basics\nx, y, z = 1, 2, 3\n\narr = [1, 2, 3]\ntemp = arr[0]\na = 1\n\n# Splice\narr[1:2:]\narr[1 : 2]\n\n# Operations\nc = sqrt(a*a + b*b)"
+        },
+        {
+          "type": "title",
+          "content": "Default values and functions"
+        },
+        {
+          "type": "text",
+          "content": "There are moments when the above suggestions are **not followed**, like when defining **default** values or functions. In those cases, we don't need to put whitespace around the equal signs, unless we have annotations. In addition to that, we should avoid putting whitespaces around function **calls** and dictionary/list **indexing**."
+        },
+        {
+          "type": "code",
+          "content": "# Default\ndef function(real, imag=0.0):\n    return (real, imag)\n\nfunction(real=3, imag=9.9)\n\n# Types added\ndef function(real, input: imag = 0.0):\n    return (real, imag)\n\n# Functions\nfunc(1)\nsecrets['key'] = inputs[1]"
         }
       ],
       "Functions Formatting": [
         {
+          "type": "mainTitle",
+          "content": "Functions Formatting"
+        },
+        {
+          "type": "title",
+          "content": "Barebone functions"
+        },
+        {
           "type": "text",
-          "content": "Use a consistent style for defining functions."
+          "content": "The simplest way to define a function is by using the **def** keyword followed by the function name and a colon. The function can be empty or have inputs and outputs. Once we have inputs we simply add them in the parenthesis."
+        },
+        {
+          "type": "code",
+          "content": "# Barebone function\ndef function():\n    pass\n\n# Adding inputs and outputs with defaults\ndef function(real, imag=0.0):\n    return (real, imag)"
+        },
+        {
+          "type": "title",
+          "content": "Types"
+        },
+        {
+          "type": "code",
+          "content": "# Adding types on inputs and outputs\ndef function(real: float, imag: float = 0.0) -> Tuple[float, float]:\n    return (real, imag)"
+        },
+        {
+          "type": "text",
+          "content": "To upgrade out function to the next level we are introduced to the **Type Hints**. They are a way to document our code and make it more readable. They are not enforced by the interpreter, but they are a good way to document our code. As you can see in the code above, the input variables are explicitly defined as floats, and the output is defined as a **Tuple** of floats after the -> signature."
+        },
+        {
+          "type": "title",
+          "content": "Function Complexity"
+        },
+        {
+          "type": "text",
+          "content": "Just like we kept our function and variables names should be kept meaningful, we also want to keep our funtion meaningful and to do so we keep them simple and separate repeated code into functions; breaking down the problems to make them reusable and useful."
+        },
+        {
+          "type": "code",
+          "content": "# Keeping functions simple\ndef complex_function(a, b):\n    result = 0\n    for i in range(a):\n        result += i * b\n    return result"
+        },
+        {
+          "type": "depth",
+          "content": "  1. [PEP 484](https://www.python.org/dev/peps/pep-0484/) | Type Hints\n  2. [PEP 3107](https://www.python.org/dev/peps/pep-3107/) | Function Annotations"
         }
       ]
     },
     "Basics": {
-      "Data Types": [],
-      "Scope": [],
-      "Operations": [],
-      "Comparison": [],
-      "Control Flow": []
+      "Data Types": [
+        {
+          "type": "mainTitle",
+          "content": "Data Types"
+        },
+        {
+          "type": "title"
+        },
+        {
+          "type": "text",
+          "content": "In Python, variables are dynamically typed whcih means taht deifning the types of variables is not necessary for your program to run. However we are provided built-in types that we can use to improve the performance and readability of our code."
+        },
+        {
+          "type": "text",
+          "content": "The primary built-in types in Python include:"
+        },
+        {
+          "type": "text",
+          "content": "1. **int**: Integer numbers\n2. **float**: Floating point numbers\n3. **bool**: Boolean values\n4. **str**: Strings\n5. **tuple**: Ordered, immutable collection\n6. **list**: Ordered, mutable collection\n7. **set**: Unordered, mutable collection\n8. **dict**: Unordered, mutable collection of key-value pairs\n9. **NoneType**: None value"
+        },
+        {
+          "type": "code",
+          "content": "# Data types\nx = 10 # Integer\npi = 3.14 # Floats\nis_complete = False # Boolean\ngreeting = \"Hello, World!\" # Strings\ncoordinates = (10, 20) # Tuple\nunique_numbers = {1, 2, 3, 4} # Set\nperson = {'name': 'Alice', 'age': 25} # Dictionary\nempty = None # NoneType"
+        },
+        {
+          "type": "info",
+          "title": "Keywords",
+          "content": "Keywords in Python are reserved words that have special meanings and are used to execute special code or change the flow of the code. Given that they are reserved, you won't be able to use it for variables. Some commonly used keywords include: **if**, **else**, **while**, **for**, **def**, **class**, **try**, **except**, and **import**."
+        },
+        {
+          "type": "depth",
+          "content": "1. [Python Documentation](https://docs.python.org/3/library/stdtypes.html) | Built-in Types\n2. [Real Python](https://realpython.com/python-data-types/) | Python Data Types"
+        }
+      ],
+      "Scope": [
+        {
+          "type": "mainTitle",
+          "content": "Scope"
+        },
+        {
+          "type": "title",
+          "content": " 4 types of scopes"
+        },
+        {
+          "type": "text",
+          "content": "There are exactly 4 types of scopes in Python: **Local**, **Enclosing**, **Global**, and **Built-in**. The order in which Python searches for a variable is: Local -> Enclosing -> Global -> Built-in."
+        },
+        {
+          "type": "code",
+          "content": "x = 'global'  # Global scope\n\ndef outer_function():\n    x = 'enclosing'  # Enclosing scope\n    \n    def inner_function():\n        x = 'local'  # Local scope\n        print(f'{x}')  # local\n        \n    inner_function()\n    print(f'{x}')  # enclosing\n\nouter_function()\nprint(f'{x}')  # global\n\n# Built-in scope example\ny = len([1, 2, 3])  # len is a built-in function\nprint(f'Built-in: {y}')  # Built-in: 3"
+        },
+        {
+          "type": "depth",
+          "content": "  1. [PEP 227](https://peps.python.org/pep-0227/) | Nested Scopes\n  2. [Python Documentation](https://docs.python.org/3/tutorial/classes.html#scopes-and-namespaces) | Scopes and Namespaces"
+        }
+      ],
+      "Operators & Comparasion": [
+        {
+          "type": "mainTitle",
+          "content": "Operators & Comparasion"
+        },
+        {
+          "type": "title",
+          "content": "Arithmetic Operations"
+        },
+        {
+          "type": "text",
+          "content": "In python, we have the classic arithmetic operations that allow us to perform calculations on variables. The key operators to keep in mind are backlash(/) and double-backlash(//) since the different is the output type where / will return a float and // will return an integer. The operators are: **'+'**, **'-'**, **'*'**, **'/'**, **'%'**, **'**'**, and **'//'**."
+        },
+        {
+          "type": "code",
+          "content": "# Arithmetic\na, b = 1, 2\na + b # 3\na - b # -1\na * b # 2\na / b # 0.5\na % b # 1\na ** b # 1\na // b # 0"
+        },
+        {
+          "type": "title",
+          "content": "Comparison Operations"
+        },
+        {
+          "type": "text",
+          "content": "The usage of comparison operators allows us to work with statements that need boolean confirmations. The operators are: **'>'**, **'<'**, **'=='**, **'!='**, **'>='**, and **'<='**."
+        },
+        {
+          "type": "info",
+          "title": "Comparing objects",
+          "content": "When comparing objects from user-defined classes, Python doesn't know how to compare them by default. To enable comparison operations, you need to define **magic methods** (dunder methods) like `__eq__`, `__lt__`, `__gt__`, etc. You can learn more about these in the **Classes** section."
+        },
+        {
+          "type": "code",
+          "content": "# Comparing variables\na, b = 1, 2\n\na > b  # False\na < b  # True\na == b  # False\na != b  # True\na >= b  # False\na <= b  # True\n\n# Comparing objects (strings lexographically)\nname1, name2 = 'Alice', 'Bob'\n\nname1 == name2  # False\nname1 != name2  # True\nname1 < name2  # True\nname1 > name2  # False\nname1 <= name2  # True\nname1 >= name2  # False"
+        },
+        {
+          "type": "depth",
+          "content": "  1. [PEP 207](https://peps.python.org/pep-0207/) | Rich Comparisons\n  2. [Python Data Model](https://docs.python.org/3/reference/datamodel.html#comparisons) | Comparison Methods"
+        }
+      ],
+      "Control Flow": [
+        {
+          "type": "mainTitle",
+          "content": "Control Flow"
+        },
+        {
+          "type": "title",
+          "content": "If-Else-Elif"
+        },
+        {
+          "type": "text",
+          "content": "In python we have the classic if, else and elif statements that allow us to run a part of the code under the conditions stated after the statements. **'If'** is the initial condition, **'elif'** is the condition that comes after it if the previous was false, and finally **'else'** is the condition that runs if **all** the previous conditions were false."
+        },
+        {
+          "type": "code",
+          "content": "#if statements\nhungry = True\nif hungry:\n    print('Eat something!')\n\n# if-else statements\nthirsty = False\nif thirsty:\n    print('Drink Water!')\nelse:\n    print('No water needed!')\n\n# if-elif-else statements\nsleepy = True\nif sleepy:\n    print('Take a nap!')\nelif hungry:\n    print('Eat something!')\nelse:\n    print('Work!')"
+        },
+        {
+          "type": "title",
+          "content": "While-For"
+        },
+        {
+          "type": "text",
+          "content": "Loops allow us to run a block of code multiple times depending on the specifgications of the statement. **'While'** loops run until the condition is false, and **'For'** loops run for a specific number of times."
+        },
+        {
+          "type": "code",
+          "content": "thirsty = True\nwhile thirsty:\n    print('Drinking Water!')\n    thirsty = False\n# Drinking water!\n\nfor i in range(5):\n    print(i)\n    if i == 3:\n        break\n# 1 2 3"
+        },
+        {
+          "type": "title",
+          "content": "macth-case"
+        },
+        {
+          "type": "text",
+          "content": "SInce Python 3.10 the macth-case statements were introduced. They act as switches and allow us to run a block of code depending on the value of a variable."
+        },
+        {
+          "type": "code",
+          "content": "# macth-case statements act as switches\ndef handle_webstatus(status):\n    match status:\n        case 200:\n            return 'OK'\n        case 404:\n            return 'Not Found'\n        case 500:\n            return 'Internal Server Error'\n        case _:\n            return 'Unknown Status'"
+        },
+        {
+          "type": "depth",
+          "content": "1. [PEP 234](https://peps.python.org/pep-0234/) | Iterators\n2. [PEP 622](https://peps.python.org/pep-0622/) | Structural Pattern Matching"
+        }
+      ]
     },
     "Functions": {
       "General": [],
@@ -221,7 +476,7 @@
       "Keywords": [],
       "Decorators": [],
       "Closures": [],
-      "Annotations": []
+      "Generics": []
     },
     "Trees": {
       "General": [],
@@ -249,13 +504,139 @@
       "Stack": []
     },
     "Typing": {
-      "Optional": [],
-      "Typing": []
+      "Protocol": [
+        {
+          "type": "mainTitle",
+          "content": "Protocol"
+        },
+        {
+          "type": "title",
+          "content": "Defining Protocol"
+        },
+        {
+          "type": "text",
+          "content": "Protocols introduces the idea of structual subtyping. While types allows us to define the exact input and output types, protocols extend this by defining the structure of a class that must be followed by another classe by *'implementation'*."
+        },
+        {
+          "type": "text",
+          "content": "While it's true that we can't explicitly implement a protocol class to another, it is by using the defined methods and attributes that we implement them implicitly as structural subtyping."
+        },
+        {
+          "type": "code",
+          "content": "# Using Protocol\nfrom typing import Protocol\n\nclass Animal(Protocol):\n    def speak(self) -> str:\n        ...\n\n# Implicitly implementing the protocol\nclass Dog:\n    def speak(self) -> str:\n        return 'Woof!'\n\n# Dog is an Animal\nFirulais = Dog()\nfido.speak()# Woof!"
+        },
+        {
+          "type": "info",
+          "title": "Ellipsis (...)",
+          "content": "The ellipsis (...) can be a useful placeholders in different  but in the case of protocols, it indicates that a function needs to be implemented by a class."
+        },
+        {
+          "type": "title",
+          "content": "Runtime Checkable"
+        },
+        {
+          "type": "text",
+          "content": "To ensure that a class is following the structure defined by a protocol, we can use **@runtime_checkable**. The annotation allows us to verify if a class has succesfully followed the structure of a given protocol class."
+        },
+        {
+          "type": "code",
+          "content": "# Using runtime_checkable to verify Protocol\nfrom typing import Protocol, runtime_checkable\n\n@runtime_checkable\nclass Company(Protocol):\n    def builds(self) -> str:\n        ...\nclass Ford:\n    def build(self) -> str:\n        return 'Car made'\n\nisinstance(Ford, Company) # True"
+        },
+        {
+          "type": "depth",
+          "content": "  1. [PEP 544](https://www.python.org/dev/peps/pep-0544/) | Protocols: Structural subtyping (static duck typing)\n  2. [Ellipsis](https://docs.python.org/3/library/constants.html#Ellipsis) | Ellipsis"
+        }
+      ],
+      "Others": [
+        {
+          "type": "mainTitle",
+          "content": "Other Tools"
+        },
+        {
+          "type": "title",
+          "content": "Optional"
+        },
+        {
+          "type": "text",
+          "content": "Optional is a type that allows us to define a variable that can be eirther a specific type or None."
+        },
+        {
+          "type": "text",
+          "content": "This is useful when we are expecting the possibility that we won't have a value for an input."
+        },
+        {
+          "type": "code",
+          "content": "# Optional type\ndef greet(name: Optional[str] = None) -> str:\n    if name is None:\n        return 'Say hello to my little Friend!'\n    return f'Hello, {name}!'\n\ngreet() # Say hello to my little Friend!\ngreet('Martha') # Hello, Martha!"
+        },
+        {
+          "type": "title",
+          "content": "Callable"
+        },
+        {
+          "type": "text",
+          "content": "A callable type allows us to decide that a variable is a function or method."
+        },
+        {
+          "type": "code",
+          "content": "# Callable type\ndef author_doing(work: Callable[[],str]) -> None:\n    print(f'Author is {work()}')\n\ndef write_book() -> str:\n    return \"writing a book\"\n\nauthor_doing(write_book) # Author is writing"
+        },
+        {
+          "type": "title",
+          "content": "Any"
+        },
+        {
+          "type": "text",
+          "content": "In our codebase, when we use types but do not require a specific type for an input or output, we can use *`Any`*. This allows us to have the type syntax without having to specify a particular type."
+        },
+        {
+          "type": "code",
+          "content": "# Undefined type? use Any\ndef send_data(data: Any) -> Any:\n    return data\n\nsend_data(1) # 1\nsend_data('Hello') # 'Hello'"
+        },
+        {
+          "type": "title",
+          "content": "Union"
+        },
+        {
+          "type": "text",
+          "content": "Union type helps us define multiple types for a variable, limiting them to those specified types."
+        },
+        {
+          "type": "code",
+          "content": "def add(a: Union[int, float], b: Union[int, float]) -> Union[int, float]:\n    return a + b\n\nadd(1, 2) # 3\nadd(1.0, 2.0) # 3.0"
+        },
+        {
+          "type": "title",
+          "content": "Literal"
+        },
+        {
+          "type": "text",
+          "content": "Similarly to Union we limit the inputs to a set of values."
+        },
+        {
+          "type": "code",
+          "content": "# Using Unions and Literals\n_PathType = Union[str, bytes, int]\n\n@overload\ndef open(path: _PathType,\n         mode: Literal[\"r\", \"w\", \"a\", \"x\", \"r+\", \"w+\", \"a+\", \"x+\"]\n         ) -> IO[Text]: ..."
+        },
+        {
+          "type": "title",
+          "content": "Final"
+        },
+        {
+          "type": "text",
+          "content": "Final type, like other languagges, allows us to define a variable to a value that cannot be reassigned."
+        },
+        {
+          "type": "code",
+          "content": "# Final type\nPI: Final = 3.14159\nPI = 3.14 # Error: Cannot reassign a final variable"
+        },
+        {
+          "type": "depth",
+          "content": "  1. [Optional](https://docs.python.org/3/library/typing.html#typing.Optional) | Optional type\n  2. [Callable](https://docs.python.org/3/library/typing.html#typing.Callable) | Callable type\n  3. [Any](https://docs.python.org/3/library/typing.html#typing.Any) | Any type\n  4. [Union](https://docs.python.org/3/library/typing.html#typing.Union) | Union type\n  5. [Literal](https://docs.python.org/3/library/typing.html#typing.Literal) | Literal type\n  6. [Final](https://docs.python.org/3/library/typing.html#typing.Final) | Final type"
+        }
+      ]
     },
     "Algorithms": {
       "Binary Search": [],
       "Dijiikstra": [],
-      "Cycle Detection": [],
       "Fast and Slow Pointers": [],
       "Topological Sort": [],
       "Prism's Algorithm": [],
@@ -300,10 +681,156 @@
       "Time/Space Complexity": []
     },
     "Graphs": {
-      "Matrix": [],
-      "Adjeacency List": [],
-      "DFS": [],
-      "BFS": []
+      "Matrix": [
+        {
+          "type": "mainTitle",
+          "content": "Matrix"
+        },
+        {
+          "type": "code",
+          "content": "# Matrix example\nmatrix = [\n    [1, 1, 0, 0],\n    [1, 1, 0, 1],\n    [0, 1, 1, 1],\n    [0, 0, 0, 1]\n]\n\n # Accessing elements\nmatrix[0][0]  # 1"
+        },
+        {
+          "type": "title",
+          "content": "Matrix Traversal"
+        },
+        {
+          "type": "text",
+          "content": "Directly traversing a matrix involves visiting all the elements row-by-row and column-by-column. When dealing with the traversal of a matrix is important to keep in mind the boundaries of the matrix to avoid indexing out of them."
+        },
+        {
+          "type": "code",
+          "content": "# Direct Traversal\nmatrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]\nrows, cols = len(matrix), len(matrix[0])\n\nfor i in range(rows):\n    for j in range(cols):\n        print(matrix[i][j])"
+        },
+        {
+          "type": "title",
+          "content": "Matrix Transpose"
+        },
+        {
+          "type": "text",
+          "content": "Some problems may require you to transpose a matrix (useful libraries like numpy make this process easier)."
+        },
+        {
+          "type": "code",
+          "content": "matrix = [[1, 2], [3, 4]]\ntranspose = [[matrix[j][i] for j in range(len(matrix))] for i in range(len(matrix[0]))]"
+        }
+      ],
+      "Adjeacency List": [
+        {
+          "type": "mainTitle",
+          "content": "Adjacency List"
+        },
+        {
+          "type": "title",
+          "content": "Nodes and Edges"
+        },
+        {
+          "type": "text",
+          "content": "On an adjacency list, each node is represented by a key that holds a list of its neighbors. It implicitly describes the edges and relationships that each node in the graph has."
+        },
+        {
+          "type": "code",
+          "content": "graph = {\n    'A': ['B', 'C'],\n    'B': ['D', 'E'],\n    'C': ['F'],\n    'D': [],\n    'E': ['F'],\n    'F': []\n}\n"
+        },
+        {
+          "type": "text",
+          "content": "There are two types of adjacency lists:"
+        },
+        {
+          "type": "text",
+          "content": "- **Directed**: The edges have a direction, meaning that the connection between the nodes is one-way (e.g., A → B).\n\n- **Undirected**: The edges have no direction, meaning that the connection between the nodes is two way (e.g., A ↔ B)."
+        },
+        {
+          "type": "text",
+          "content": "You won't notice a difference in the code since both types can be written in the same way."
+        },
+        {
+          "type": "info",
+          "title": "Fun Fact :)",
+          "content": "The map on the right of the website is an example of an adjacency list. Each bubble is a node with its connections described in an adjacency list to be processed into the map. It’s a great way to define relationships quickly."
+        }
+      ],
+      "DFS": [
+        {
+          "type": "mainTitle",
+          "content": "Depth First Search"
+        },
+        {
+          "type": "Idea",
+          "content": "Depth-First Search (DFS) is an algorithm to traverse a graph one branch at a time. Starting from a chosen node, DFS goes deep into its neighbors, moving one level at a time until we reach the end of the branch/path where we backtrack and go to the next branch."
+        },
+        {
+          "type": "title",
+          "content": "Nodes DFS"
+        },
+        {
+          "type": "text",
+          "content": "The process is the following:\n1. Start at a node (the starting point).\n2. Use a set to keep track of the nodes you've seen to prevent revisiting them.\n3. If you haven't seen the node, add it to the set.\n4. For each unseen neighbor of the current node, recursively apply the DFS function.\n5. When you reach the end (happens when you reach a node that has no neighbors or all neighbors have been seen), process it.\n6. Repeat steps 2-5 until all reachable nodes from the starting point have been seen."
+        },
+        {
+          "type": "code",
+          "content": "# DFS implementation on an adjacency list\ngraph = {\n    'A': ['B', 'C'],\n    'B': ['D', 'E'],\n    'C': ['F'],\n    'D': [],\n    'E': ['F'],\n    'F': []\n}\n\ndef dfs(node, seen):\n    if node not in seen:\n        seen.add(node)\n        for neighbor in graph[node]:\n            dfs(neighbor, seen)\n        print(node, end=' ')\n\n\nseen = set()\ndfs('A', seen)\n# Output: C F E D B A"
+        },
+        {
+          "type": "title",
+          "content": "Matrix DFS"
+        },
+        {
+          "type": "text",
+          "content": "The process on matrices is similar with an additional condition of ending the branch which is when we go out of bounds."
+        },
+        {
+          "type": "text",
+          "content": ""
+        },
+        {
+          "type": "code",
+          "content": "# DFS implementation on a matrix\nmatrix = [\n    [1, 1, 0, 0],\n    [1, 1, 0, 1],\n    [0, 1, 1, 1],\n    [0, 0, 0, 1]\n]\ndef dfs(matrix, i, j, seen):\n    # Check out of bounds and seen\n    if (i < 0 or i >= len(matrix) or j < 0 or j >= len(matrix[0]) or (i, j) in seen or matrix[i][j] == 0):\n        return\n\n    seen.add((i, j))\n\n    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]\n    for d in directions:\n        new_i, new_j = i + d[0], j + d[1]\n        dfs(matrix, new_i, new_j, seen)\n    print(f'({i}, {j})')\n\nseen = set()\ndfs(matrix, 0, 0, seen)\n# Output: (3, 3) (1, 3) (2, 3) (2, 2) (2, 1) (0, 1) (1, 1) (1, 0) (0, 0)"
+        },
+        {
+          "type": "info",
+          "title": "Directions List",
+          "content": "A useful trick to use when working with DFS/BFS is the use a **'directions'** list to specify the movement patterns of the algorithm. Depending on the problem, you may need to simply move to the 4 direct positions (up, down, left, right) or in all 8 directions (up, down, left, right, and the four diagonals)."
+        }
+      ],
+      "BFS": [
+        {
+          "type": "mainTitle",
+          "content": "Breadth First Search"
+        },
+        {
+          "type": "Idea",
+          "content": "Breadth-First Search (BFS) is an algorithm to traverse a graph one level at a time. All neighbors of a node are traversed at the same time before moving to the next level of neighbors."
+        },
+        {
+          "type": "title",
+          "content": "Nodes BFS"
+        },
+        {
+          "type": "text",
+          "content": "To create the BFS algorithm we need 2 crucial data structures: **sets and queues**. The set keeps track of the nodes that have visited/seen so we don't visit them again in case of a cycle in the graph. On the other hand, we use the queue to keep track of the nodes we need to visit."
+        },
+        {
+          "type": "text",
+          "content": "The process is the following:\n1. Start at a node (the starting point)\n2. Use a queue to keep track of the nodes to visit/see\n3. Use a set to avoid visiting the same node twice\n4. Explore all neighbors of the current node\n5. Repeat 1-4 until the queue is empty"
+        },
+        {
+          "type": "code",
+          "content": "# BFS implementation using lists and adjacency list\ngraph = {\n    'A': ['B', 'C'],\n    'B': ['D', 'E'],\n    'C': ['F'],\n    'D': [],\n    'E': ['F'],\n    'F': []\n}\n\n# seen: nodes we already visited\n# queue: nodes to be processed\nseen = set('A')\nqueue = ['A']\n\nwhile queue:\n    # Take next node on the line/queue\n    current_node = queue.pop(0)\n    print(current_node, end = ' ')\n\n    # Visit/Look the nodes attached to the current one\n    for neighbour in graph[current_node]:\n        if neighbour not in seen:\n            seen.add(neighbour)     # Add the neighbor to the set\n            queue.append(neighbour) # Putting neighbors in list/line\n# Output: A B C D E F"
+        },
+        {
+          "type": "title",
+          "content": "Matrix BFS"
+        },
+        {
+          "type": "text",
+          "content": "Working with matrices gives us another perspective on BFS, instead of neighbors we work with **directions**."
+        },
+        {
+          "type": "code",
+          "content": "# BFS implementation using deque and matrix\ndirections = [(0, -1), (0, 1), (1, 0), (-1, 0)]\ngraph = [\n    [1, 1, 0, 1],\n    [1, 0, 1, 0],\n    [0, 1, 1, 1],\n    [1, 0, 0, 1]\n]\n\nqueue = deque([(0, 0)])\nseen = set([(0, 0)])\n\nwhile queue:\n    x, y = queue.popleft()\n    print(f\"({x}, {y})\", end=' ')\n\n    # Traverse in all 4 directions\n    for dx, dy in directions:\n        nx, ny = x + dx, y + dy\n        # Verify Out of Bounds\n        if 0 <= nx < len(graph) and 0 <= ny < len(graph[0]) and graph[nx][ny] == 1:\n            if (nx, ny) not in seen:\n                seen.add((nx, ny))\n                queue.append((nx, ny))\n# Output: (0, 0) (0, 1) (1, 0) (2, 1) (2, 2) (2, 3)"
+        }
+      ]
     },
     "Dictionaries": {
       "General": [],
@@ -354,13 +881,69 @@
       "Flags": []
     },
     "Map, Filter, Reduce": {
-      "General": []
+      "General": [
+        {
+          "type": "mainTitle",
+          "content": "Map, Filter, Reduce"
+        },
+        {
+          "type": "text",
+          "content": "Map, Filter and Reduce are essential function to know when working with python iterables since they allow us to manipulate the data we are given in more efficient ways."
+        },
+        {
+          "type": "text",
+          "content": "The first step to use them is by importing them from the functools library, which has a lot more functions to check out as well (Links to the documentation are at the end of this guide). Then we simply take a function and a list (iterable) and we are ready to use them."
+        },
+        {
+          "type": "title",
+          "content": "Map"
+        },
+        {
+          "type": "text",
+          "content": "Map allows us to run a function on each element on our list, apply the function on them one by one and get the results one by one. We can use a function or a lambda to do so."
+        },
+        {
+          "type": "code",
+          "content": "# Function to map\ndef square(x):\n    return x * x\n\n# Using map and making a list\nnumbers = [1, 2, 3, 4, 5]\nsquared = list(map(square, numbers))\n\n# Using lambda\nlambda_squared = list(map(lambda x: x * x, numbers))\n# lambda_squared: [1, 4, 9, 16, 25]"
+        },
+        {
+          "type": "title",
+          "content": "Filter"
+        },
+        {
+          "type": "text",
+          "content": "Filter on the other hand can help us choose which data points we want to keep in our list, we are given back the point if it passes the function's logic operations."
+        },
+        {
+          "type": "code",
+          "content": "# Function to filter\ndef is_digit_or_letter(x):\n    return return isinstance(x, (int, str)) and (str(x).isdigit() or str(x).isalpha())\n\nbox_of_things = [1, 'a', \"Hello\", 4, 5]\n\n# Using filter and making a list\nnumbers = list(filter(is_digit_or_letter, box_of_things))\n# numbers: [1, 'a', 4, 5]"
+        },
+        {
+          "type": "title",
+          "content": "Reduce"
+        },
+        {
+          "type": "text",
+          "content": "Reduce applies the functions to the iterable until we are left a single value/data point. The function takes two values and using a process reduces them to one value. The reduce function takes the function and the list and continues to reduce the list two values at a time, taking the result and reducing it with the next value."
+        },
+        {
+          "type": "code",
+          "content": "# Function to reduce\ndef add(x, y):\n    return x + y\n\nnumbers = [1, 2, 3, 4, 5]\nsummed = reduce(add, numbers)\n\n# Using lambda\nlambda_summed = reduce(lambda x, y: x + y, numbers)\n# lambda_summed: 15\n\n# Initial value added\nsummed_based = reduce(add, numbers, 10)\n# summed_based = 25"
+        },
+        {
+          "type": "text",
+          "content": "In addition to the above we can also set up an initializer which is a starting point. In the case of numbers the starting point can be a starting value to add to using the list:"
+        },
+        {
+          "type": "depth",
+          "content": "  1. [Map](https://docs.python.org/3/library/functions.html#map) | Python Documentation\n  2. [Filter](https://docs.python.org/3/library/functions.html#filter) | Python Documentation\n  3. [Reduce](https://docs.python.org/3/library/functools.html#functools.reduce) | Python Documentation"
+        }
+      ]
     },
     "Async": {
       "General": [],
       "Cocurrent": [],
-      "Exceptions": [],
-      "Examples": []
+      "Exceptions": []
     },
     "Testing": {
       "Unitttest": [],
@@ -368,8 +951,36 @@
       "MagicMock": []
     },
     "Lambda": {
-      "General": [],
-      "Examples": []
+      "General": [
+        {
+          "type": "mainTitle",
+          "content": "Lambda"
+        },
+        {
+          "type": "title",
+          "content": "Lambda Functions"
+        },
+        {
+          "type": "text",
+          "content": "Lambda functions are used to define a function in a single line and are useful when we don't want to define a function that will only be used once. They are defined using the **lambda** keyword followed by the arguments and a colon, then the expression. Think of the **arguments as the inputs** and **the expression as the logic** that will give us the output."
+        },
+        {
+          "type": "code",
+          "content": "# Defining Lambdas\nlambda arguments: expression\n\n# Example\nlambda x, y: x + y"
+        },
+        {
+          "type": "text",
+          "content": "Some common to use lambdas are in the map, filter, and sorted functions. Some examples below:"
+        },
+        {
+          "type": "code",
+          "content": "# Filter case\nnumbers = [1, 2, 3, 4, 5, 6]\neven_numbers = list(filter(lambda x: x % 2 == 0, numbers))\n# even_numbers: [2, 4, 6]\n\n# Lambda for keys\npoints = [(2, 3), (1, 2), (4, 1)]\nsorted_points = sorted(points, key=lambda point: point[0])\n# sorted_points: [(1, 2), (2, 3), (4, 1)]"
+        },
+        {
+          "type": "depth",
+          "content": "1. [Lambda](https://docs.python.org/3/reference/expressions.html#lambda) | Python Documentation"
+        }
+      ]
     }
   }
 }

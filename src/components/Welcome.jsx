@@ -11,10 +11,10 @@ import {
 import { Trie, serializeTrie, deserializeTrie } from '../utils/Trie';
 import PropTypes from 'prop-types';
 import { Tooltip } from 'antd';
+import { Link } from 'react-router-dom';
 
 export default function Welcome({
   isDarkTheme,
-  options,
   setShowWelcome,
   setSelectedTopic,
   handleExpand,
@@ -22,6 +22,7 @@ export default function Welcome({
   handleHide,
   toggleTheme,
   showWelcome,
+  width,
   setIsMediaOnly,
 }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -31,6 +32,7 @@ export default function Welcome({
   const [trie, setTrie] = useState(null);
   const searchRef = useRef(null);
   const listRef = useRef(null);
+  console.log(width);
   useEffect(() => {
     const cachedTrie = localStorage.getItem('searchTrie');
 
@@ -74,6 +76,30 @@ export default function Welcome({
       fetchContentData();
     }
   }, []);
+  useEffect(() => {
+    if (listRef.current && selectedIndex >= 0) {
+      const selectedItem = listRef.current.children[selectedIndex];
+      if (selectedItem) {
+        selectedItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+  }, [selectedIndex]);
+  const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setFilteredTopics([]);
+        setSearchTerm('');
+        setSelectedIndex(-1);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const handleSearch = (event) => {
     const value = event.target.value.toLowerCase();
     setSearchTerm(value);
@@ -107,29 +133,7 @@ export default function Welcome({
       }
     }
   };
-  useEffect(() => {
-    if (listRef.current && selectedIndex >= 0) {
-      const selectedItem = listRef.current.children[selectedIndex];
-      if (selectedItem) {
-        selectedItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-    }
-  }, [selectedIndex]);
-  const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setFilteredTopics([]);
-        setSearchTerm('');
-        setSelectedIndex(-1);
-      }
-    };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
   return (
     <>
       <div className="flex flex-col items-start p-4 h-screen justify-center">
@@ -160,7 +164,7 @@ export default function Welcome({
           ProlaDict
         </h1>
 
-        <div className="overflow-hidden z-10 whitespace-nowrap body mt-5 ml-1.5 w-full">
+        <div className="overflow-hidden z-10 whitespace-nowrap body mt-0 ml-1.5 w-full">
           <div className="animate-marquee whitespace-nowrap flex">
             {topics.map((topic, index) => (
               <span
@@ -194,14 +198,20 @@ export default function Welcome({
               onChange={handleSearch}
               onKeyDown={handleKeyDown}
               className="mt-4 px-4 py-2 w-full text-lg border border-gray-300 rounded-t-md focus:outline-none "
-            />
-            <div className="w-full max-h-60 overflow-y-auto scrollbar-left">
-              {filteredTopics.length !== 0 && (
-                <ul ref={listRef}>
+            />{' '}
+            {filteredTopics.length !== 0 && (
+              <div
+                style={{ width: `${width}%` }}
+                className="absolute left-0 px-4 max-h-60 transition-all duration-300 overflow-y-auto scrollbar-left"
+              >
+                <ul
+                  ref={listRef}
+                  className="transition-all ease-in-out duration-300"
+                >
                   {filteredTopics.map((topic, index) => (
                     <li
                       key={index}
-                      className={`flex ${
+                      className={`flex transition-all ease-in-out duration-300 ${
                         index === filteredTopics.length - 1
                           ? 'rounded-b-lg'
                           : ''
@@ -209,7 +219,7 @@ export default function Welcome({
                     >
                       <button
                         onClick={() => handleTopicClick(topic)}
-                        className={`flex-grow py-2 px-4 w-full text-light-background body-bold text-left text-xl ${
+                        className={`flex-grow transition-all ease-in-out duration-300 py-2 px-4 w-full text-light-background body-bold text-left text-xl ${
                           selectedIndex === index
                             ? 'bg-blue-300'
                             : isDarkTheme
@@ -237,8 +247,8 @@ export default function Welcome({
                     </li>
                   ))}
                 </ul>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -337,14 +347,14 @@ function Buttons({
         >
           Copyright ©2024 Proladict. All rights reserved.
         </p>
-        <a
-          href="/"
+        <Link
+          to="/terms"
           className={`font-semibold text-white ${
             isDarkTheme ? 'text-white' : 'text-blue-700'
           }`}
         >
           Terms of Use
-        </a>
+        </Link>
       </div>
       <div className="flex space-x-2">
         {!showWelcome && (
@@ -395,4 +405,10 @@ Welcome.propTypes = {
   isDarkTheme: PropTypes.bool.isRequired,
   setSelectedTopic: PropTypes.func.isRequired,
   setShowWelcome: PropTypes.func.isRequired,
+  handleExpand: PropTypes.func.isRequired,
+  isExpanded: PropTypes.bool.isRequired,
+  handleHide: PropTypes.func.isRequired,
+  toggleTheme: PropTypes.func.isRequired,
+  showWelcome: PropTypes.bool.isRequired,
+  setIsMediaOnly: PropTypes.func.isRequired,
 };

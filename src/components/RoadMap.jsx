@@ -116,14 +116,13 @@ const RoadMap = ({
   setShowWelcome,
   isDraggable,
   setIsHidden,
+  width,
   selectedCourse,
   change,
 }) => {
-  const [scale, setScale] = useState(0.85);
-  const [translate, setTranslate] = useState({
-    x: 0,
-    y: window.innerHeight / 5,
-  });
+  const [scale, setScale] = useState(1.1);
+  const [translate, setTranslate] = useState({ x: 0, y: 0 });
+  const containerRef = useRef(null);
   const [isPanning, setIsPanning] = useState(false);
   const [topics, setTopics] = useState([]);
   const panStart = useRef({ x: 0, y: 0 });
@@ -131,32 +130,47 @@ const RoadMap = ({
   const lastTouchY = useRef(0);
   const lastTouchX = useRef(0);
   const [levels, setLevels] = useState({});
+
   const updateScale = () => {
-    const roadMapWidth = (window.innerWidth * 2) / 3;
-    const initialScale = Math.min(
-      roadMapWidth / 1050,
-      window.innerHeight / 1200
+    const widthPercentage = (window.innerWidth / window.screen.width) * 100;
+    const heightPercentage = (window.innerHeight / window.screen.height) * 100;
+
+    const roadmapScale = Math.min(
+      widthPercentage / 75,
+      heightPercentage / 110,
+      width / 75
     );
-    setScale(Math.max(0.2, Math.min(1.1, initialScale)));
+    setScale(Math.max(0.2, Math.min(1.1, roadmapScale)));
   };
-  useEffect(() => {
-    if (returnToCenter) {
-      updateScale();
-      setTranslate({
-        x: 0,
-        y: window.innerHeight / 5,
-      });
-    }
-  }, [returnToCenter]);
 
   useEffect(() => {
     updateScale();
     window.addEventListener('resize', updateScale);
+
     return () => {
       window.removeEventListener('resize', updateScale);
     };
-  }, []);
-
+  }, [width]);
+  useEffect(() => {
+    if (returnToCenter) {
+      updateScale();
+      setTranslate({
+        x:
+          (window.innerWidth * scale) / 2 -
+          containerRef.current.offsetWidth / 1.75,
+        y: window.innerHeight / 2 - containerRef.current.offsetHeight / 2,
+      });
+    }
+  }, [returnToCenter]);
+  useEffect(() => {
+    if (returnToCenter) {
+      updateScale();
+      setTranslate({
+        x: translate.x,
+        y: window.innerHeight / 2 - containerRef.current.offsetHeight / 2,
+      });
+    }
+  }, [window.innerHeight]);
   useEffect(() => {
     const fetchContentData = async () => {
       try {
@@ -188,7 +202,6 @@ const RoadMap = ({
     const zoomAmount = e.deltaY * -0.001;
     setScale((prevScale) => Math.max(0.2, Math.min(2, prevScale + zoomAmount)));
   };
-
   const handleTouchStart = (e) => {
     setIsPanning(true);
     lastTouchX.current = e.touches[0].clientX - translate.x;
@@ -202,9 +215,7 @@ const RoadMap = ({
       });
     }
   };
-
   const handleTouchEnd = () => setIsPanning(false);
-
   const handleMouseDown = (e) => {
     setIsPanning(true);
     panStart.current = {
@@ -212,9 +223,7 @@ const RoadMap = ({
       y: e.clientY - translate.y,
     };
   };
-
   const handleMouseUp = () => setIsPanning(false);
-
   const handleMouseMove = (e) => {
     if (isPanning && isDraggable) {
       setTranslate({
@@ -225,33 +234,36 @@ const RoadMap = ({
   };
 
   return (
-    <div
-      className="w-full h-full items-center justify-center overflow-hidden"
-      onMouseEnter={() => setIsHoveringRoadmap(true)}
-      onMouseLeave={() => {
-        setIsPanning(false);
-        setIsHoveringRoadmap(false);
-      }}
-    >
+    <div className="w-full h-full flex items-center justify-center overflow-hidden">
       <div
-        className={`w-full h-full ${isDraggable ? 'cursor-grab' : ''}`}
-        onWheel={handleWheel}
+        className={`w-full h-full items-center justify-center ${
+          isDraggable ? 'cursor-grab' : ''
+        }`}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseMove={handleMouseMove}
+        onWheel={handleWheel}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        style={{
-          transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`,
-          transition: isPanning ? 'none' : 'transform 0.2s ease',
-        }}
       >
-        <div className="grid gap-4">
+        <div
+          onMouseEnter={() => setIsHoveringRoadmap(true)}
+          onMouseLeave={() => {
+            setIsPanning(false);
+            setIsHoveringRoadmap(false);
+          }}
+          style={{
+            transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`,
+            transition: isPanning ? 'none' : 'transform 0.2s ease',
+          }}
+          className="absolute z-0 grid gap-4 items-center justify-center"
+          ref={containerRef}
+        >
           {Object.keys(levels).map((level) => (
             <div
               key={level}
-              className="flex justify-center my-1 space-x-5"
+              className="flex justify-center my-1 space-x-5 "
               style={{
                 textShadow: '10px 10px 10px rgba(0, 0, 0, 1)',
               }}
@@ -292,13 +304,12 @@ RoadMapBubble.propTypes = {
 RoadMap.propTypes = {
   isDarkTheme: PropTypes.bool.isRequired,
   setSelectedTopic: PropTypes.func.isRequired,
-  returnToCenter: PropTypes.oneOfType([
-    PropTypes.object.isRequired,
-    PropTypes.bool.isRequired,
-  ]).isRequired,
+  returnToCenter: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
+    .isRequired,
   setShowWelcome: PropTypes.func.isRequired,
   isDraggable: PropTypes.bool.isRequired,
   setIsHidden: PropTypes.func.isRequired,
+  width: PropTypes.number.isRequired,
   selectedCourse: PropTypes.object.isRequired,
   change: PropTypes.any.isRequired,
 };

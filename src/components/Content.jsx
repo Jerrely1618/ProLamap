@@ -1,6 +1,7 @@
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  ArrowTrendingUpIcon,
   Bars4Icon,
   CheckIcon,
   ChevronDownIcon,
@@ -21,8 +22,8 @@ import { ThreeDots } from 'react-loader-spinner';
 import ReactPlayer from 'react-player';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import {
-  oneDark,
   oneLight,
+  coldarkDark,
 } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import rehypeSanitize from 'rehype-sanitize';
 
@@ -45,7 +46,6 @@ export default function Content({
   const [contentData, setContentData] = useState(null);
   const [selectedStep, setSelectedStep] = useState('');
   const [isCompleted, setIsCompleted] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const toggleCompletion = () => {
     const courseData = JSON.parse(localStorage.getItem('completed') || '{}');
@@ -104,12 +104,6 @@ export default function Content({
 
     localStorage.setItem('completed', JSON.stringify(courseData));
   };
-
-  useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
   useEffect(() => {
     const courseData = JSON.parse(localStorage.getItem('completed') || '{}');
     const completedSubtopics = new Set(
@@ -276,22 +270,21 @@ function BigContent({
                 <button
                   key={step}
                   onClick={() => setSelectedStep(step)}
-                  className={`py-5 px-4 transition-colors body-bold text-base duration-300 text-left ${
+                  className={`py-5 px-4 transition-all duration-300 body-bold text-base text-left relative ${
                     selectedStep === step
-                      ? 'bg-third-background text-white'
-                      : 'bg-dark-secondary text-white'
-                  } ${
-                    index === steps.length - 1
-                      ? 'rounded-tr rounded-br rounded-tr-none'
-                      : 'border-b'
-                  }`}
+                      ? 'ml-5 bg-third-background text-white z-0'
+                      : `ml-0 text-white z-10 shadow-xl ${
+                          isDarkTheme ? 'bg-dark-secondary' : 'bg-light-text1'
+                        }`
+                  } ${index === 0 && 'rounded-tl-lg'} ${
+                    index === steps.length - 1 && 'rounded-bl-lg'
+                  } `}
                 >
                   {step}
                 </button>
               ))}
             </div>
 
-            {/* Completion Button */}
             <div className="flex justify-center bg-transparent">
               <button
                 className={`mt-5 flex items-center justify-center body-bold px-5 py-2 rounded transition-colors duration-300 ${
@@ -315,106 +308,29 @@ function BigContent({
                 </span>
               </button>
             </div>
+            <div
+              className={`flex flex-col text-sm mt-1 0 justify-center text-center items-center`}
+            >
+              <p
+                className={`font-bold justify-center items-center ${
+                  isDarkTheme ? 'text-dark-secondary' : 'text-light-secondary'
+                }  `}
+              >
+                Copyright ©2024 Proladict. All rights reserved.
+              </p>
+              <a
+                href="/"
+                className={`font-semibold text-white ${
+                  isDarkTheme ? 'text-white' : 'text-blue-700'
+                }`}
+              >
+                Terms of Use
+              </a>
+            </div>
           </div>
         </div>
       </div>
     </>
-  );
-}
-function Buttons({
-  handleExpand,
-  isExpanded,
-  isDarkTheme,
-  handleHide,
-  toggleTheme,
-  setShowWelcome,
-  showWelcome,
-  setIsMediaOnly,
-  isMediaOnly,
-}) {
-  const toggleSettings = () => {
-    setIsMediaOnly((prev) => !prev);
-  };
-
-  return (
-    <div className="flex justify-between bg-transparent m-4">
-      <div className="flex space-x-2">
-        <Tooltip title="Exit" placement="top">
-          <button
-            onClick={handleHide}
-            className={`p-2 rounded transition-colors duration-300 bg-redSpecial text-white hover:bg-red-800`}
-          >
-            <XMarkIcon className="h-5 w-5" />
-          </button>
-        </Tooltip>
-        {!showWelcome && (
-          <Tooltip title="Home" placement="top">
-            <button
-              onClick={setShowWelcome}
-              className={`p-2 rounded transition-colors duration-300 ${
-                isDarkTheme
-                  ? 'bg-dark-secondary text-dark-background'
-                  : 'bg-light-text1  text-light-secondary'
-              }`}
-            >
-              <HomeIcon className="h-5 w-5" />
-            </button>
-          </Tooltip>
-        )}
-
-        <Tooltip title="Theme Toggle" placement="top">
-          <button
-            onClick={toggleTheme}
-            className={`p-2 rounded transition-colors duration-300 ${
-              isDarkTheme
-                ? 'bg-dark-secondary text-dark-background'
-                : 'bg-light-text1  text-light-secondary'
-            }`}
-          >
-            {isDarkTheme ? (
-              <SunIcon className="h-5 w-5" />
-            ) : (
-              <MoonIcon className="h-5 w-5" />
-            )}
-          </button>
-        </Tooltip>
-      </div>
-
-      <div className="flex space-x-2">
-        {!showWelcome && (
-          <Tooltip title="Media-Only" placement="top">
-            <button
-              onClick={toggleSettings}
-              className={`p-2 rounded transition-colors duration-300 ${
-                isMediaOnly
-                  ? 'bg-blue-600 text-white'
-                  : isDarkTheme
-                  ? 'bg-dark-secondary text-dark-background'
-                  : 'bg-light-text1  text-light-secondary'
-              }`}
-            >
-              <EyeIcon className="h-5 w-5" />
-            </button>
-          </Tooltip>
-        )}
-        <Tooltip title="Expand" placement="top">
-          <button
-            onClick={handleExpand}
-            className={`p-2 rounded transition-colors duration-300 ${
-              isDarkTheme
-                ? 'bg-dark-secondary text-dark-background'
-                : 'bg-light-text1  text-light-secondary'
-            }`}
-          >
-            {isExpanded ? (
-              <ArrowLeftIcon className="h-5 w-5" />
-            ) : (
-              <ArrowRightIcon className="h-5 w-5" />
-            )}
-          </button>
-        </Tooltip>
-      </div>
-    </div>
   );
 }
 function SmallContent({
@@ -450,22 +366,23 @@ function SmallContent({
       <h1
         className={`${
           isDarkTheme ? 'text-white' : 'text-third-background'
-        } text-5xl body-bold transition-colors duration-300 text-left pb-2 px-4`}
+        } text-5xl body-bold transition-all  duration-300 text-left pb-2 px-4`}
       >
         {selectedTopic}
       </h1>
       {isMenuOpen ? (
-        <div className="grid w-full min-w-0 h-full pb-[86px] overflow-y-auto grid-rows-steps-layout">
+        <div
+          className="overflow-y-auto h-full grid w-full pb-[150px] transition-all duration-300 grid-rows-steps-layout"
+          style={{ maxHeight: `${window.innerHeight}px` }}
+        >
           {steps.map((step, index) => (
             <button
               key={index}
               onClick={() => setSelectedStep(step)}
-              className={`py-10 px-4 transition-colors body-bold text-base duration-300 text-left ${
+              className={`px-4 transition-all duration-300 body-bold text-base text-left relative ${
                 selectedStep === step
-                  ? isDarkTheme
-                    ? 'bg-third-background text-white'
-                    : 'bg-third-background text-white'
-                  : 'bg-dark-secondary text-white'
+                  ? 'bg-third-background py-6 text-white'
+                  : 'bg-dark-secondary py-2 text-white'
               }`}
             >
               {step}
@@ -610,11 +527,11 @@ function ContentForStep({
                     </h2>
                     {isOpen ? (
                       <ChevronUpIcon
-                        className={`ml-auto w-5 h-5 transform transition-transform duration-300`}
+                        className={`text-white ml-auto w-5 h-5 transform transition-transform duration-300`}
                       />
                     ) : (
                       <ChevronDownIcon
-                        className={`ml-auto w-5 h-5 transform transition-transform duration-300`}
+                        className={`text-white ml-auto w-5 h-5 transform transition-transform duration-300`}
                       />
                     )}
                   </div>
@@ -649,31 +566,86 @@ function ContentForStep({
               {item.content}
             </h2>
           )}
+          {item.type === 'mainTitle' && (
+            <h2
+              className={`text-3xl body-bold ${
+                isDarkTheme ? 'text-light-text1' : 'text-dark-primary'
+              }`}
+            >
+              {item.content}
+            </h2>
+          )}
           {!isMediaOnly && item.type === 'text' && (
             <div className="text-base my-2 text-base">
               <ReactMarkdown
                 rehypePlugins={[rehypeSanitize]}
                 components={{
-                  ul: ({ children }) => (
-                    <ul className="list-disc pl-4">{children}</ul>
+                  ol: ({ children }) => (
+                    <ol className="list-decimal pl-4">{children}</ol>
                   ),
-                  li: ({ children }) => <li className="ml-4">{children}</li>,
+                  li: ({ children }) => (
+                    <li className="ml-4 font-semibold">{children}</li>
+                  ),
                 }}
               >
                 {item.content}
               </ReactMarkdown>
             </div>
           )}
+          {!isMediaOnly && item.type === 'Idea' && (
+            <>
+              <p className="text-lg font-bold text-blue-400">Idea:</p>
+              <div className="text-lg base mb-2 font-light">
+                <ReactMarkdown rehypePlugins={[rehypeSanitize]}>
+                  {item.content}
+                </ReactMarkdown>
+              </div>
+            </>
+          )}
+
+          {!isMediaOnly && item.type === 'depth' && (
+            <>
+              <p className={`text-3xl body-bold  `}>Learn in Depth</p>
+              <div className="text-base my-2">
+                <ReactMarkdown
+                  rehypePlugins={[rehypeSanitize]}
+                  components={{
+                    ol: ({ children }) => (
+                      <ol className="list-decimal pl-4">{children}</ol>
+                    ),
+                    li: ({ children }) => <li className="ml-4">{children}</li>,
+                    a: ({ children, href }) => (
+                      <a
+                        href={href}
+                        className={`${
+                          isDarkTheme ? 'text-light-text1' : 'text-dark-primary'
+                        } font-bold hover:underline`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {children}
+                      </a>
+                    ),
+                  }}
+                >
+                  {item.content
+                    .split('\n')
+                    .map((line) => line.trim())
+                    .join('\n')}
+                </ReactMarkdown>
+              </div>
+            </>
+          )}
+
           {item.type === 'video' && (
             <div className={`flex justify-center items-center my-2 rounded`}>
-              <div className="w-full max-w-2xl aspect-video rounded">
+              <div className="w-full max-w-2xl aspect-video rounded border-[3.5px] border-dark-text2">
                 <ReactPlayer
                   url={item.content}
                   width="100%"
                   height="100%"
                   controls={true}
                   light={true}
-                  className="rounded"
                   playing={false}
                   config={{
                     youtube: {
@@ -687,10 +659,7 @@ function ContentForStep({
           {item.type === 'code' && selectedCourse.value && (
             <SyntaxHighlighter
               language={selectedCourse.value}
-              showLineNumbers={true}
-              showInlineLineNumbers={false}
-              wrapLines={true}
-              style={isDarkTheme ? oneDark : oneLight}
+              style={isDarkTheme ? coldarkDark : oneLight}
               className="text-base scrollbar-left-small"
             >
               {item.content}
@@ -699,6 +668,118 @@ function ContentForStep({
         </div>
       ))}
     </>
+  );
+}
+function Buttons({
+  handleExpand,
+  isExpanded,
+  isDarkTheme,
+  handleHide,
+  toggleTheme,
+  setShowWelcome,
+  showWelcome,
+  setIsMediaOnly,
+  isMediaOnly,
+}) {
+  const toggleSettings = () => {
+    setIsMediaOnly((prev) => !prev);
+  };
+
+  return (
+    <div className="flex justify-between bg-transparent m-4">
+      <div className="flex space-x-2">
+        <Tooltip title="Exit" placement="top">
+          <button
+            onClick={handleHide}
+            className={`p-2 rounded transition-colors duration-300 bg-redSpecial text-white hover:bg-red-800`}
+          >
+            <XMarkIcon className="h-5 w-5" />
+          </button>
+        </Tooltip>
+        {!showWelcome && (
+          <Tooltip title="Home" placement="top">
+            <button
+              onClick={setShowWelcome}
+              className={`p-2 rounded transition-colors duration-300 ${
+                isDarkTheme
+                  ? 'bg-dark-secondary text-dark-background'
+                  : 'bg-light-text1  text-light-secondary'
+              }`}
+            >
+              <HomeIcon className="h-5 w-5" />
+            </button>
+          </Tooltip>
+        )}
+
+        <Tooltip title="Theme Toggle" placement="top">
+          <button
+            onClick={toggleTheme}
+            className={`p-2 rounded transition-colors duration-300 ${
+              isDarkTheme
+                ? 'bg-dark-secondary text-dark-background'
+                : 'bg-light-text1  text-light-secondary'
+            }`}
+          >
+            {isDarkTheme ? (
+              <SunIcon className="h-5 w-5" />
+            ) : (
+              <MoonIcon className="h-5 w-5" />
+            )}
+          </button>
+        </Tooltip>
+      </div>
+
+      <div className="flex space-x-2 relative">
+        {!showWelcome && (
+          <Tooltip title="Media-Only" placement="top">
+            <button
+              onClick={toggleSettings}
+              className={`p-2 rounded transition-colors duration-300 ${
+                isMediaOnly
+                  ? 'bg-blue-600 text-white'
+                  : isDarkTheme
+                  ? 'bg-dark-secondary text-dark-background'
+                  : 'bg-light-text1 text-light-secondary'
+              }`}
+            >
+              <EyeIcon className="h-5 w-5" />
+            </button>
+          </Tooltip>
+        )}
+
+        <div className="absolute top-11 z-20 flex w-full flex-col -rotate-[32deg] items-center">
+          <ArrowTrendingUpIcon
+            className={`${
+              isDarkTheme ? 'text-white' : 'text-dark-background'
+            } h-5 w-5 w-full transform -rotate-[60deg]`}
+          />
+          <span
+            className={`text-center text-xl toon m-0  w-full leading-tight ${
+              isDarkTheme ? 'text-white' : 'text-dark-background'
+            }`}
+          >
+            Only code!
+          </span>
+        </div>
+
+        <Tooltip title="Expand" placement="top">
+          <button
+            onClick={handleExpand}
+            className={`p-2 rounded transition-colors duration-300 ${
+              isDarkTheme
+                ? 'bg-dark-secondary text-dark-background'
+                : 'bg-light-text1 text-light-secondary'
+            }`}
+          >
+            {isExpanded ? (
+              <ArrowLeftIcon className="h-5 w-5" />
+            ) : (
+              <ArrowRightIcon className="h-5 w-5" />
+            )}
+          </button>
+        </Tooltip>
+      </div>
+    </div>
   );
 }
 
@@ -711,6 +792,38 @@ Content.propTypes = {
   selectedTopic: PropTypes.string.isRequired,
   selectedSubtopic: PropTypes.string,
   setChange: PropTypes.func.isRequired,
+  isExpanded: PropTypes.bool.isRequired,
+  handleHide: PropTypes.func.isRequired,
+  toggleTheme: PropTypes.func.isRequired,
+  setShowWelcome: PropTypes.func.isRequired,
+  showWelcome: PropTypes.bool.isRequired,
+  width: PropTypes.number.isRequired,
+  handleExpand: PropTypes.func.isRequired,
+  setIsMediaOnly: PropTypes.func.isRequired,
+};
+BigContent.propTypes = {
+  isDarkTheme: PropTypes.bool.isRequired,
+  selectedStep: PropTypes.string.isRequired,
+  selectedCourse: PropTypes.shape({
+    value: PropTypes.string.isRequired,
+  }).isRequired,
+  setSelectedStep: PropTypes.func.isRequired,
+  selectedTopic: PropTypes.string.isRequired,
+  isMediaOnly: PropTypes.bool.isRequired,
+  contentData: PropTypes.object.isRequired,
+  isCompleted: PropTypes.bool.isRequired,
+  toggleCompletion: PropTypes.func.isRequired,
+};
+Buttons.propTypes = {
+  handleExpand: PropTypes.func.isRequired,
+  isExpanded: PropTypes.bool.isRequired,
+  isDarkTheme: PropTypes.bool.isRequired,
+  handleHide: PropTypes.func.isRequired,
+  toggleTheme: PropTypes.func.isRequired,
+  setShowWelcome: PropTypes.func.isRequired,
+  showWelcome: PropTypes.bool.isRequired,
+  setIsMediaOnly: PropTypes.func.isRequired,
+  isMediaOnly: PropTypes.bool.isRequired,
 };
 ContentForStep.propTypes = {
   step: PropTypes.string.isRequired,
@@ -722,4 +835,18 @@ ContentForStep.propTypes = {
   contentData: PropTypes.object.isRequired,
   isMediaOnly: PropTypes.bool.isRequired,
   isDarkTheme: PropTypes.bool.isRequired,
+};
+SmallContent.propTypes = {
+  toggleCompletion: PropTypes.func.isRequired,
+  isDarkTheme: PropTypes.bool.isRequired,
+  selectedStep: PropTypes.string.isRequired,
+  setSelectedStep: PropTypes.func.isRequired,
+  isCompleted: PropTypes.bool.isRequired,
+  contentData: PropTypes.object.isRequired,
+  width: PropTypes.number.isRequired,
+  selectedCourse: PropTypes.shape({
+    value: PropTypes.string.isRequired,
+  }).isRequired,
+  selectedTopic: PropTypes.string.isRequired,
+  isMediaOnly: PropTypes.bool.isRequired,
 };
