@@ -358,7 +358,7 @@
         },
         {
           "type": "depth",
-          "content": "1. [Python Documentation](https://docs.python.org/3/library/stdtypes.html) | Built-in Types\n2. [Real Python](https://realpython.com/python-data-types/) | Python Data Types"
+          "content": "1. [Python Documentation](https://docs.python.org/3/library/stdtypes.html) | Built-in Types"
         }
       ],
       "Scope": [
@@ -383,10 +383,10 @@
           "content": "  1. [PEP 227](https://peps.python.org/pep-0227/) | Nested Scopes\n  2. [Python Documentation](https://docs.python.org/3/tutorial/classes.html#scopes-and-namespaces) | Scopes and Namespaces"
         }
       ],
-      "Operators & Comparasion": [
+      "Operators & Comparison": [
         {
           "type": "mainTitle",
-          "content": "Operators & Comparasion"
+          "content": "Operators & Comparison"
         },
         {
           "type": "title",
@@ -492,11 +492,179 @@
     },
     "Classes": {
       "General": [],
-      "Constructor": [],
-      "Variables": [],
-      "Methods": [],
-      "Decorators": [],
-      "Magic Methods": []
+      "Constructor and Destructor": [
+        {
+          "type": "mainTitle",
+          "content": "Constructor and Destructor"
+        },
+        {
+          "type": "title",
+          "content": "Constructor"
+        },
+        {
+          "type": "text",
+          "content": "The constructor is a special method of a class defined by the __init__ magic method. It defines and intiliazes the attributes that a class will have when an object is created."
+        },
+        {
+          "type": "text",
+          "content": "In the __init__ method we can defined class attributes with the keyword **self**."
+        },
+        {
+          "type": "code",
+          "content": "# Creating a person class\nclass Person:\n    def __init__(self, name, age):\n        self.name = name\n        self.age = age\n\n#Creating a person object\nalice = Person('Alice', 25)\nprint(alice.name) # Alice\nprint(alice.age) # 25"
+        },
+        {
+          "type": "title",
+          "content": "Destructor"
+        },
+        {
+          "type": "text",
+          "content": "On the other hand, the destructor can help us clean up resources when an object is destroyed. It is defined by the __del__ magic method."
+        },
+        {
+          "type": "code",
+          "content": "# Destroying a person object\n\nclass Person:\n    def __init__(self, name, age):\n        self.name = name\n        self.age = age\n    \n    def __del__(self):\n        print(f'{self.name} has been deleted')\n\n#Creating a person object\nalice = Person('Alice', 25)\ndel alice # Alice has been deleted"
+        },
+        {
+          "type": "info",
+          "title": "Garbage Collector",
+          "content": "In python, memory management is done automatically by the garbage collector. The destructor is to simply release external resources or any other logic you want to add to an object when it's deleted."
+        },
+        {
+          "type": "depth",
+          "content": "1. [Constructors](https://docs.python.org/3/reference/datamodel.html#object.__init__) | Python Documentation\n2. [Destructors](https://docs.python.org/3/reference/datamodel.html#object.__del__) | Python Documentation"
+        }
+      ],
+      "Methods": [
+        {
+          "type": "mainTitle",
+          "content": "Methods"
+        },
+        {
+          "type": "text",
+          "content": "Methods can be described as the functions of the class. They should have the **self** keyword as an input to have access to the attributes of the object, and can be called this object."
+        },
+        {
+          "type": "code",
+          "content": "# Creating a person class\nclass Person:\n    def __init__(self, name: str, age: int):\n        self.name = name\n        self.age = age\n    def aging(self):\n        self.age += 1\n#Creating a person object\nalice = Person('Alice', 25)\nalice.aging()\nprint(alice.age) # 26"
+        },
+        {
+          "type": "depth",
+          "content": "1. [Python Documentation](https://docs.python.org/3/glossary.html#term-method) | Method Objects"
+        }
+      ],
+      "Decorators": [
+        {
+          "type": "mainTitle",
+          "content": "Decorators"
+        },
+        {
+          "type": "text",
+          "content": "Decorators are a way to extend how a class will function without needing to change the class itself. They can be identified by the **@** symbol and placed before the class. They are defined with a function that takes the class as the input and returns the class with the added functionality."
+        },
+        {
+          "type": "code",
+          "content": "def add_time(cls):\n    cls.createdDate = datetime.now()\n    return cls\n\n@add_time\nclass Person:\n    def __init__(self, name, age):\n        self.name = name\n        self.age = age\n\np1 = Person('Alice', 30)\nprint(f\"Name: {p1.name}, Age: {p1.age}, Created Date: {p1.createdDate}\")\n# Name: Alice, Age: 30, Created Date: 2024-10-17 15:30:45.123456"
+        },
+        {
+          "type": "title",
+          "content": "Useful Example"
+        },
+        {
+          "type": "code",
+          "content": "def validate_age_and_name(cls):\n    initCls = cls.__init__\n\n    def new_init(self, name, age):\n        if age < 0:\n            raise ValueError(\"Age cannot be negative\")\n        elif not isinstance(name, str) or len(name) == 0:\n            raise ValueError(\"Name must be a non-empty string\")\n        initCls(self, name, age)\n\n    cls.__init__ = new_init\n    return cls\n\n@validate_age_and_name\nclass Person:\n    def __init__(self, name, age):\n        self.name = name\n        self.age = age\n\ntry:\n    p1 = Person(\"Alice\", 30)  # Valid\n    p2 = Person(\"\", 25)       # ValueError: Name must be a non-empty string\n    p3 = Person(\"Bob\", -5)    # ValueError: Age cannot be negative\nexcept ValueError as e:\n    print(e)"
+        },
+        {
+          "type": "depth",
+          "content": "1. [Decorator](https://docs.python.org/3/glossary.html#term-decorator) | Python Decorators"
+        }
+      ],
+      "Magic Methods": [
+        {
+          "type": "mainTitle",
+          "content": "Magic Methods"
+        },
+        {
+          "type": "text",
+          "content": "Magic Methods (or Dunder Methods) are special methods that we can use in our classes to define how an object will interact with certain built-in operations. Below are the most common magic methods:"
+        },
+        {
+          "type": "text",
+          "content": "1. Comparisons\n2. Arithmetic\n3. Container\n4. Context\n5. Attribute Access\n6. Others"
+        },
+        {
+          "type": "title",
+          "content": "Comparisons"
+        },
+        {
+          "type": "text",
+          "content": "Comparison methods allow us to define how an object will react to comparison operations."
+        },
+        {
+          "type": "code",
+          "content": "# Comparison magic methods\nclass Person:\n    def __init__(self, name, age):\n        self.name = name\n        self.age = age\n\n    def __eq__(self, other):  # p1 == p2\n        return self.name == other.name and self.age == other.age\n\n    def __lt__(self, other):  # p1 < p2\n        return self.age < other.age\n\n    def __gt__(self, other):  # p1 > p2\n        return self.age > other.age\n\n    def __le__(self, other):  # p1 <= p2\n        return self.age <= other.age\n\n    def __ge__(self, other):  # p1 >= p2\n        return self.age >= other.age\n\n    def __ne__(self, other):  # p1 != p2\n        return self.age != other.age"
+        },
+        {
+          "type": "title",
+          "content": "Arithmetic"
+        },
+        {
+          "type": "text",
+          "content": "Arithmetic methods allow us to define what arithmetic operators will do when used with user-defined classes/objects."
+        },
+        {
+          "type": "code",
+          "content": "# Arithmetic magic methods\nclass Point:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n\n    def __add__(self, other):  # p1 + p2\n        return Point(self.x + other.x, self.y + other.y)\n\n    def __sub__(self, other):  # p1 - p2\n        return Point(self.x - other.x, self.y - other.y)\n\n    def __mul__(self, other):  # p1 * p2\n        return Point(self.x * other.x, self.y * other.y)\n\n    def __truediv__(self, other):  # p1 / p2\n        return Point(self.x / other.x, self.y / other.y)"
+        },
+        {
+          "type": "title",
+          "content": "Container"
+        },
+        {
+          "type": "text",
+          "content": "Container methods help us define how an object will behave with indexing."
+        },
+        {
+          "type": "code",
+          "content": "# Container magic methods\nclass Point:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n\n    def __getitem__(self, index):  # p[index]\n        if index == 0:\n            return self.x\n        elif index == 1:\n            return self.y\n        else:\n            raise IndexError(\"Index out of range\")\n\n    def __setitem__(self, index, value):  # p[index] = value\n        if index == 0:\n            self.x = value\n        elif index == 1:\n            self.y = value\n        else:\n            raise IndexError(\"Index out of range\")"
+        },
+        {
+          "type": "title",
+          "content": "Context"
+        },
+        {
+          "type": "text",
+          "content": "Context methods define the behavior with the **with** statements."
+        },
+        {
+          "type": "code",
+          "content": "# Context magic methods\nclass File:\n    def __init__(self, filename, mode):\n        self.filename = filename\n        self.mode = mode\n\n    def __enter__(self):  # with statement\n        self.file = open(self.filename, self.mode)\n        return self.file\n\n    def __exit__(self, exc_type, exc_value, traceback):  # context exit\n        self.file.close()"
+        },
+        {
+          "type": "title",
+          "content": "Attribute Access"
+        },
+        {
+          "type": "text",
+          "content": "Attribute Access methods gives us a way to define the bahvior of accessing attributes of an object."
+        },
+        {
+          "type": "code",
+          "content": "# Attribute Access magic methods\nclass Person:\n    def __init__(self, name, age):\n        self.name = name\n        self.age = age\n\n    def __getattr__(self, attr):  # p.attr\n        return f'Attribute {attr} not found'\n\n    def __setattr__(self, attr, value):  # p.attr = value\n        if attr == 'age' and value < 0:\n            raise ValueError(\"Age cannot be negative\")\n        super().__setattr__(attr, value)"
+        },
+        {
+          "type": "title",
+          "content": "Others"
+        },
+        {
+          "type": "code",
+          "content": "# Other magic methods\nclass Person:\n    def __init__(self, name, age):\n        self.name = name\n        self.age = age\n\n    def __str__(self):  # str(p)\n        return f'Name: {self.name}, Age: {self.age}'\n\n    def __repr__(self):  # repr(p)\n        return f'Person({self.name}, {self.age})'\n\n    def __len__(self):  # len(p)\n        return len(self.name)"
+        },
+        {
+          "type": "depth",
+          "content": "1. [Magic Methods (Data Model)](https://docs.python.org/3/reference/datamodel.html#special-method-names) | Special method names"
+        }
+      ]
     },
     "Recursion": {
       "General": [],
@@ -849,7 +1017,7 @@
       "Functions": [],
       "Forzenset": [],
       "Loops": [],
-      "Comparasions": [],
+      "Comparisons": [],
       "Time/Space Complexity": []
     },
     "Heaps": {

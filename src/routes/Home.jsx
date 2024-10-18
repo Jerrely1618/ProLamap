@@ -117,6 +117,7 @@ export default function Home() {
   };
   const handleDrag = useCallback((clientX) => {
     const newWidth = (clientX / window.innerWidth) * 100;
+    console.log((window.innerWidth / window.screen.width) * 100);
     if (newWidth >= 35 && newWidth <= 100) {
       setWidth(newWidth);
       if (dragRef.current) {
@@ -287,19 +288,24 @@ export default function Home() {
             </Tooltip>
             {selectedOption && (
               <div className="flex items-center z-10 mx-5 w-full sm:mx-2">
-                <div
-                  className={`relative flex-grow h-4 rounded  mx-2 ${
-                    isDarkTheme
-                      ? 'bg-light-background border-light-background'
-                      : 'bg-third-background border-dark-background'
-                  }`}
-                >
+                {(window.innerWidth / window.screen.width) * 100 > 50 &&
+                width < 70 ? (
                   <div
-                    id="progress-bar"
-                    className={`absolute h-full rounded bg-green-500`}
-                    style={{ width: `${progressBarWidth}%` }}
-                  />
-                </div>
+                    className={`relative flex-grow h-4 rounded  mx-2 ${
+                      isDarkTheme
+                        ? 'bg-light-background border-light-background'
+                        : 'bg-third-background border-dark-background'
+                    }`}
+                  >
+                    <div
+                      id="progress-bar"
+                      className={`absolute h-full rounded bg-green-500`}
+                      style={{ width: `${progressBarWidth}%` }}
+                    />
+                  </div>
+                ) : (
+                  <p>{`${Math.round(progressBarWidth)}%`}</p>
+                )}
               </div>
             )}
 

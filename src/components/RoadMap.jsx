@@ -166,7 +166,9 @@ const RoadMap = ({
     if (returnToCenter) {
       updateScale();
       setTranslate({
-        x: translate.x,
+        x:
+          (window.innerWidth * scale) / 2 -
+          containerRef.current.offsetWidth / 1.75,
         y: window.innerHeight / 2 - containerRef.current.offsetHeight / 2,
       });
     }
