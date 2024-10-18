@@ -130,7 +130,7 @@ const RoadMap = ({
   const lastTouchY = useRef(0);
   const lastTouchX = useRef(0);
   const [levels, setLevels] = useState({});
-
+  const lastDistance = useRef(0);
   const updateScale = () => {
     const widthPercentage = (window.innerWidth / window.screen.width) * 100;
     const heightPercentage = (window.innerHeight / window.screen.height) * 100;
@@ -203,19 +203,44 @@ const RoadMap = ({
     setScale((prevScale) => Math.max(0.2, Math.min(2, prevScale + zoomAmount)));
   };
   const handleTouchStart = (e) => {
-    setIsPanning(true);
-    lastTouchX.current = e.touches[0].clientX - translate.x;
-    lastTouchY.current = e.touches[0].clientY - translate.y;
+    e.preventDefault();
+    if (e.touches.length === 2) {
+      lastDistance.current = Math.hypot(
+        e.touches[1].clientX - e.touches[0].clientX,
+        e.touches[1].clientY - e.touches[0].clientY
+      );
+    } else if (e.touches.length === 1) {
+      setIsPanning(true);
+      lastTouchX.current = e.touches[0].clientX - translate.x;
+      lastTouchY.current = e.touches[0].clientY - translate.y;
+    }
   };
+
   const handleTouchMove = (e) => {
-    if (isPanning && isDraggable) {
+    e.preventDefault();
+
+    if (e.touches.length === 2) {
+      const currentDistance = Math.hypot(
+        e.touches[1].clientX - e.touches[0].clientX,
+        e.touches[1].clientY - e.touches[0].clientY
+      );
+      const zoomAmount = (currentDistance - lastDistance.current) * 0.002;
+      setScale((prevScale) =>
+        Math.max(0.2, Math.min(2, prevScale + zoomAmount))
+      );
+      lastDistance.current = currentDistance;
+    } else if (e.touches.length === 1 && isPanning) {
       setTranslate({
         x: e.touches[0].clientX - lastTouchX.current,
         y: e.touches[0].clientY - lastTouchY.current,
       });
     }
   };
-  const handleTouchEnd = () => setIsPanning(false);
+
+  const handleTouchEnd = () => {
+    setIsPanning(false);
+    lastDistance.current = 0;
+  };
   const handleMouseDown = (e) => {
     setIsPanning(true);
     panStart.current = {
