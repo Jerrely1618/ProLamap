@@ -1,4 +1,4 @@
-export default function TermsOfUse() {
+export default function Terms() {
   return (
     <div className="terms-of-use-container">
       <h1>Terms of Use</h1>

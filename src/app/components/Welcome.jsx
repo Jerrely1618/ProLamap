@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback } from "react";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -7,13 +7,13 @@ import {
   MoonIcon,
   SunIcon,
   XMarkIcon,
-} from '@heroicons/react/24/solid';
-import { Trie, serializeTrie, deserializeTrie } from '../utils/Trie';
-import PropTypes from 'prop-types';
-import { Tooltip } from 'antd';
-import { Link } from 'react-router-dom';
-import debounce from 'lodash.debounce';
-import { FixedSizeList as List } from 'react-window';
+} from "@heroicons/react/24/solid";
+import { Trie, serializeTrie, deserializeTrie } from "../utils/Trie";
+import PropTypes from "prop-types";
+import { Tooltip } from "antd";
+import Link from "next/link";
+import debounce from "lodash.debounce";
+import { FixedSizeList as List } from "react-window";
 
 export default function Welcome({
   isDarkTheme,
@@ -27,7 +27,7 @@ export default function Welcome({
   width,
   setIsMediaOnly,
 }) {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [filteredTopics, setFilteredTopics] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [topics, setTopics] = useState([]);
@@ -36,14 +36,14 @@ export default function Welcome({
   const listRef = useRef(null);
 
   useEffect(() => {
-    const cachedTrie = localStorage.getItem('searchTrie');
+    const cachedTrie = localStorage.getItem("searchTrie");
     if (cachedTrie) {
       const deserializedTrie = deserializeTrie(cachedTrie);
       setTrie(deserializedTrie);
       setTopics(deserializedTrie.getAllTopics());
     } else {
       const fetchContentData = async () => {
-        const response = await fetch('/contents.json');
+        const response = await fetch("/contents.json");
         const data = await response.json();
         const newTrie = new Trie();
         const allTopics = [];
@@ -53,7 +53,7 @@ export default function Welcome({
           const color = languageData.color;
 
           for (const topic in languageData) {
-            if (topic === 'color') continue;
+            if (topic === "color") continue;
             allTopics.push(topic);
             newTrie.insert(topic, { topic, language, color });
 
@@ -69,7 +69,7 @@ export default function Welcome({
           }
         }
 
-        localStorage.setItem('searchTrie', serializeTrie(newTrie));
+        localStorage.setItem("searchTrie", serializeTrie(newTrie));
         setTrie(newTrie);
         setTopics(allTopics);
       };
@@ -89,14 +89,14 @@ export default function Welcome({
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setFilteredTopics([]);
-        setSearchTerm('');
+        setSearchTerm("");
         setSelectedIndex(-1);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -126,15 +126,15 @@ export default function Welcome({
 
   const handleKeyDown = (event) => {
     if (filteredTopics.length > 0) {
-      if (event.key === 'ArrowDown') {
+      if (event.key === "ArrowDown") {
         setSelectedIndex((prevIndex) =>
           prevIndex < filteredTopics.length - 1 ? prevIndex + 1 : prevIndex
         );
-      } else if (event.key === 'ArrowUp') {
+      } else if (event.key === "ArrowUp") {
         setSelectedIndex((prevIndex) =>
           prevIndex > 0 ? prevIndex - 1 : prevIndex
         );
-      } else if (event.key === 'Enter' && selectedIndex >= 0) {
+      } else if (event.key === "Enter" && selectedIndex >= 0) {
         handleTopicClick(filteredTopics[selectedIndex]);
       }
     }
@@ -145,7 +145,7 @@ export default function Welcome({
       <div className="flex flex-col items-start p-4 h-screen justify-center">
         <div
           className={`body-bold flex space-x-5 ${
-            isDarkTheme ? 'text-dark-secondary' : 'text-dark-background'
+            isDarkTheme ? "text-dark-secondary" : "text-dark-background"
           } absolute md:top-5 bottom-5`}
         >
           <div>
@@ -157,14 +157,14 @@ export default function Welcome({
         </div>
         <h2
           className={`md:text-4xl text-3xl sm:text-2xl body font-semibold mb-1 ${
-            isDarkTheme ? 'text-dark-secondary' : 'text-dark-background'
+            isDarkTheme ? "text-dark-secondary" : "text-dark-background"
           }`}
         >
           Welcome to
         </h2>
         <h1
           className={`md:text-8xl text-4xl sm:text-5xl font-light bubble ${
-            isDarkTheme ? 'text-dark-secondary' : 'text-third-text1'
+            isDarkTheme ? "text-dark-secondary" : "text-third-text1"
           }`}
         >
           ProlaDict
@@ -176,7 +176,7 @@ export default function Welcome({
               <span
                 key={index}
                 className={`mr-8 flex items-center font-bold ${
-                  isDarkTheme ? 'text-dark-secondary' : 'text-dark-background'
+                  isDarkTheme ? "text-dark-secondary" : "text-dark-background"
                 }`}
               >
                 {topic}
@@ -184,7 +184,7 @@ export default function Welcome({
             ))}
             <span
               className={`mr-8 flex items-center font-bold ${
-                isDarkTheme ? 'text-dark-secondary' : 'text-dark-background'
+                isDarkTheme ? "text-dark-secondary" : "text-dark-background"
               }`}
             >
               <span className="font-bold flex items-center">
@@ -214,7 +214,7 @@ export default function Welcome({
                   height={200}
                   itemCount={filteredTopics.length}
                   itemSize={35}
-                  width={'100%'}
+                  width={"100%"}
                   ref={listRef}
                 >
                   {({ index, style }) => (
@@ -224,21 +224,23 @@ export default function Welcome({
                       className="transition-all ease-in-out duration-300"
                     >
                       <button
+                        aria-label={filteredTopics[index].topic}
                         onClick={() => handleTopicClick(filteredTopics[index])}
                         className={`flex-grow py-2 px-4 w-full text-light-background body-bold text-left text-xl ${
                           selectedIndex === index
-                            ? 'bg-blue-300'
+                            ? "bg-blue-300"
                             : isDarkTheme
-                            ? 'bg-dark-secondary'
-                            : 'bg-dark-background'
+                            ? "bg-dark-secondary"
+                            : "bg-dark-background"
                         } hover:bg-blue-500 focus:bg-blue-500 transition-colors duration-200`}
                       >
                         {filteredTopics[index].topic}
                         <button
+                          aria-label={filteredTopics[index].language}
                           className={`py-2 px-4 capitalize body-bold text-sm ${
                             isDarkTheme
-                              ? 'text-dark-background'
-                              : 'text-light-background'
+                              ? "text-dark-background"
+                              : "text-light-background"
                           }`}
                           style={{
                             backgroundColor: filteredTopics[index].color,
@@ -307,6 +309,7 @@ function Buttons({
       <div className="flex space-x-2">
         <Tooltip title="Exit" placement="top">
           <button
+            aria-label="Settings"
             onClick={handleHide}
             className={`p-2 rounded bg-redSpecial text-white hover:bg-red-800`}
           >
@@ -316,11 +319,12 @@ function Buttons({
         {!showWelcome && (
           <Tooltip title="Home" placement="top">
             <button
+              aria-label="Home"
               onClick={handleHomeClick}
               className={`p-2 rounded ${
                 isDarkTheme
-                  ? 'bg-dark-secondary text-dark-background'
-                  : 'bg-light-text1  text-light-secondary'
+                  ? "bg-dark-secondary text-dark-background"
+                  : "bg-light-text1  text-light-secondary"
               }`}
             >
               <HomeIcon className="h-5 w-5" />
@@ -330,11 +334,12 @@ function Buttons({
 
         <Tooltip title="Theme Toggle" placement="top">
           <button
+            aria-label="Theme Toggle"
             onClick={toggleTheme}
             className={`p-2 rounded ${
               isDarkTheme
-                ? 'bg-dark-secondary text-dark-background'
-                : 'bg-light-text1  text-light-secondary'
+                ? "bg-dark-secondary text-dark-background"
+                : "bg-light-text1  text-light-secondary"
             }`}
           >
             {isDarkTheme ? (
@@ -350,29 +355,30 @@ function Buttons({
       >
         <p
           className={`font-bold justify-center items-center  px-2 ${
-            isDarkTheme ? 'text-dark-secondary' : 'text-light-secondary'
+            isDarkTheme ? "text-dark-secondary" : "text-light-secondary"
           }  `}
         >
           Copyright ©2024 Proladict. All rights reserved.
         </p>
-        <Link
+        {/* <Link
           to="/terms"
           className={`font-semibold text-white ${
-            isDarkTheme ? 'text-white' : 'text-blue-700'
+            isDarkTheme ? "text-white" : "text-blue-700"
           }`}
         >
           Terms of Use
-        </Link>
+        </Link> */}
       </div>
       <div className="flex space-x-2">
         {!showWelcome && (
           <Tooltip title="Media-Only" placement="top">
             <button
+              aria-label="Media-Only"
               onClick={toggleSettings}
               className={`p-2 rounded ${
                 isDarkTheme
-                  ? 'bg-dark-secondary text-dark-background'
-                  : 'bg-light-text1  text-light-secondary'
+                  ? "bg-dark-secondary text-dark-background"
+                  : "bg-light-text1  text-light-secondary"
               }`}
             >
               <EyeIcon className="h-5 w-5" />
@@ -381,11 +387,12 @@ function Buttons({
         )}
         <Tooltip title="Expand" placement="top">
           <button
+            aria-label="Expand"
             onClick={handleExpand}
             className={`p-2 rounded ${
               isDarkTheme
-                ? 'bg-dark-secondary text-dark-background'
-                : 'bg-light-text1  text-light-secondary'
+                ? "bg-dark-secondary text-dark-background"
+                : "bg-light-text1  text-light-secondary"
             }`}
           >
             {isExpanded ? (
