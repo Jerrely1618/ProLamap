@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -12,6 +12,8 @@ import { Trie, serializeTrie, deserializeTrie } from '../utils/Trie';
 import PropTypes from 'prop-types';
 import { Tooltip } from 'antd';
 import { Link } from 'react-router-dom';
+import debounce from 'lodash.debounce';
+import { FixedSizeList as List } from 'react-window';
 
 export default function Welcome({
   isDarkTheme,
@@ -32,15 +34,13 @@ export default function Welcome({
   const [trie, setTrie] = useState(null);
   const searchRef = useRef(null);
   const listRef = useRef(null);
-  console.log(width);
+
   useEffect(() => {
     const cachedTrie = localStorage.getItem('searchTrie');
-
     if (cachedTrie) {
       const deserializedTrie = deserializeTrie(cachedTrie);
       setTrie(deserializedTrie);
-      const allTopics = deserializedTrie.getAllTopics();
-      setTopics(allTopics);
+      setTopics(deserializedTrie.getAllTopics());
     } else {
       const fetchContentData = async () => {
         const response = await fetch('/contents.json');
@@ -76,15 +76,15 @@ export default function Welcome({
       fetchContentData();
     }
   }, []);
+
   useEffect(() => {
-    if (listRef.current && selectedIndex >= 0) {
-      const selectedItem = listRef.current.children[selectedIndex];
-      if (selectedItem) {
-        selectedItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
+    if (listRef.current && selectedIndex >= 0 && filteredTopics.length > 0) {
+      listRef.current.scrollToItem(selectedIndex);
     }
-  }, [selectedIndex]);
+  }, [selectedIndex, filteredTopics]);
+
   const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -100,35 +100,41 @@ export default function Welcome({
     };
   }, []);
 
-  const handleSearch = (event) => {
+  const handleSearch = useCallback(
+    debounce((value) => {
+      if (trie) {
+        const results = trie.searchPrefix(value);
+        setFilteredTopics(results);
+      }
+    }, 300),
+    [trie]
+  );
+
+  const handleSearchChange = (event) => {
     const value = event.target.value.toLowerCase();
     setSearchTerm(value);
     setSelectedIndex(-1);
-
-    if (trie) {
-      const results = trie.searchPrefix(value);
-      setFilteredTopics(results);
-    }
+    handleSearch(value);
   };
+
   const handleTopicClick = (item) => {
-    if (item.parentTopic) {
-      setSelectedTopic(capitalize(item.parentTopic));
-    } else {
-      setSelectedTopic(capitalize(item.topic));
-    }
+    setSelectedTopic(
+      item.parentTopic ? capitalize(item.parentTopic) : capitalize(item.topic)
+    );
     setShowWelcome(false);
   };
+
   const handleKeyDown = (event) => {
-    if (event.key === 'ArrowDown') {
-      setSelectedIndex((prevIndex) =>
-        prevIndex < filteredTopics.length - 1 ? prevIndex + 1 : prevIndex
-      );
-    } else if (event.key === 'ArrowUp') {
-      setSelectedIndex((prevIndex) =>
-        prevIndex > 0 ? prevIndex - 1 : prevIndex
-      );
-    } else if (event.key === 'Enter') {
-      if (selectedIndex >= 0 && selectedIndex < filteredTopics.length) {
+    if (filteredTopics.length > 0) {
+      if (event.key === 'ArrowDown') {
+        setSelectedIndex((prevIndex) =>
+          prevIndex < filteredTopics.length - 1 ? prevIndex + 1 : prevIndex
+        );
+      } else if (event.key === 'ArrowUp') {
+        setSelectedIndex((prevIndex) =>
+          prevIndex > 0 ? prevIndex - 1 : prevIndex
+        );
+      } else if (event.key === 'Enter' && selectedIndex >= 0) {
         handleTopicClick(filteredTopics[selectedIndex]);
       }
     }
@@ -165,7 +171,7 @@ export default function Welcome({
         </h1>
 
         <div className="overflow-hidden z-10 whitespace-nowrap body mt-0 ml-1.5 w-full">
-          <div className="animate-marquee whitespace-nowrap flex">
+          <div className="animate-marquee whitespace-nowrap flex will-change-transform">
             {topics.map((topic, index) => (
               <span
                 key={index}
@@ -189,64 +195,61 @@ export default function Welcome({
           </div>
         </div>
 
-        <div className="w-full z-10 ">
+        <div className="w-full z-10">
           <div ref={searchRef}>
             <input
               type="text"
               placeholder="Search topics or subtopics..."
               value={searchTerm}
-              onChange={handleSearch}
+              onChange={handleSearchChange}
               onKeyDown={handleKeyDown}
-              className="mt-4 px-4 py-2 w-full text-lg border border-gray-300 rounded-t-md focus:outline-none "
-            />{' '}
-            {filteredTopics.length !== 0 && (
+              className="mt-4 px-4 py-2 w-full text-lg border border-gray-300 rounded-t-md focus:outline-none"
+            />
+            {filteredTopics.length > 0 && (
               <div
                 style={{ width: `${width}%` }}
-                className="absolute left-0 px-4 max-h-60 transition-all duration-300 overflow-y-auto scrollbar-left"
+                className="absolute left-0 px-4 transition-all duration-300"
               >
-                <ul
+                <List
+                  height={200}
+                  itemCount={filteredTopics.length}
+                  itemSize={35}
+                  width={'100%'}
                   ref={listRef}
-                  className="transition-all ease-in-out duration-300"
                 >
-                  {filteredTopics.map((topic, index) => (
-                    <li
+                  {({ index, style }) => (
+                    <div
                       key={index}
-                      className={`flex transition-all ease-in-out duration-300 ${
-                        index === filteredTopics.length - 1
-                          ? 'rounded-b-lg'
-                          : ''
-                      }`}
+                      style={style}
+                      className="transition-all ease-in-out duration-300"
                     >
                       <button
-                        onClick={() => handleTopicClick(topic)}
-                        className={`flex-grow transition-all ease-in-out duration-300 py-2 px-4 w-full text-light-background body-bold text-left text-xl ${
+                        onClick={() => handleTopicClick(filteredTopics[index])}
+                        className={`flex-grow py-2 px-4 w-full text-light-background body-bold text-left text-xl ${
                           selectedIndex === index
                             ? 'bg-blue-300'
                             : isDarkTheme
                             ? 'bg-dark-secondary'
                             : 'bg-dark-background'
-                        }  hover:bg-blue-500 focus:bg-blue-500 transition-colors duration-200 
-                      `}
+                        } hover:bg-blue-500 focus:bg-blue-500 transition-colors duration-200`}
                       >
-                        {topic.topic}
+                        {filteredTopics[index].topic}
+                        <button
+                          className={`py-2 px-4 capitalize body-bold text-sm ${
+                            isDarkTheme
+                              ? 'text-dark-background'
+                              : 'text-light-background'
+                          }`}
+                          style={{
+                            backgroundColor: filteredTopics[index].color,
+                          }}
+                        >
+                          {filteredTopics[index].language}
+                        </button>
                       </button>
-                      <button
-                        className={`py-2 px-4 capitalize body-bold text-sm ${
-                          index === filteredTopics.length - 1
-                            ? 'rounded-br-lg'
-                            : ''
-                        } ${
-                          isDarkTheme
-                            ? 'text-dark-background'
-                            : 'text-light-background'
-                        }`}
-                        style={{ backgroundColor: topic.color }}
-                      >
-                        {topic.language}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+                    </div>
+                  )}
+                </List>
               </div>
             )}
           </div>
@@ -263,7 +266,8 @@ export default function Welcome({
           }
           .animate-marquee {
             display: inline-flex;
-            animation: marquee 150s linear infinite;
+            animation: marquee 100s linear infinite;
+            will-change: transform; /* Optimize for performance */
           }
         `}</style>
       </div>
@@ -290,9 +294,13 @@ function Buttons({
   showWelcome,
   setIsMediaOnly,
 }) {
-  const toggleSettings = () => {
+  const toggleSettings = useCallback(() => {
     setIsMediaOnly((prev) => !prev);
-  };
+  }, [setIsMediaOnly]);
+
+  const handleHomeClick = useCallback(() => {
+    setShowWelcome(true);
+  }, [setShowWelcome]);
 
   return (
     <div className="flex justify-between justify-center items-center bg-transparent m-4 z-10">
@@ -308,7 +316,7 @@ function Buttons({
         {!showWelcome && (
           <Tooltip title="Home" placement="top">
             <button
-              onClick={setShowWelcome}
+              onClick={handleHomeClick}
               className={`p-2 rounded ${
                 isDarkTheme
                   ? 'bg-dark-secondary text-dark-background'
@@ -398,7 +406,8 @@ Buttons.propTypes = {
   handleHide: PropTypes.func.isRequired,
   toggleTheme: PropTypes.func.isRequired,
   setShowWelcome: PropTypes.func.isRequired,
-  showWelcome: PropTypes.bool.isRequired,
+  showWelcome: PropTypes.oneOfType([PropTypes.bool, PropTypes.object])
+    .isRequired,
   setIsMediaOnly: PropTypes.func.isRequired,
 };
 Welcome.propTypes = {
@@ -407,8 +416,10 @@ Welcome.propTypes = {
   setShowWelcome: PropTypes.func.isRequired,
   handleExpand: PropTypes.func.isRequired,
   isExpanded: PropTypes.bool.isRequired,
+  width: PropTypes.number.isRequired,
   handleHide: PropTypes.func.isRequired,
   toggleTheme: PropTypes.func.isRequired,
-  showWelcome: PropTypes.bool.isRequired,
+  showWelcome: PropTypes.oneOfType([PropTypes.bool, PropTypes.object])
+    .isRequired,
   setIsMediaOnly: PropTypes.func.isRequired,
 };

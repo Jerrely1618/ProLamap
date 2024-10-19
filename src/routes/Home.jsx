@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import {
   ArrowsPointingInIcon,
@@ -21,40 +21,78 @@ const languages = [
     isDisabled: true,
   },
 ];
+const initialState = {
+  isExpanded: false,
+  isHidden: false,
+  width: 40,
+  isDarkTheme: true,
+  showWelcome: true,
+  isDraggable: true,
+  showSettings: false,
+  eliminateLanguage: 'python',
+  isMediaOnly: false,
+  selectedTopic: null,
+  confirmDelete: '',
+  returnToCenter: false,
+  selectedOption: {},
+  options: [],
+  change: false,
+  progressBarWidth: 0,
+};
 
+function reducer(state, action) {
+  switch (action.type) {
+    case 'SET_STATE':
+      return { ...state, ...action.payload };
+    case 'TOGGLE_DARK_THEME':
+      return {
+        ...state,
+        isDarkTheme: !state.isDarkTheme,
+      };
+    case 'SET_OPTIONS':
+      return { ...state, options: action.payload };
+    case 'SET_SELECTED_OPTION':
+      return { ...state, selectedOption: action.payload };
+    default:
+      return state;
+  }
+}
 export default function Home() {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [isHidden, setIsHidden] = useState(false);
-  const [width, setWidth] = useState(40);
-  const [isDarkTheme, setIsDarkTheme] = useState(true);
-  const [showWelcome, setShowWelcome] = useState(true);
-  const [isDraggable, setIsDraggable] = useState(true);
-  const [showSettings, setShowSettings] = useState(false);
-  const [eliminateLanguage, setEliminateLanguage] = useState('python');
-  const [isMediaOnly, setIsMediaOnly] = useState(false);
-  const [selectedTopic, setSelectedTopic] = useState();
-  const [confirmDelete, setConfirmDelete] = useState('');
-  const [returnToCenter, setReturnToCenter] = useState(false);
-  const [selectedOption, setSelectedOpt] = useState({});
-  const [options, setOptions] = useState([]);
-  const [change, setChange] = useState(false);
-  const [progressBarWidth, setProgressBarWidth] = useState(0);
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const {
+    isExpanded,
+    isHidden,
+    width,
+    isDarkTheme,
+    showWelcome,
+    isDraggable,
+    showSettings,
+    eliminateLanguage,
+    isMediaOnly,
+    selectedTopic,
+    confirmDelete,
+    returnToCenter,
+    selectedOption,
+    options,
+    change,
+    progressBarWidth,
+  } = state;
+
   const isDragging = useRef(false);
   const settingsRef = useRef(null);
   const dragRef = useRef(null);
-
   useEffect(() => {
     const initialProgress = languages.map((option) => ({
       ...option,
       progress: getProgressFromLocalStorage(option.value),
     }));
-    setOptions(initialProgress);
+    dispatch({ type: 'SET_OPTIONS', payload: initialProgress });
 
     const lastSelected = JSON.parse(localStorage.getItem('lastSelectedOption'));
     if (lastSelected) {
-      setSelectedOpt(lastSelected);
+      dispatch({ type: 'SET_SELECTED_OPTION', payload: lastSelected });
     } else if (initialProgress.length > 0) {
-      setSelectedOpt(initialProgress[0]);
+      dispatch({ type: 'SET_SELECTED_OPTION', payload: initialProgress[0] });
     }
   }, [change]);
   useEffect(() => {
@@ -62,7 +100,10 @@ export default function Home() {
       const selectedProgress = getProgressFromLocalStorage(
         selectedOption.value
       );
-      setProgressBarWidth(selectedProgress);
+      dispatch({
+        type: 'SET_STATE',
+        payload: { progressBarWidth: selectedProgress },
+      });
     }
   }, [selectedOption]);
   useEffect(() => {
@@ -79,30 +120,43 @@ export default function Home() {
         dragRef.current.style.width = `${width}%`;
       }
     };
-
     updateWidth();
   }, [width]);
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     document.addEventListener('keydown', handleKeyDown);
-
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
-
-  const setSelectedOption = (option) => {
-    setSelectedOpt(option);
+  const setIsHidden = (value) =>
+    dispatch({ type: 'SET_STATE', payload: { isHidden: value } });
+  const setShowWelcome = (value) =>
+    dispatch({ type: 'SET_STATE', payload: { showWelcome: value } });
+  const setIsDraggable = (value) =>
+    dispatch({ type: 'SET_STATE', payload: { isDraggable: value } });
+  const setShowSettings = (value) =>
+    dispatch({ type: 'SET_STATE', payload: { showSettings: value } });
+  const setEliminateLanguage = (value) =>
+    dispatch({ type: 'SET_STATE', payload: { eliminateLanguage: value } });
+  const setSelectedTopic = (value) =>
+    dispatch({ type: 'SET_STATE', payload: { selectedTopic: value } });
+  const setConfirmDelete = (value) =>
+    dispatch({ type: 'SET_STATE', payload: { confirmDelete: value } });
+  const setReturnToCenter = (value) =>
+    dispatch({ type: 'SET_STATE', payload: { returnToCenter: value } });
+  const setSelectedOption = (value) =>
+    dispatch({ type: 'SET_STATE', payload: { selectedOption: value } });
+  const setIsMediaOnly = () => {
+    dispatch({
+      type: 'SET_STATE',
+      payload: { isMediaOnly: !state.isMediaOnly },
+    });
   };
   const getProgressFromLocalStorage = (value) => {
     const storedOptions = JSON.parse(localStorage.getItem('completed')) || {};
-
-    if (typeof storedOptions !== 'object' || !storedOptions[value]) {
-      return 0;
-    }
-
-    return storedOptions[value].progress || 0;
+    return storedOptions[value]?.progress || 0;
   };
   const handleMouseMove = (event) => {
     if (isDragging.current) {
@@ -117,9 +171,8 @@ export default function Home() {
   };
   const handleDrag = useCallback((clientX) => {
     const newWidth = (clientX / window.innerWidth) * 100;
-    console.log((window.innerWidth / window.screen.width) * 100);
     if (newWidth >= 35 && newWidth <= 100) {
-      setWidth(newWidth);
+      dispatch({ type: 'SET_STATE', payload: { width: newWidth } });
       if (dragRef.current) {
         dragRef.current.style.width = `${newWidth}%`;
       }
@@ -137,13 +190,6 @@ export default function Home() {
       setConfirmDelete('');
     }
   };
-  const toggleTheme = () => {
-    setIsDarkTheme((prev) => {
-      const newTheme = !prev;
-      document.documentElement.classList.toggle('dark', newTheme);
-      return newTheme;
-    });
-  };
   const handleMouseUp = () => {
     if (isDragging.current) {
       isDragging.current = false;
@@ -160,45 +206,63 @@ export default function Home() {
     document.addEventListener('touchmove', handleTouchMove);
     document.addEventListener('touchend', handleMouseUp);
   };
+
   const handleTouchStart = () => {
     isDragging.current = true;
     document.addEventListener('touchmove', handleTouchMove);
     document.addEventListener('touchend', handleMouseUp);
   };
+
   const handleExpand = () => {
-    setIsExpanded(!isExpanded);
-    setWidth(isExpanded ? 40 : 100);
+    dispatch({
+      type: 'SET_STATE',
+      payload: { isExpanded: !isExpanded, width: isExpanded ? 40 : 100 },
+    });
   };
+
   const handleHide = () => {
-    setIsHidden(true);
-    setIsExpanded(false);
+    dispatch({
+      type: 'SET_STATE',
+      payload: { isHidden: true, isExpanded: false },
+    });
   };
+
   const handleOptionChange = (option) => {
-    setSelectedOption(option);
+    dispatch({ type: 'SET_SELECTED_OPTION', payload: option });
   };
+
   const handleDeleteLanguage = (language) => {
-    setConfirmDelete('lang');
-    setEliminateLanguage(language);
+    dispatch({
+      type: 'SET_STATE',
+      payload: { confirmDelete: 'lang', eliminateLanguage: language },
+    });
   };
+
   const handleConfirmDelete = () => {
-    setChange((prev) => !prev);
+    dispatch({
+      type: 'SET_STATE',
+      payload: { change: !change, confirmDelete: '' },
+    });
     const completed = JSON.parse(localStorage.getItem('completed')) || {};
     delete completed[eliminateLanguage];
     localStorage.setItem('completed', JSON.stringify(completed));
+  };
 
-    setConfirmDelete('');
-  };
   const handleCancelDelete = () => {
-    setConfirmDelete('');
+    dispatch({ type: 'SET_STATE', payload: { confirmDelete: '' } });
   };
+
   const handleDeleteAllProgress = () => {
-    setConfirmDelete('all');
+    dispatch({ type: 'SET_STATE', payload: { confirmDelete: 'all' } });
   };
+
   const handleComfirmDeleteAllProgress = () => {
-    setChange((prev) => !prev);
+    dispatch({
+      type: 'SET_STATE',
+      payload: { change: !change, confirmDelete: '' },
+    });
     localStorage.removeItem('languageProgress');
     localStorage.removeItem('completed');
-    setConfirmDelete('');
   };
 
   return (
@@ -216,15 +280,19 @@ export default function Home() {
               <Welcome
                 isDarkTheme={isDarkTheme}
                 options={options}
-                setShowWelcome={setShowWelcome}
+                setShowWelcome={(val) =>
+                  dispatch({ type: 'SET_STATE', payload: { showWelcome: val } })
+                }
                 setSelectedTopic={setSelectedTopic}
                 handleExpand={handleExpand}
                 width={width}
                 isExpanded={isExpanded}
                 handleHide={handleHide}
-                toggleTheme={toggleTheme}
+                toggleTheme={() => dispatch({ type: 'TOGGLE_DARK_THEME' })}
                 showWelcome={showWelcome}
-                setIsMediaOnly={setIsMediaOnly}
+                setIsMediaOnly={(val) =>
+                  dispatch({ type: 'SET_STATE', payload: { isMediaOnly: val } })
+                }
               />
             </div>
           ) : (
@@ -234,14 +302,18 @@ export default function Home() {
                 selectedTopic={selectedTopic}
                 selectedCourse={selectedOption}
                 isMediaOnly={isMediaOnly}
-                setChange={setChange}
+                setChange={(val) =>
+                  dispatch({ type: 'SET_STATE', payload: { change: val } })
+                }
                 width={width}
                 style={{ width: '100%' }}
                 handleExpand={handleExpand}
                 isExpanded={isExpanded}
                 handleHide={handleHide}
-                toggleTheme={toggleTheme}
-                setShowWelcome={setShowWelcome}
+                toggleTheme={() => dispatch({ type: 'TOGGLE_DARK_THEME' })}
+                setShowWelcome={(val) =>
+                  dispatch({ type: 'SET_STATE', payload: { showWelcome: val } })
+                }
                 showWelcome={showWelcome}
                 setIsMediaOnly={setIsMediaOnly}
               />
@@ -465,11 +537,16 @@ export default function Home() {
     </div>
   );
 }
-function Separation({ isDarkTheme, handleMouseDown, handleTouchStart }) {
+
+const Separation = React.memo(function Separation({
+  isDarkTheme,
+  handleMouseDown,
+  handleTouchStart,
+}) {
   return (
     <div
       className={`cursor-col-resize h-screen relative px-2 transition-colors duration-300 
-          ${isDarkTheme ? 'bg-dark-background' : 'bg-light-background'} `}
+          ${isDarkTheme ? 'bg-dark-background' : 'bg-light-background'}`}
       onMouseDown={handleMouseDown}
       onTouchStart={handleTouchStart}
     >
@@ -485,86 +562,91 @@ function Separation({ isDarkTheme, handleMouseDown, handleTouchStart }) {
       </svg>
     </div>
   );
-}
-function Selection({
+});
+
+const Selection = React.memo(function Selection({
   selectedOption,
   setSelectedOption,
   isDarkTheme,
   options,
 }) {
+  const selectStyles = {
+    control: (provided) => ({
+      ...provided,
+      backgroundColor: 'transparent',
+      cursor: 'pointer',
+      border: 'none',
+      boxShadow: 'none',
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      display: 'flex',
+      justifyContent: 'space-between',
+      fontSize: '1.5rem',
+      margin: '0rem',
+      padding: '0rem',
+      fontWeight: 'bold',
+      color: isDarkTheme ? '#e2eff1' : '#1a202c',
+    }),
+    indicatorSeparator: () => null,
+    dropdownIndicator: (provided) => ({
+      ...provided,
+    }),
+    menu: (provided) => ({
+      ...provided,
+      backgroundColor: 'transparent',
+      marginTop: 0,
+      marginBottom: 0,
+      borderBottomLeftRadius: '8px',
+      borderBottomRightRadius: '8px',
+      borderTopRadius: '0px',
+      overflow: 'hidden',
+    }),
+    menuList: (provided) => ({
+      ...provided,
+      paddingTop: 0,
+      paddingBottom: 0,
+      backgroundColor: 'transparent',
+    }),
+  };
+
+  const Option = React.memo(function Option({ innerProps, isFocused, data }) {
+    return (
+      <div
+        {...innerProps}
+        className={`p-2 cursor-pointer font-bold ${
+          isFocused
+            ? 'bg-gray-200 text-light-text1'
+            : isDarkTheme
+            ? 'bg-light-background text-light-text1'
+            : 'bg-dark-background text-light-background'
+        }`}
+      >
+        {data.label}
+        {data.label !== 'More Coming Soon' && (
+          <div className="w-full h-1 mt-1 bg-gray-300">
+            <div
+              className={`h-full bg-dark-secondary rounded`}
+              style={{ width: `${data.percentage}%` }}
+            />
+          </div>
+        )}
+      </div>
+    );
+  });
+
   return (
     <Select
       options={options}
-      className={`w-48 rounded`}
+      className="w-48 rounded"
       placeholder="Select..."
       value={selectedOption}
-      onChange={(option) => setSelectedOption(option)}
-      styles={{
-        control: (provided) => ({
-          ...provided,
-          backgroundColor: 'transparent',
-          cursor: 'pointer',
-          border: 'none',
-          boxShadow: 'none',
-        }),
-        singleValue: (provided) => ({
-          ...provided,
-          display: 'flex',
-          justifyContent: 'space-between',
-          fontSize: '1.5rem',
-          margin: '0rem',
-          padding: '0rem',
-          fontWeight: 'bold',
-          color: isDarkTheme ? '#e2eff1' : '#1a202c',
-        }),
-        indicatorSeparator: () => null,
-        dropdownIndicator: (provided) => ({
-          ...provided,
-        }),
-        menu: (provided) => ({
-          ...provided,
-          backgroundColor: 'transparent',
-          marginTop: 0,
-          marginBottom: 0,
-          borderBottomLeftRadius: '8px',
-          borderBottomRightRadius: '8px',
-          borderTopRadius: '0px',
-          overflow: 'hidden',
-        }),
-        menuList: (provided) => ({
-          ...provided,
-          paddingTop: 0,
-          paddingBottom: 0,
-          backgroundColor: 'transparent',
-        }),
-      }}
-      components={{
-        Option: (props) => (
-          <div
-            {...props.innerProps}
-            className={`p-2 cursor-pointer font-bold ${
-              props.isFocused
-                ? 'bg-gray-200 text-light-text1'
-                : isDarkTheme
-                ? 'bg-light-background text-light-text1'
-                : ' bg-dark-background text-light-background'
-            }`}
-          >
-            {props.data.label}
-            {props.data.label != 'More Coming Soon' && (
-              <div className="w-full h-1 mt-1 bg-gray-300">
-                <div
-                  className={`h-full bg-dark-secondary rounded `}
-                  style={{ width: `${props.data.percentage}%` }}
-                />
-              </div>
-            )}
-          </div>
-        ),
-      }}
+      onChange={setSelectedOption}
+      styles={selectStyles}
+      components={{ Option }}
     />
   );
-}
+});
 
 Separation.propTypes = {
   isDarkTheme: PropTypes.bool.isRequired,

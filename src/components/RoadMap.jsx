@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 
@@ -28,7 +28,7 @@ const getLevels = (data) => {
   return levels;
 };
 
-const RoadMapBubble = ({
+const RoadMapBubble = React.memo(function RoadMapBubble({
   text,
   isHoveringRoadmap,
   isDarkTheme,
@@ -38,22 +38,22 @@ const RoadMapBubble = ({
   selectedCourse,
   change,
   setIsHidden,
-}) => {
+}) {
   const [hovered, setHovered] = useState(false);
   const [completedSubtopics, setCompletedSubtopics] = useState(new Set());
 
-  const updateCompletedSubtopics = () => {
+  const updateCompletedSubtopics = useCallback(() => {
     const completedFromStorage = new Set(
       JSON.parse(localStorage.getItem('completed') || '{}')?.[
         selectedCourse.value
       ]?.[text] || []
     );
     setCompletedSubtopics(completedFromStorage);
-  };
+  }, [selectedCourse.value, text]);
 
   useEffect(() => {
     updateCompletedSubtopics();
-  }, [selectedCourse.value, text, change]);
+  }, [updateCompletedSubtopics, change]);
 
   const allCompleted = Object.keys(subtopics).every((subtopic) =>
     completedSubtopics.has(subtopic)
@@ -69,7 +69,6 @@ const RoadMapBubble = ({
             ? 'bg-light-background text-dark-background'
             : 'bg-third-background text-light-background'
         }
-        
       `}
       animate={{
         x: hovered || !isHoveringRoadmap ? 0 : randomFloat(-7, 7),
@@ -91,7 +90,6 @@ const RoadMapBubble = ({
       onClick={() => (onClick(text), setShowWelcome(false), setIsHidden(false))}
     >
       {text}
-
       <div className="flex flex-wrap px-5 mt-0.5 items-center justify-center">
         {Object.keys(subtopics).length > 0 &&
           Object.keys(subtopics).map((subtopic) => (
@@ -107,7 +105,7 @@ const RoadMapBubble = ({
       </div>
     </motion.button>
   );
-};
+});
 
 const RoadMap = ({
   isDarkTheme,
@@ -131,7 +129,7 @@ const RoadMap = ({
   const lastTouchX = useRef(0);
   const [levels, setLevels] = useState({});
   const lastDistance = useRef(0);
-  const updateScale = () => {
+  const updateScale = useCallback(() => {
     const widthPercentage = (window.innerWidth / window.screen.width) * 100;
     const heightPercentage = (window.innerHeight / window.screen.height) * 100;
 
@@ -141,16 +139,20 @@ const RoadMap = ({
       width / 75
     );
     setScale(Math.max(0.2, Math.min(1.1, roadmapScale)));
-  };
+  }, [width]);
 
   useEffect(() => {
     updateScale();
-    window.addEventListener('resize', updateScale);
-
-    return () => {
-      window.removeEventListener('resize', updateScale);
+    const handleResize = () => {
+      clearTimeout(window.resizeTimeout);
+      window.resizeTimeout = setTimeout(updateScale, 100);
     };
-  }, [width]);
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [updateScale]);
   useEffect(() => {
     if (returnToCenter) {
       updateScale();
@@ -199,11 +201,11 @@ const RoadMap = ({
     fetchContentData();
   }, [selectedCourse]);
 
-  const handleWheel = (e) => {
+  const handleWheel = useCallback((e) => {
     e.preventDefault();
     const zoomAmount = e.deltaY * -0.001;
     setScale((prevScale) => Math.max(0.2, Math.min(2, prevScale + zoomAmount)));
-  };
+  }, []);
   const handleTouchStart = (e) => {
     e.preventDefault();
     if (e.touches.length === 2) {
@@ -251,14 +253,17 @@ const RoadMap = ({
     };
   };
   const handleMouseUp = () => setIsPanning(false);
-  const handleMouseMove = (e) => {
-    if (isPanning && isDraggable) {
-      setTranslate({
-        x: e.clientX - panStart.current.x,
-        y: e.clientY - panStart.current.y,
-      });
-    }
-  };
+  const handleMouseMove = useCallback(
+    (e) => {
+      if (isPanning) {
+        setTranslate({
+          x: e.clientX - panStart.current.x,
+          y: e.clientY - panStart.current.y,
+        });
+      }
+    },
+    [isPanning]
+  );
 
   return (
     <div className="w-full h-full flex items-center justify-center overflow-hidden">
