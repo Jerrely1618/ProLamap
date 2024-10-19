@@ -7,8 +7,7 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import Collapsible from 'react-collapsible';
 import ReactMarkdown from 'react-markdown';
-import ReactPlayer from 'react-player';
-import SyntaxHighlighter from 'react-syntax-highlighter';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import {
   oneLight,
   coldarkDark,
