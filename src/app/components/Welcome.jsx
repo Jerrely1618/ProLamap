@@ -360,31 +360,16 @@ function Buttons({
         >
           Copyright ©2024 Proladict. All rights reserved.
         </p>
-        {/* <Link
-          to="/terms"
+        <Link
+          href="/terms"
           className={`font-semibold text-white ${
             isDarkTheme ? "text-white" : "text-blue-700"
           }`}
         >
           Terms of Use
-        </Link> */}
+        </Link>
       </div>
       <div className="flex space-x-2">
-        {!showWelcome && (
-          <Tooltip title="Media-Only" placement="top">
-            <button
-              aria-label="Media-Only"
-              onClick={toggleSettings}
-              className={`p-2 rounded ${
-                isDarkTheme
-                  ? "bg-dark-secondary text-dark-background"
-                  : "bg-light-text1  text-light-secondary"
-              }`}
-            >
-              <EyeIcon className="h-5 w-5" />
-            </button>
-          </Tooltip>
-        )}
         <Tooltip title="Expand" placement="top">
           <button
             aria-label="Expand"

@@ -381,13 +381,13 @@ export default function Home() {
               <button
                 aria-label="Settings"
                 onClick={() => setShowSettings(true)}
-                className={`p-2 rounded z-10 absolute top-[15px] left-[5px] bg-redSpecial text-white`}
+                className={`p-2 rounded z-10 absolute top-[25px] left-[5px] bg-redSpecial text-white`}
               >
                 <Cog6ToothIcon className="h-5 w-5" />
               </button>
             </Tooltip>
             {selectedOption && (
-              <div className="flex items-center z-10 mx-5 w-full sm:mx-2">
+              <div className="flex items-center justify-center z-10 mx-5 w-full sm:mx-2">
                 {screenWidth > 0 &&
                 (windowWidth / screenWidth) * 100 > 50 &&
                 width < 70 ? (
@@ -405,7 +405,13 @@ export default function Home() {
                     />
                   </div>
                 ) : (
-                  <p>{`${Math.round(progressBarWidth)}%`}</p>
+                  <p
+                    className={`text-right font-bold text-3xl bg-red ${
+                      isDarkTheme
+                        ? "text-light-background"
+                        : "text-dark-background"
+                    }`}
+                  >{`${Math.round(progressBarWidth)}%`}</p>
                 )}
               </div>
             )}
