@@ -87,7 +87,11 @@ const RoadMapBubble = React.memo(function RoadMapBubble({
           ease: 'linear',
         },
       }}
-      onClick={() => (onClick(text), setShowWelcome(false), setIsHidden(false))}
+      onClick={() => {
+        onClick(text);
+        setShowWelcome(false);
+        setIsHidden(false);
+      }}
     >
       {text}
       <div className="flex flex-wrap px-5 mt-0.5 items-center justify-center">
@@ -129,6 +133,7 @@ const RoadMap = ({
   const lastTouchX = useRef(0);
   const [levels, setLevels] = useState({});
   const lastDistance = useRef(0);
+
   const updateScale = useCallback(() => {
     const widthPercentage = (window.innerWidth / window.screen.width) * 100;
     const heightPercentage = (window.innerHeight / window.screen.height) * 100;
@@ -153,6 +158,7 @@ const RoadMap = ({
       window.removeEventListener('resize', handleResize);
     };
   }, [updateScale]);
+
   useEffect(() => {
     if (returnToCenter) {
       updateScale();
@@ -164,17 +170,7 @@ const RoadMap = ({
       });
     }
   }, [returnToCenter]);
-  useEffect(() => {
-    if (returnToCenter) {
-      updateScale();
-      setTranslate({
-        x:
-          (window.innerWidth * scale) / 2 -
-          containerRef.current.offsetWidth / 1.75,
-        y: window.innerHeight / 2 - containerRef.current.offsetHeight / 2,
-      });
-    }
-  }, [window.innerHeight]);
+
   useEffect(() => {
     const fetchContentData = async () => {
       try {
@@ -206,6 +202,7 @@ const RoadMap = ({
     const zoomAmount = e.deltaY * -0.001;
     setScale((prevScale) => Math.max(0.2, Math.min(2, prevScale + zoomAmount)));
   }, []);
+
   const handleTouchStart = (e) => {
     e.preventDefault();
     if (e.touches.length === 2) {
@@ -245,6 +242,7 @@ const RoadMap = ({
     setIsPanning(false);
     lastDistance.current = 0;
   };
+
   const handleMouseDown = (e) => {
     setIsPanning(true);
     panStart.current = {
@@ -252,7 +250,9 @@ const RoadMap = ({
       y: e.clientY - translate.y,
     };
   };
+
   const handleMouseUp = () => setIsPanning(false);
+
   const handleMouseMove = useCallback(
     (e) => {
       if (isPanning) {
@@ -274,49 +274,39 @@ const RoadMap = ({
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseMove={handleMouseMove}
+        onMouseLeave={() => (setIsPanning(false), setIsHoveringRoadmap(false))}
         onWheel={handleWheel}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        onMouseEnter={() => setIsHoveringRoadmap(true)}
+        ref={containerRef}
       >
-        <div
-          onMouseEnter={() => setIsHoveringRoadmap(true)}
-          onMouseLeave={() => {
-            setIsPanning(false);
-            setIsHoveringRoadmap(false);
-          }}
+        <motion.div
+          className="flex flex-col items-center justify-center"
           style={{
             transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`,
-            transition: isPanning ? 'none' : 'transform 0.2s ease',
           }}
-          className="absolute z-0 grid gap-4 items-center justify-center"
-          ref={containerRef}
         >
-          {Object.keys(levels).map((level) => (
-            <div
-              key={level}
-              className="flex justify-center my-1 space-x-5 "
-              style={{
-                textShadow: '10px 10px 10px rgba(0, 0, 0, 1)',
-              }}
-            >
-              {levels[level].map((node) => (
+          {Object.entries(levels).map(([level, nodes]) => (
+            <div key={level} className="flex flex-row">
+              {nodes.map((node) => (
                 <RoadMapBubble
-                  selectedCourse={selectedCourse}
-                  change={change}
-                  isDarkTheme={isDarkTheme}
-                  setIsHidden={setIsHidden}
                   key={node}
                   text={node}
                   isHoveringRoadmap={isHoveringRoadmap}
+                  isDarkTheme={isDarkTheme}
                   onClick={setSelectedTopic}
                   setShowWelcome={setShowWelcome}
                   subtopics={topics[node] || {}}
+                  selectedCourse={selectedCourse}
+                  change={change}
+                  setIsHidden={setIsHidden}
                 />
               ))}
             </div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
@@ -333,11 +323,11 @@ RoadMapBubble.propTypes = {
   change: PropTypes.any.isRequired,
   setIsHidden: PropTypes.func.isRequired,
 };
+
 RoadMap.propTypes = {
   isDarkTheme: PropTypes.bool.isRequired,
   setSelectedTopic: PropTypes.func.isRequired,
-  returnToCenter: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
-    .isRequired,
+  returnToCenter: PropTypes.bool.isRequired,
   setShowWelcome: PropTypes.func.isRequired,
   isDraggable: PropTypes.bool.isRequired,
   setIsHidden: PropTypes.func.isRequired,
@@ -345,4 +335,5 @@ RoadMap.propTypes = {
   selectedCourse: PropTypes.object.isRequired,
   change: PropTypes.any.isRequired,
 };
+
 export default RoadMap;

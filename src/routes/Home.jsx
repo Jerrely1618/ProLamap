@@ -57,6 +57,7 @@ function reducer(state, action) {
       return state;
   }
 }
+
 export default function Home() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const {
@@ -80,7 +81,6 @@ export default function Home() {
 
   const isDragging = useRef(false);
   const settingsRef = useRef(null);
-  const dragRef = useRef(null);
   useEffect(() => {
     const initialProgress = languages.map((option) => ({
       ...option,
@@ -114,14 +114,6 @@ export default function Home() {
       setSelectedOption(options[0]);
     }
   }, [options]);
-  useEffect(() => {
-    const updateWidth = () => {
-      if (dragRef.current) {
-        dragRef.current.style.width = `${width}%`;
-      }
-    };
-    updateWidth();
-  }, [width]);
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     document.addEventListener('keydown', handleKeyDown);
@@ -171,11 +163,9 @@ export default function Home() {
   };
   const handleDrag = useCallback((clientX) => {
     const newWidth = (clientX / window.innerWidth) * 100;
+
     if (newWidth >= 35 && newWidth <= 100) {
       dispatch({ type: 'SET_STATE', payload: { width: newWidth } });
-      if (dragRef.current) {
-        dragRef.current.style.width = `${newWidth}%`;
-      }
     }
   }, []);
   const handleClickOutside = (event) => {
@@ -269,11 +259,10 @@ export default function Home() {
     <div className="flex h-screen transition-colors overflow-hidden duration-300">
       {!isHidden && (
         <div
-          ref={dragRef}
-          className={`flex flex-col flex-grow h-full transition-colors duration-300 shadow-lg ${
+          className={`flex flex-col flex-grow h-full transition-width transition-colors duration-300 shadow-lg ${
             isDarkTheme ? 'bg-dark-background' : 'bg-light-background'
           }`}
-          style={{ width: `${width}%`, height: '100vh' }}
+          style={{ width: `${width}%` }}
         >
           {showWelcome ? (
             <div className="flex-grow flex flex-col-reverse md:flex-col h-full w-full">
