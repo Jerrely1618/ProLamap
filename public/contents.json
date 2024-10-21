@@ -470,13 +470,127 @@
       ]
     },
     "Functions": {
-      "General": [],
-      "Intitialization": [],
-      "Args & Kwargs": [],
-      "Keywords": [],
-      "Decorators": [],
-      "Closures": [],
-      "Generics": []
+      "General": [
+        {
+          "type": "title",
+          "content": "Initialization"
+        },
+        {
+          "type": "text",
+          "content": "Functions are pieces of code that are defined to perform the specific lines of code under it. The parameters section is where we gather our inputs that will be used in the function. The logic goes directly under it accompany with a return statement that gives us the output if necessary."
+        },
+        {
+          "type": "code",
+          "content": "def function_name(parameter: type): -> expected_type\n    # Function's logic\n    return output"
+        },
+        {
+          "type": "title",
+          "content": "Args and Kwargs"
+        },
+        {
+          "type": "text",
+          "content": "Arguments(args) and Keyword Arguments(kwargs) are special types of inputs that we can use in a function. Args allow us to obtain an unpredicted amount of arguments."
+        },
+        {
+          "type": "code",
+          "content": "# Args in functions\ndef adding_nums(*numbers):\n    return sum(numbers)\n\nadding_nums(1, 2, 3, 4) # 10"
+        },
+        {
+          "type": "text",
+          "content": "Kwargs are similart to args since the idea of unpredictability of the inputs remains the same. The difference, however, is that kwargs are keyword arguments that are passed as dictionaries."
+        },
+        {
+          "type": "code",
+          "content": "# Kwargs in functions\ndef printing_names(**kwargs):\n    for name, last_name in kwargs.items():\n        print(f\"{name}, {last_name}.\")\n\nprinting_names(Alice=\"Doe\", John=\"Doe\", John=\"Mayers\")\n# Alice, Doe.\n# John, Mayers."
+        },
+        {
+          "type": "depth",
+          "content": "1. [Functions](https://docs.python.org/3/tutorial/controlflow.html#defining-functions) | Python Documentation"
+        }
+      ],
+      "Decorators and Generators": [
+        {
+          "type": "mainTitle",
+          "content": "Decorators and Generators"
+        },
+        {
+          "type": "title",
+          "content": "Decorators"
+        },
+        {
+          "type": "text",
+          "content": "Decorators are a way to extend the way a function works without changing the function. They can be thought of as plugins of a function. They take the function as an input and return the result of the wrapped function edited by the decorator."
+        },
+        {
+          "type": "code",
+          "content": "# Function Decorators\ndef uppercase(func):\n    def wrapper(*args, **kwargs):\n        result = func(*args, **kwargs)\n        return ' '.join(word.capitalize() for word in result.split())\n    return wrapper\n\n@uppercase\ndef greet(name):\n    return f\"hi, {name}!\"\n\ngreet(\"alice\") # Hi, Alice!"
+        },
+        {
+          "type": "title",
+          "content": "Generators"
+        },
+        {
+          "type": "text",
+          "content": "Generators are a great way to make iterators. They are defined as standard functions but use the **yield** keyword to return a value one iteration at a time. It prevents us from allocating large amount of memory when iterating over large datasets."
+        },
+        {
+          "type": "code",
+          "content": "# Generator\ndef even_numbers(limit):\n    num = 0\n    while num <= limit:\n        yield num\n        num += 2\n\nfor even in even_numbers(10):\n    print(even)  # 0, 2, 4, 6, 8, 10"
+        },
+        {
+          "type": "depth",
+          "content": "1. [Decorators](https://docs.python.org/3/glossary.html#term-decorator) | Python Documentation\n2. [Generators](https://docs.python.org/3/glossary.html#term-generator) | Python Documentation"
+        }
+      ],
+      "Iterators": [],
+      "Closures": [
+        {
+          "type": "mainTitle",
+          "content": "Closures"
+        },
+        {
+          "type": "text",
+          "content": "Closures capture the environment of the parent function with its variables. The inner function can access the variables the outer function had defined. The example below will help you understand how closures work."
+        },
+        {
+          "type": "code",
+          "content": "def string_api(value):\n     # fetch API data\n    data = value\n    def stringify(value):\n        return f\"{value} - {data}\"\n\n    return stringify\n\napi = string_api(\"1234\")\napi(\"data\") # data - 1234"
+        },
+        {
+          "type": "text",
+          "content": "In the example above the \"api\" function is a closure that captures the data of the parent function and when called with its own input, it returns a string combining the new input and the data from the parent function."
+        },
+        {
+          "type": "depth",
+          "content": "1. [Closures](https://docs.python.org/3/reference/datamodel.html#closures) | Python Documentation"
+        }
+      ],
+      "Generics": [
+        {
+          "type": "mainTitle",
+          "content": "Generics"
+        },
+        {
+          "type": "text",
+          "content": "Generics are a way to define functions/classes that can work with any data type. They are defined using the **TypeVar** class from the typing module."
+        },
+        {
+          "type": "text",
+          "content": "While they are not required since Python is a dynamically typed language, they can be useful for documentation and to catch errors early in the development process."
+        },
+        {
+          "type": "code",
+          "content": "T = TypeVar('T')\n\nclass Stack(Generic[T]):\n    def __init__(self) -> None:\n        self.stack: List[T] = []\n\n    def push(self, item: T) -> None:\n        self.stack.append(item)\n\nstack = Stack[int]()\nstack.push(1) # [1]\nstack.push(2) # [1, 2]\nstack.push(\"3\") # TypeError"
+        },
+        {
+          "type": "text",
+          "content": "In the example above any type can be used to create the **Stack** class, but once the object is initialized the methods should use the same type as the object."
+        },
+        {
+          "type": "depth",
+          "content": "1. [Generics](https://docs.python.org/3/library/typing.html#generics) | Python Documentation"
+        }
+      ]
     },
     "Trees": {
       "General": [],
@@ -494,7 +608,6 @@
       "General": [],
       "Constructor and Destructor": [
         {
-          "type": "mainTitle",
           "content": "Constructor and Destructor"
         },
         {
@@ -836,7 +949,8 @@
       "Indexing": [],
       "Operations": [],
       "Loops": [],
-      "Methods": []
+      "Methods": [],
+      "namedtuple": []
     },
     "Arrays": {
       "General": [],
@@ -1029,14 +1143,7 @@
     },
     "File Handling": {
       "General": [],
-      "Methods": [],
-      "Modes": []
-    },
-    "Decorators & Generators": {
-      "Decorators": [],
-      "Generators": [],
-      "Yield": [],
-      "Iterators": []
+      "Methods": []
     },
     "Context Manager": {
       "General": [],

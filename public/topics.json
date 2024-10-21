@@ -1,34 +1,93 @@
 {
   "python": {
     "PEP8": [],
-    "Basics": ["Classes", "Functions"],
-    "Functions": ["Algorithms", "Recursion"],
-    "Classes": ["Arrays", "Tuples", "Sets", "Dictionaries"],
-    "Recursion": ["Graphs", "Lambda"],
-    "Algorithms": ["Graphs", "Lambda"],
-    "Arrays": ["Strings", "Map, Filter, Reduce", "Heaps"],
-    "Graphs": ["Tries", "Trees"],
-    "Dictionaries": ["Tries", "Trees"],
-    "Sets": ["Tries", "Trees"],
-    "Heaps": ["Tries", "Trees"],
-    "Tuples": ["Tries", "Trees"],
-    "Strings": ["Tries", "Trees"],
+    "Basics": [
+      "Classes",
+      "Functions"
+    ],
+    "Functions": [
+      "Algorithms",
+      "Recursion"
+    ],
+    "Classes": [
+      "Arrays",
+      "Tuples",
+      "Sets",
+      "Dictionaries"
+    ],
+    "Recursion": [
+      "Graphs",
+      "Lambda"
+    ],
+    "Algorithms": [
+      "Graphs",
+      "Lambda"
+    ],
+    "Arrays": [
+      "Strings",
+      "Map, Filter, Reduce",
+      "Heaps"
+    ],
+    "Graphs": [
+      "Tries",
+      "Trees"
+    ],
+    "Dictionaries": [
+      "Tries",
+      "Trees"
+    ],
+    "Sets": [
+      "Tries",
+      "Trees"
+    ],
+    "Heaps": [
+      "Tries",
+      "Trees"
+    ],
+    "Tuples": [
+      "Tries",
+      "Trees"
+    ],
+    "Strings": [
+      "Tries",
+      "Trees"
+    ],
     "Lambda": [],
     "Typing": [],
-    "Exception Handling": ["Async", "Testing"],
-    "File Handling": ["Async", "Testing"],
+    "Exception Handling": [
+      "Async",
+      "Testing"
+    ],
+    "File Handling": [
+      "Async",
+      "Testing"
+    ],
     "Common Libraries": [],
-    "Decorators & Generators": ["File Handling", "Exception Handling"],
-    "Context Manager": ["File Handling", "Exception Handling"],
-    "Regular Expressions": ["File Handling", "Exception Handling"],
+    "Context Manager": [
+      "File Handling",
+      "Exception Handling"
+    ],
+    "Regular Expressions": [
+      "File Handling",
+      "Exception Handling"
+    ],
     "Map, Filter, Reduce": [
-      "Decorators & Generators",
       "Context Manager",
       "Regular Expressions"
     ],
-    "Tries": ["Map, Filter, Reduce", "Typing"],
-    "Trees": ["Map, Filter, Reduce", "Typing"],
-    "Async": ["Common Libraries"],
-    "Testing": ["Common Libraries"]
+    "Tries": [
+      "Map, Filter, Reduce",
+      "Typing"
+    ],
+    "Trees": [
+      "Map, Filter, Reduce",
+      "Typing"
+    ],
+    "Async": [
+      "Common Libraries"
+    ],
+    "Testing": [
+      "Common Libraries"
+    ]
   }
 }
