@@ -1,4 +1,5 @@
 import { CheckIcon } from "@heroicons/react/24/solid";
+import Link from "next/link";
 import PropTypes from "prop-types";
 import React, { useCallback, useMemo } from "react";
 const ContentForStep = React.lazy(() => import("./ContentForStep"));
@@ -99,22 +100,15 @@ const BigContent = React.memo(function BigContent({
               </button>
             </div>
 
-            <div className="flex flex-col text-sm mt-10 text-center">
-              <p
-                className={`font-bold ${
-                  isDarkTheme ? "text-dark-secondary" : "text-light-secondary"
-                }`}
-              >
+            <div
+              className={`flex flex-col text-sm mt-10 text-center ${
+                isDarkTheme ? "text-dark-secondary" : "text-light-secondary"
+              }`}
+            >
+              <p className={`font-bold `}>
                 Copyright ©2024 Re. All rights reserved.
               </p>
-              <a
-                href="/"
-                className={`font-semibold ${
-                  isDarkTheme ? "text-white" : "text-blue-700"
-                }`}
-              >
-                Terms of Use
-              </a>
+              <Link href="/terms">Terms of Use</Link>
             </div>
           </div>
         </div>
