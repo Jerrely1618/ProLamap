@@ -2,18 +2,18 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   InformationCircleIcon,
-} from '@heroicons/react/24/solid';
-import PropTypes from 'prop-types';
-import React, { useState } from 'react';
-import Collapsible from 'react-collapsible';
-import ReactMarkdown from 'react-markdown';
-import ReactPlayer from 'react-player';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+} from "@heroicons/react/24/solid";
+import PropTypes from "prop-types";
+import React, { useState } from "react";
+import Collapsible from "react-collapsible";
+import ReactMarkdown from "react-markdown";
+import ReactPlayer from "react-player";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import {
   oneLight,
   coldarkDark,
-} from 'react-syntax-highlighter/dist/esm/styles/prism';
-import rehypeSanitize from 'rehype-sanitize';
+} from "react-syntax-highlighter/dist/esm/styles/prism";
+import rehypeSanitize from "rehype-sanitize";
 
 const ContentForStep = React.memo(function ContentForStep({
   step,
@@ -34,7 +34,7 @@ const ContentForStep = React.memo(function ContentForStep({
     return (
       <p
         className={`text-3xl justify-center ${
-          isDarkTheme ? 'text-white' : 'text-dark-background'
+          isDarkTheme ? "text-white" : "text-dark-background"
         }`}
       >
         Oooops, no content available for {step}.
@@ -47,11 +47,11 @@ const ContentForStep = React.memo(function ContentForStep({
       {topicContent.map((item, index) => (
         <div
           className={`body-medium text-xl ${
-            isDarkTheme ? 'text-light-background' : 'text-dark-background'
+            isDarkTheme ? "text-light-background" : "text-dark-background"
           }`}
           key={index}
         >
-          {!isMediaOnly && item.type === 'info' && (
+          {!isMediaOnly && item.type === "info" && (
             <div className="my-2">
               <Collapsible
                 open={isOpen}
@@ -60,7 +60,7 @@ const ContentForStep = React.memo(function ContentForStep({
                 trigger={
                   <div
                     className={`flex items-center cursor-pointer bg-third-text1 p-2 ${
-                      isOpen ? 'rounded-t-lg' : 'rounded-lg'
+                      isOpen ? "rounded-t-lg" : "rounded-lg"
                     }`}
                   >
                     <div className="text-white rounded-full w-8 h-8 flex items-center justify-center mr-2">
@@ -101,25 +101,25 @@ const ContentForStep = React.memo(function ContentForStep({
               </Collapsible>
             </div>
           )}
-          {item.type === 'title' && (
+          {item.type === "title" && (
             <h2
               className={`text-xl body-bold ${
-                isDarkTheme ? 'text-light-background' : 'text-dark-background'
+                isDarkTheme ? "text-light-background" : "text-dark-background"
               }`}
             >
               {item.content}
             </h2>
           )}
-          {item.type === 'mainTitle' && (
+          {item.type === "mainTitle" && (
             <h2
               className={`text-3xl body-bold ${
-                isDarkTheme ? 'text-light-text1' : 'text-dark-primary'
+                isDarkTheme ? "text-light-text1" : "text-dark-primary"
               }`}
             >
               {item.content}
             </h2>
           )}
-          {!isMediaOnly && item.type === 'text' && (
+          {!isMediaOnly && item.type === "text" && (
             <div className="text-base my-2 text-base">
               <ReactMarkdown
                 rehypePlugins={[rehypeSanitize]}
@@ -136,7 +136,7 @@ const ContentForStep = React.memo(function ContentForStep({
               </ReactMarkdown>
             </div>
           )}
-          {!isMediaOnly && item.type === 'Idea' && (
+          {!isMediaOnly && item.type === "Idea" && (
             <>
               <p className="text-lg font-bold text-blue-400">Idea:</p>
               <div className="text-lg base mb-2 font-light">
@@ -147,7 +147,7 @@ const ContentForStep = React.memo(function ContentForStep({
             </>
           )}
 
-          {!isMediaOnly && item.type === 'depth' && (
+          {!isMediaOnly && item.type === "depth" && (
             <>
               <p className={`text-3xl body-bold  `}>Learn in Depth</p>
               <div className="text-base my-2">
@@ -162,7 +162,7 @@ const ContentForStep = React.memo(function ContentForStep({
                       <a
                         href={href}
                         className={`${
-                          isDarkTheme ? 'text-light-text1' : 'text-dark-primary'
+                          isDarkTheme ? "text-light-text1" : "text-dark-primary"
                         } font-bold hover:underline`}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -173,15 +173,15 @@ const ContentForStep = React.memo(function ContentForStep({
                   }}
                 >
                   {item.content
-                    .split('\n')
+                    .split("\n")
                     .map((line) => line.trim())
-                    .join('\n')}
+                    .join("\n")}
                 </ReactMarkdown>
               </div>
             </>
           )}
 
-          {item.type === 'video' && (
+          {item.type === "video" && (
             <div className={`flex justify-center items-center my-2 rounded`}>
               <div className="w-full max-w-2xl aspect-video rounded border-[3.5px] border-dark-text2">
                 <ReactPlayer
@@ -200,7 +200,7 @@ const ContentForStep = React.memo(function ContentForStep({
               </div>
             </div>
           )}
-          {item.type === 'code' && selectedCourse.value && (
+          {item.type === "code" && selectedCourse.value && (
             <SyntaxHighlighter
               language={selectedCourse.value}
               style={isDarkTheme ? coldarkDark : oneLight}

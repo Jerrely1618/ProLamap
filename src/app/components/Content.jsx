@@ -1,7 +1,6 @@
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
-  ArrowTrendingUpIcon,
   EyeIcon,
   HomeIcon,
   MoonIcon,

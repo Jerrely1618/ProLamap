@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
-  EyeIcon,
   HomeIcon,
   MoonIcon,
   SunIcon,
@@ -24,7 +23,6 @@ export default function Welcome({
   handleHide,
   toggleTheme,
   showWelcome,
-  width,
   setIsMediaOnly,
 }) {
   const [searchTerm, setSearchTerm] = useState("");

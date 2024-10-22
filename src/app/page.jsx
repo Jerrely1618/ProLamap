@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useEffect, useCallback, useReducer } from "react";
+import React, { useRef, useEffect, useCallback, useReducer, lazy } from "react";
 import PropTypes from "prop-types";
 import {
   ArrowsPointingInIcon,
@@ -8,10 +8,10 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/solid";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import RoadMap from "./components/RoadMap";
 import Select from "react-select";
-import Welcome from "./components/Welcome";
-import Content from "./components/Content";
+const Content = lazy(() => import("./components/Content"));
+const Welcome = lazy(() => import("./components/Welcome"));
+const RoadMap = lazy(() => import("./components/RoadMap"));
 import { Button, Switch, Tooltip } from "antd";
 const languages = [
   { value: "python", label: "Python" },
@@ -129,9 +129,9 @@ export default function Home() {
   useEffect(() => {
     const lastSelected = JSON.parse(localStorage.getItem("lastSelectedOption"));
     if (lastSelected) {
-      setSelectedOption(lastSelected);
+      dispatch({ type: "SET_SELECTED_OPTION", payload: lastSelected });
     } else if (options.length > 0) {
-      setSelectedOption(options[0]);
+      dispatch({ type: "SET_SELECTED_OPTION", payload: options[0] });
     }
   }, [options]);
 
@@ -164,8 +164,6 @@ export default function Home() {
     dispatch({ type: "SET_STATE", payload: { confirmDelete: value } });
   const setReturnToCenter = (value) =>
     dispatch({ type: "SET_STATE", payload: { returnToCenter: value } });
-  const setSelectedOption = (value) =>
-    dispatch({ type: "SET_STATE", payload: { selectedOption: value } });
   const setIsMediaOnly = () => {
     dispatch({
       type: "SET_STATE",
