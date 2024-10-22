@@ -2,7 +2,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 
 export const metadata = {
-  title: "ProlaDict - Programming Dictionary for Fast Learning",
+  title:"Re - Programming Dictionary for Fast Learning",
   description:
     "Master programming languages quickly with ProlaDict, the ultimate dictionary for Python concepts including algorithms, recursion, data structures, and more. Perfect for learners and developers seeking to solidify and reapply their knowledge.",
   keywords: "ProlaDict, Python, programming, algorithms, recursion, data structures, learning, coding",

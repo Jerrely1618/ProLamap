@@ -10,18 +10,18 @@ module.exports = {
       colors: {
         redSpecial:'#2E073F',
         light: {
-          background: '#F5EFFF', 
+          background: '#f7f2ff', 
           text1: '#A594F9', 
           text2: '#A594F9', 
           primary: '#e2eff1', 
           secondary: '#555273', 
         },
         dark: {
-          background: '#070F2B',
+          background: '#070f2c',
           text1: '#9290C3', 
           text2: '#555273 ',
           primary: '#3b82f6',
-          secondary: '#9290C3', 
+          secondary: '#BECDFA', 
         },
         third:{
           background: '#2E073F',
@@ -29,7 +29,22 @@ module.exports = {
           text2: '#A594F9',
           primary: '#2E073F',
           secondary: '#AD49E1',
-        }
+        },
+      },
+      backgroundImage: {
+        'light-gradient': 'linear-gradient(270deg, rgba(245,239,255,0.8), rgba(165,148,249,0.8))',
+        'dark-gradient': 'linear-gradient(270deg, rgba(7, 15, 43, 1), rgba(22, 33, 71, 1))',
+      },
+      backdropBlur: {
+        sm: '4px',
+        md: '8px',
+        lg: '12px',
+      },
+      boxShadow: {
+        'glassy': '0 4px 30px rgba(0, 0, 0, 0.1)',
+      },
+      opacity: {
+        'glass': '0.8',
       },
     },
   },

@@ -1,12 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Modak&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 .toon{
     font-family: 'Gamja Flower', cursive;
+}
+.title {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
 }
 .body {
     font-family: 'Montserrat', sans-serif;
@@ -55,4 +59,26 @@
 }
 .draggable {
   transition: width 0.2s ease; 
+}
+.custom-switch.ant-switch-checked {
+  background-color: #070F2B; /* Dark background color when checked */
+  border-color: #F5EFFF; /* Optional: match border with the background */
+}
+
+/* Checked state on hover */
+.custom-switch.ant-switch-checked:hover {
+  background-color: #444; /* Darker shade on hover */
+  border-color: #444; /* Match border with the new background */
+}
+
+/* Unchecked state */
+.custom-switch.ant-switch {
+  background-color: #F5EFFF; /* Light background color when unchecked */
+  border-color: #e0e0e0; /* Optional: match border with the background */
+}
+
+/* Unchecked state on hover */
+.custom-switch.ant-switch:hover {
+  background-color: #120433;
+  border-color: #d0d0d0; /* Match border with the new background */
 }

@@ -1,6 +1,6 @@
 {
   "python": {
-    "color": "#F0A8D0",
+    "color": "#ffe05c",
     "PEP8": {
       "Principals": [
         {
@@ -542,31 +542,38 @@
           "content": "1. [Decorators](https://docs.python.org/3/glossary.html#term-decorator) | Python Documentation\n2. [Generators](https://docs.python.org/3/glossary.html#term-generator) | Python Documentation"
         }
       ],
-      "Iterators": [{
-        "type":"mainTitle",
-        "content":"Iterators"
-
-      },
-      {"type":"text", "content":"Iterators define how objects are traversed in built-in loops such as for loops. To define the iterator for a class we need 3 components:"},
-{
-  "type": "text",
-  "content": "1. \\_\\_iter\\_\\_\n2. \\_\\_next\\_\\_\n3. StopIteration"
-},
-      {
-        "type":"text",
-        "content":"The first component __iter__ define the object of the class that we want to iterate over. The __next__ magic method specifies how we are iterating over the object. And last the StopIteration exception ends the iteration."
-      },
-      {"type":"code",
-        "content":"class Stack:\n    def __init__(self):\n        self.stack = []\n        self.i = 0\n\n    def push(self, x):\n        self.stack.append(x)\n\n    def __iter__(self): # return object to be iterated from the class\n        return self\n\n    def __next__(self):\n        if i < len(self.stack):\n            curr_item = self.stack[i]\n            self.i += 1\n            return curr_item\n        else:\n            raise StopIteration"},
+      "Iterators": [
         {
-          "type":"text","content":"Once the class has define the iterator, we can use the object in loops as shown below."
-        },{
-        "type":"code",
-        "content":"my_stack = Stack()\nmy_stack.push(1)\nmy_stack.push(2)\n\nfor item in my_stack: # Using an iterator mechanism\n    print(item)\n# 1 2"
+          "type": "mainTitle",
+          "content": "Iterators"
         },
         {
-          "type":"depth",
-          "content":"1. [Iterator](https://docs.python.org/3/glossary.html#term-iterator) | Python Documentation\n2. [PEP234](https://peps.python.org/pep-0234/) | Iterators"
+          "type": "text",
+          "content": "Iterators define how objects are traversed in built-in loops such as for loops. To define the iterator for a class we need 3 components:"
+        },
+        {
+          "type": "text",
+          "content": "1. \\_\\_iter\\_\\_\n2. \\_\\_next\\_\\_\n3. StopIteration"
+        },
+        {
+          "type": "text",
+          "content": "The first component __iter__ define the object of the class that we want to iterate over. The __next__ magic method specifies how we are iterating over the object. And last the StopIteration exception ends the iteration."
+        },
+        {
+          "type": "code",
+          "content": "class Stack:\n    def __init__(self):\n        self.stack = []\n        self.i = 0\n\n    def push(self, x):\n        self.stack.append(x)\n\n    def __iter__(self): # return object to be iterated from the class\n        return self\n\n    def __next__(self):\n        if i < len(self.stack):\n            curr_item = self.stack[i]\n            self.i += 1\n            return curr_item\n        else:\n            raise StopIteration"
+        },
+        {
+          "type": "text",
+          "content": "Once the class has define the iterator, we can use the object in loops as shown below."
+        },
+        {
+          "type": "code",
+          "content": "my_stack = Stack()\nmy_stack.push(1)\nmy_stack.push(2)\n\nfor item in my_stack: # Using an iterator mechanism\n    print(item)\n# 1 2"
+        },
+        {
+          "type": "depth",
+          "content": "1. [Iterator](https://docs.python.org/3/glossary.html#term-iterator) | Python Documentation\n2. [PEP234](https://peps.python.org/pep-0234/) | Iterators"
         }
       ],
       "Closures": [
@@ -1170,90 +1177,89 @@
     "File Handling": {
       "General": [
         {
-          "type":"mainTitle",
-          "content":"General"
+          "type": "mainTitle",
+          "content": "General"
         },
         {
-          "type":"text",
-          "content":"Learning and remembering how to handle files in Python involves understanding modes, methods and context managers."
+          "type": "text",
+          "content": "Learning and remembering how to handle files in Python involves understanding modes, methods and context managers."
         },
         {
-          "type":"title",
-          "content":"Modes"
+          "type": "title",
+          "content": "Modes"
         },
         {
-          "type":"text",
-          "content":"When working with files in our code, we have to keep in mind the different modes we can use to open files and interact with them. Each mode give us certain permissions over the file. The modes are the following:"
+          "type": "text",
+          "content": "When working with files in our code, we have to keep in mind the different modes we can use to open files and interact with them. Each mode give us certain permissions over the file. The modes are the following:"
         },
         {
-          "type":"text",
-          "content":"1. **'r' – Read mode.** Opens file for reading only.\n2. **'w' – Write Mode.**\n Opens file for writing only.\n3. **'a' – Append Mode.** Writes at the end of the file.\n4. **'x' – Exclusive creation mode.** Asserts if file exists, fails if so.\n5. **'b' – Binary mode.** Reads/Write binary data.\n6. **'t' – Text mode.** Reads/Write text data."
+          "type": "text",
+          "content": "1. **'r' – Read mode.** Opens file for reading only.\n2. **'w' – Write Mode.**\n Opens file for writing only.\n3. **'a' – Append Mode.** Writes at the end of the file.\n4. **'x' – Exclusive creation mode.** Asserts if file exists, fails if so.\n5. **'b' – Binary mode.** Reads/Write binary data.\n6. **'t' – Text mode.** Reads/Write text data."
         },
         {
-          "type":"title",
-          "content":"open and close"
+          "type": "title",
+          "content": "open and close"
         },
         {
-          "type":"text",
-          "content":"The direct way to open a file in your code is by using the open function with the filepath (absolute or relative) and mode as arguments. The same can be achieved using the with keyword, which declares a context manager that opens the file and ensures it is automatically closed after the block of code is executed."
+          "type": "text",
+          "content": "The direct way to open a file in your code is by using the open function with the filepath (absolute or relative) and mode as arguments. The same can be achieved using the with keyword, which declares a context manager that opens the file and ensures it is automatically closed after the block of code is executed."
         },
         {
-          "type":"info",
-          "title":"Leaving multiple files open",
-          "content":"ALways remember to close the files using the close() method. Leaving multiple files opened can tie many resources, potentially causing memory leaks. Additionally, if the file is open and the program crashes it could lead to your file getting corrupted or changes not being changed altogether, losing your work."
+          "type": "info",
+          "title": "Leaving multiple files open",
+          "content": "ALways remember to close the files using the close() method. Leaving multiple files opened can tie many resources, potentially causing memory leaks. Additionally, if the file is open and the program crashes it could lead to your file getting corrupted or changes not being changed altogether, losing your work."
         },
         {
-          "type":"code",
-          "content":"# opening the file directly\nfile = open('file.txt', mode)\nfile.close() # closing file\n\n# Using context manager to open file and close automatically\nwith open('file.txt', mode) as file:\n    data = file.read()"
+          "type": "code",
+          "content": "# opening the file directly\nfile = open('file.txt', mode)\nfile.close() # closing file\n\n# Using context manager to open file and close automatically\nwith open('file.txt', mode) as file:\n    data = file.read()"
         },
         {
-          "type":"depth",
-          "content":"1. [PEP 3116](https://peps.python.org/pep-3116/#the-open-built-in-function) | New I/O Open Built-In function\n2. [IO](https://docs.python.org/3/library/io.html#module-io) | Core tools for working with streams"
+          "type": "depth",
+          "content": "1. [PEP 3116](https://peps.python.org/pep-3116/#the-open-built-in-function) | New I/O Open Built-In function\n2. [IO](https://docs.python.org/3/library/io.html#module-io) | Core tools for working with streams"
         }
       ],
       "Methods and OS": [
         {
-          "type":"mainTitle",
-          "content":"Methods and OS"
+          "type": "mainTitle",
+          "content": "Methods and OS"
         },
         {
-          "type":"title",
-          "content":"Methods"
+          "type": "title",
+          "content": "Methods"
         },
         {
-          "type":"text",
-          "content":""
+          "type": "text",
+          "content": ""
         },
         {
           "type": "code",
           "content": "# my_resume.txt:\n# John Doe\n# Computer Science Student at MIT\n# Skills: Python, Java, C++\n# Experience: Software Engineering Intern at Google\n# Interests: AI, Machine Learning, Web Development\n\nwith open('/documents/my_resume.txt', 'r') as resume:\n    first_20ch = resume.read(20)  # 'John Doe Computer S'\n    next_line = resume.readline()  # 'cience Student at MIT\\n'\n    next_line_2 = resume.readline()  # 'Skills: Python, Java, C++\\n'\n    all_lines = resume.readlines()  # ['Experience: Software Engineering Intern at Google\\n', 'Interests: AI, Machine Learning, Web Development\\n']"
         },
         {
-          "type":"text",
-          "content":""
+          "type": "text",
+          "content": ""
         },
         {
-          "type":"code",
-          "content":"# employees.txt\n# John Doe\n\nwith open('C:/documents/employees.txt', w) as employees:\n    employees.write(\"Jane Doe\")\n    employees.writelines([\"Tom Brien\\n\", \"Janet Soy\"])\n# John Doe\n# Jane Doe\n# Tom Brien\n# Janet Soy"
+          "type": "code",
+          "content": "# employees.txt\n# John Doe\n\nwith open('C:/documents/employees.txt', w) as employees:\n    employees.write(\"Jane Doe\")\n    employees.writelines([\"Tom Brien\\n\", \"Janet Soy\"])\n# John Doe\n# Jane Doe\n# Tom Brien\n# Janet Soy"
         },
         {
-          "type":"info",
-          "title":"I/O exceptions",
-          "content":"More on exception on the 'Exception Handling' module"
+          "type": "info",
+          "title": "I/O exceptions",
+          "content": "More on exception on the 'Exception Handling' module"
         },
         {
-          "type":"title",
-          "content":"OS module"
+          "type": "title",
+          "content": "OS module"
         },
         {
-          "type":"text",
-          "content":""
+          "type": "text",
+          "content": ""
         },
-        
-{
-  "type": "code",
-  "content": "import os\n\n# Directory: ['filename.txt', 'otherfile.txt']\nos.listdir()  # ['filename.txt', 'otherfile.txt']\nos.path.exists('filename.txt')  # True\nos.remove('filename.txt')  # ['filename.txt', 'otherfile.txt']\n\nos.mkdir('important_files')\nos.path.join('C:\\important_files', 'filename.txt')  # 'C:\\important_files\\filename.txt'\nos.rmdir('important_files')"
-}
+        {
+          "type": "code",
+          "content": "import os\n\n# Directory: ['filename.txt', 'otherfile.txt']\nos.listdir()  # ['filename.txt', 'otherfile.txt']\nos.path.exists('filename.txt')  # True\nos.remove('filename.txt')  # ['filename.txt', 'otherfile.txt']\n\nos.mkdir('important_files')\nos.path.join('C:\\important_files', 'filename.txt')  # 'C:\\important_files\\filename.txt'\nos.rmdir('important_files')"
+        }
       ]
     },
     "Context Manager": {

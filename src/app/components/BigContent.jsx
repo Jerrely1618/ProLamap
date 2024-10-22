@@ -25,11 +25,15 @@ const BigContent = React.memo(function BigContent({
   );
 
   return (
-    <div>
+    <div
+      className={`max-w-screen-lg justify-center flex flex-col ${
+        isDarkTheme ? "bg-dark-background" : "bg-light-background"
+      }`}
+    >
       <h1
         className={`${
           isDarkTheme ? "text-white" : "text-third-background"
-        } text-5xl body-bold transition-colors duration-300 text-left pb-2 px-4`}
+        } text-5xl body-bold  transition-colors duration-300 text-left pb-2 px-4`}
       >
         {selectedTopic}
       </h1>
@@ -48,29 +52,19 @@ const BigContent = React.memo(function BigContent({
         </div>
 
         <div
-          className={`transition-colors duration-300 col-span-1 ${
-            isDarkTheme ? "bg-dark-background" : "bg-light-background"
-          } h-full`}
+          className={`transition-colors duration-300 col-span-1 bg-transparent h-full`}
         >
-          <div
-            className={`grid w-full ${
-              isCompleted ? "border-b-green-500" : "border-b-light-background"
-            } border-b-0`}
-          >
+          <div className={`grid w-full bg-transparent border-b-0`}>
             <div className="grid">
               {steps.map((step, index) => (
                 <button
                   aria-label={step}
                   key={step}
                   onClick={() => handleStepSelection(step)}
-                  className={`py-5 px-4 transition-all duration-300 body-bold text-base text-left relative ${
+                  className={`py-5 px-4 transition-all text-white duration-300 body-bold text-base text-left relative ${
                     selectedStep === step
-                      ? "ml-5 bg-third-background text-white z-0"
-                      : `ml-0 z-10 shadow-xl ${
-                          isDarkTheme
-                            ? "bg-dark-secondary text-white"
-                            : "bg-light-text1 text-black"
-                        }`
+                      ? "ml-5 bg-third-background  z-0"
+                      : `ml-0 z-10 shadow-xl bg-light-text1`
                   } ${index === 0 && "rounded-tl-lg"} ${
                     index === steps.length - 1 && "rounded-bl-lg"
                   } `}
@@ -111,7 +105,7 @@ const BigContent = React.memo(function BigContent({
                   isDarkTheme ? "text-dark-secondary" : "text-light-secondary"
                 }`}
               >
-                Copyright ©2024 Proladict. All rights reserved.
+                Copyright ©2024 Re. All rights reserved.
               </p>
               <a
                 href="/"

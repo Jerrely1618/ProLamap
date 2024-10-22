@@ -86,12 +86,11 @@ const SmallContent = React.memo(function SmallContent({
       )}
 
       <div
-        className={`fixed bottom-0 transition-colors duration-300 ${
+        className={`fixed bottom-0 transition-colors duration-300 w-full ${
           isDarkTheme ? "bg-dark-background" : "bg-light-background"
         } ${
           isCompleted ? "border-t-green-500" : "border-t-light-background"
         } border-t-[5px]`}
-        style={{ width: `${width}%` }}
       >
         <div className="flex w-full">
           <div className="flex items-center justify-between w-auto">

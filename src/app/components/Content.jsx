@@ -178,7 +178,11 @@ const Content = React.memo(function Content({
       />
       <Suspense
         fallback={
-          <div className="flex flex-col w-full min-w-0 text-2xl items-center justify-center h-screen">
+          <div
+            className={` flex flex-col w-full min-w-0 text-2xl items-center justify-center h-screen ${
+              isDarkTheme ? "bg-dark-background" : "bg-light-background"
+            }`}
+          >
             <ThreeDots
               height="80"
               width="80"
@@ -246,13 +250,17 @@ function Buttons({
   }, [setShowWelcome]);
 
   return (
-    <div className="flex justify-between bg-transparent m-4">
+    <div
+      className={`flex justify-between p-4 ${
+        isDarkTheme ? "bg-dark-background" : "bg-light-background"
+      }`}
+    >
       <div className="flex space-x-2">
         <Tooltip title="Exit" placement="top">
           <button
             aria-label="Exit"
             onClick={handleHide}
-            className={`p-2 rounded transition-colors duration-300 bg-redSpecial text-white hover:bg-red-800`}
+            className={`p-2 rounded transition-colors duration-300 bg-redSpecial text-white hover:bg-red-700`}
           >
             <XMarkIcon className="h-5 w-5" />
           </button>
@@ -262,10 +270,10 @@ function Buttons({
             <button
               aria-label="Home"
               onClick={handleHomeClick}
-              className={`p-2 rounded transition-colors duration-300 ${
+              className={`p-2 rounded transition-color duration-300 ${
                 isDarkTheme
-                  ? "bg-dark-secondary text-dark-background"
-                  : "bg-light-text1  text-light-secondary"
+                  ? "bg-dark-secondary text-dark-background hover:bg-third-primary hover:text-white"
+                  : "bg-light-text1  text-light-secondary hover:bg-blue-500 hover:text-white"
               }`}
             >
               <HomeIcon className="h-5 w-5" />
@@ -277,10 +285,10 @@ function Buttons({
           <button
             aria-label="Theme Toggle"
             onClick={toggleTheme}
-            className={`p-2 rounded transition-colors duration-300 ${
+            className={`p-2 rounded transition-color duration-300 ${
               isDarkTheme
-                ? "bg-dark-secondary text-dark-background"
-                : "bg-light-text1  text-light-secondary"
+                ? "bg-dark-secondary text-dark-background hover:text-white"
+                : "bg-light-text1  text-light-secondary hover:text-dark-background"
             }`}
           >
             {isDarkTheme ? (
@@ -298,11 +306,11 @@ function Buttons({
             <button
               aria-label="Media-Only"
               onClick={toggleSettings}
-              className={`p-2 rounded transition-colors duration-300 ${
+              className={`p-2 rounded transition-colors duration-300 hover:bg-blue-600 hover:text-white ${
                 isMediaOnly
-                  ? "bg-blue-600 text-white"
+                  ? "bg-blue-600 text-white "
                   : isDarkTheme
-                  ? "bg-dark-secondary text-dark-background"
+                  ? "bg-dark-secondary text-dark-background "
                   : "bg-light-text1 text-light-secondary"
               }`}
             >
@@ -315,10 +323,10 @@ function Buttons({
           <button
             aria-label="Expand"
             onClick={handleExpand}
-            className={`p-2 rounded transition-colors duration-300 ${
+            className={`p-2 rounded transition-color duration-300 ${
               isDarkTheme
-                ? "bg-dark-secondary text-dark-background"
-                : "bg-light-text1  text-light-secondary"
+                ? "bg-dark-secondary text-dark-background hover:bg-third-primary hover:text-white"
+                : "bg-light-text1  text-light-secondary hover:bg-blue-500 hover:text-white"
             }`}
           >
             {isExpanded ? (

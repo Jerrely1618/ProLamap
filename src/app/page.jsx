@@ -23,9 +23,9 @@ const languages = [
   },
 ];
 const initialState = {
-  isExpanded: false,
+  isExpanded: true,
   isHidden: false,
-  width: 40,
+  width: 100,
   isDarkTheme: true,
   showWelcome: true,
   isDraggable: true,
@@ -294,11 +294,11 @@ export default function Home() {
   };
 
   return (
-    <div className="flex h-screen transition-colors overflow-hidden duration-300">
+    <div className="flex h-screen transition-all overflow-hidden duration-300">
       {!isHidden && (
         <div
-          className={`flex flex-col flex-grow h-full transition-width transition-colors duration-300 shadow-lg ${
-            isDarkTheme ? "bg-dark-background" : "bg-light-background"
+          className={`flex flex-col flex-grow h-full transition-width transition-colors duration-300 shadow-glassy backdrop-blur-md bg-opacity-glass ${
+            isDarkTheme ? "bg-dark-gradient" : "bg-light-gradient"
           }`}
           style={{ width: `${width}%` }}
         >
@@ -458,7 +458,7 @@ export default function Home() {
               isDarkTheme ? "text-dark-secondary" : "text-light-secondary"
             } body`}
           >
-            ProlaDict
+            Re
           </h1>
         </div>
       )}
@@ -489,7 +489,7 @@ export default function Home() {
               <button
                 aria-label="Close"
                 onClick={() => setShowSettings(false)}
-                className={`p-2 rounded bg-redSpecial hover:bg-red-800 ${
+                className={`p-2 rounded bg-redSpecial hover:bg-red-700 ${
                   isDarkTheme ? " text-light-background" : "text-light-text1"
                 }`}
               >
@@ -507,7 +507,7 @@ export default function Home() {
                   <div className="mt-3 flex space-x-4">
                     <Button
                       aria-label="Yes"
-                      className="bg-red-800 text-white"
+                      className="bg-red-700 text-white"
                       type="primary"
                       onClick={
                         confirmDelete === "lang"
@@ -553,7 +553,7 @@ export default function Home() {
                       <button
                         aria-label="Delete"
                         onClick={() => handleDeleteLanguage(eliminateLanguage)}
-                        className="bg-redSpecial text-lg body-bold text-white rounded-lg p-2 hover:bg-red-800"
+                        className="bg-redSpecial text-lg body-bold text-white rounded-lg p-2 hover:bg-red-700"
                       >
                         Delete Progress
                       </button>
@@ -561,7 +561,7 @@ export default function Home() {
                     <button
                       aria-label="Delete All"
                       onClick={handleDeleteAllProgress}
-                      className="bg-redSpecial text-lg body-bold text-white mt-2 rounded-lg p-2 hover:bg-red-800"
+                      className="bg-redSpecial text-lg body-bold text-white mt-2 rounded-lg p-2 hover:bg-red-700"
                     >
                       Delete All Progress
                     </button>
