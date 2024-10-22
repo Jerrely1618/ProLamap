@@ -1,7 +1,7 @@
 import { CheckIcon } from "@heroicons/react/24/solid";
 import PropTypes from "prop-types";
 import React, { useCallback, useMemo } from "react";
-const ContentForStep = lazy(() => import("./ContentForStep"));
+const ContentForStep = React.lazy(() => import("./ContentForStep"));
 
 const BigContent = React.memo(function BigContent({
   isDarkTheme,

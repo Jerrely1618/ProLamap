@@ -3,6 +3,7 @@ import {
   ChevronUpIcon,
   InformationCircleIcon,
 } from "@heroicons/react/24/solid";
+import Link from "next/link";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
 import Collapsible from "react-collapsible";
@@ -159,16 +160,17 @@ const ContentForStep = React.memo(function ContentForStep({
                     ),
                     li: ({ children }) => <li className="ml-4">{children}</li>,
                     a: ({ children, href }) => (
-                      <a
-                        href={href}
-                        className={`${
-                          isDarkTheme ? "text-light-text1" : "text-dark-primary"
-                        } font-bold hover:underline`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {children}
-                      </a>
+                      <Link href={href} target="_blank" passHref>
+                        <span
+                          className={`${
+                            isDarkTheme
+                              ? "text-light-text1"
+                              : "text-dark-primary"
+                          } font-bold hover:underline`}
+                        >
+                          {children}
+                        </span>
+                      </Link>
                     ),
                   }}
                 >
