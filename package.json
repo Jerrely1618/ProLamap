@@ -17,7 +17,7 @@
     "glob": "^9.3.5",
     "lodash.debounce": "^4.0.8",
     "lru-cache": "^11.0.1",
-    "next": "^15.0.0",
+    "next": "14.2",
     "proladict": "file:",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",

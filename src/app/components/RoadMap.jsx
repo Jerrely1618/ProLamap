@@ -1,4 +1,10 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useRef,
+  useMemo,
+  useEffect,
+  useCallback,
+} from "react";
 import { motion } from "framer-motion";
 import PropTypes from "prop-types";
 
@@ -40,14 +46,13 @@ const RoadMapBubble = React.memo(function RoadMapBubble({
   setIsHidden,
 }) {
   const [hovered, setHovered] = useState(false);
-  const [completedSubtopics, setCompletedSubtopics] = useState(new Set());
+  const [completedSubtopics, setCompletedSubtopics] = useState([]);
 
   const updateCompletedSubtopics = useCallback(() => {
-    const completedFromStorage = new Set(
+    const completedFromStorage =
       JSON.parse(localStorage.getItem("completed") || "{}")?.[
         selectedCourse.value
-      ]?.[text] || []
-    );
+      ]?.[text] || [];
     setCompletedSubtopics(completedFromStorage);
   }, [selectedCourse.value, text]);
 
@@ -55,9 +60,18 @@ const RoadMapBubble = React.memo(function RoadMapBubble({
     updateCompletedSubtopics();
   }, [updateCompletedSubtopics, change]);
 
-  const allCompleted = Object.keys(subtopics).every((subtopic) =>
-    completedSubtopics.has(subtopic)
+  const allCompleted = useMemo(
+    () =>
+      Object.keys(subtopics).every((subtopic) =>
+        completedSubtopics.includes(subtopic)
+      ),
+    [subtopics, completedSubtopics]
   );
+
+  const handleHoverStart = () => setHovered(true);
+  const handleHoverEnd = () => setHovered(false);
+
+  const subtopicKeys = useMemo(() => Object.keys(subtopics), [subtopics]);
 
   return (
     <motion.button
@@ -79,14 +93,11 @@ const RoadMapBubble = React.memo(function RoadMapBubble({
         x: { repeat: Infinity, duration: randomFloat(0.5, 1), ease: "linear" },
         y: { repeat: Infinity, duration: randomFloat(0.5, 1), ease: "linear" },
       }}
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
+      onHoverStart={handleHoverStart}
+      onHoverEnd={handleHoverEnd}
       whileHover={{
         scale: 1.15,
-        transition: {
-          duration: 0.05,
-          ease: "linear",
-        },
+        transition: { duration: 0.05, ease: "linear" },
       }}
       onClick={() => {
         onClick(text);
@@ -96,12 +107,12 @@ const RoadMapBubble = React.memo(function RoadMapBubble({
     >
       {text}
       <div className="flex flex-wrap px-5 mt-0.5 items-center justify-center">
-        {Object.keys(subtopics).length > 0 &&
-          Object.keys(subtopics).map((subtopic) => (
+        {subtopicKeys.length > 0 &&
+          subtopicKeys.map((subtopic) => (
             <div
               key={subtopic}
               className={`w-3 h-3 rounded-full mx-0.5 my-0.5 ${
-                completedSubtopics.has(subtopic)
+                completedSubtopics.includes(subtopic)
                   ? "bg-green-700"
                   : "bg-gray-400"
               }`}
@@ -286,26 +297,30 @@ const RoadMap = ({
         ref={containerRef}
       >
         <motion.div
-          className="flex flex-col items-center justify-center"
+          className="grid grid-cols-1 gap-4"
           style={{
             transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`,
           }}
         >
           {Object.entries(levels).map(([level, nodes]) => (
-            <div key={level} className="flex flex-row">
-              {nodes.map((node) => (
-                <RoadMapBubble
+            <div key={level} className="flex flex-row justify-center">
+              {nodes.map((node, index) => (
+                <div
                   key={node}
-                  text={node}
-                  isHoveringRoadmap={isHoveringRoadmap}
-                  isDarkTheme={isDarkTheme}
-                  onClick={setSelectedTopic}
-                  setShowWelcome={setShowWelcome}
-                  subtopics={topics[node] || {}}
-                  selectedCourse={selectedCourse}
-                  change={change}
-                  setIsHidden={setIsHidden}
-                />
+                  className={`flex-shrink-0 ${index > 0 ? "ml-2" : ""}`}
+                >
+                  <RoadMapBubble
+                    text={node}
+                    isHoveringRoadmap={isHoveringRoadmap}
+                    isDarkTheme={isDarkTheme}
+                    onClick={setSelectedTopic}
+                    setShowWelcome={setShowWelcome}
+                    subtopics={topics[node] || {}}
+                    selectedCourse={selectedCourse}
+                    change={change}
+                    setIsHidden={setIsHidden}
+                  />
+                </div>
               ))}
             </div>
           ))}

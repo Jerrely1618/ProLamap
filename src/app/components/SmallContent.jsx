@@ -6,7 +6,7 @@ import {
   Bars4Icon,
   CheckIcon,
 } from "@heroicons/react/24/solid";
-const ContentForStep = lazy(() => import("./ContentForStep"));
+const ContentForStep = React.lazy(() => import("./ContentForStep"));
 
 const SmallContent = React.memo(function SmallContent({
   toggleCompletion,

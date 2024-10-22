@@ -189,32 +189,36 @@ export default function Welcome({
             </span>
           </h1>
           <div className="flex flex-col items-center justify-center w-full">
-            <div className="overflow-hidden z-20 whitespace-nowrap body mt-0 ml-1.5 w-full">
-              <div className="animate-marquee whitespace-nowrap flex will-change-transform">
-                {topics.map((topic, index) => (
+            {isExpanded && (
+              <div className="overflow-hidden z-20 whitespace-nowrap body mt-0 ml-1.5 w-full">
+                <div className="animate-marquee whitespace-nowrap flex will-change-transform">
+                  {topics.map((topic, index) => (
+                    <span
+                      key={index}
+                      className={`mr-8 flex items-center text-xs md:text-sm sm:text-sm font-bold ${
+                        isDarkTheme
+                          ? "text-dark-secondary"
+                          : "text-dark-background"
+                      }`}
+                    >
+                      {topic}
+                    </span>
+                  ))}
                   <span
-                    key={index}
-                    className={`mr-8 flex items-center text-xs md:text-sm sm:text-sm font-bold ${
+                    className={`mr-8 flex items-center font-bold ${
                       isDarkTheme
                         ? "text-dark-secondary"
                         : "text-dark-background"
                     }`}
                   >
-                    {topic}
+                    <span className="font-bold flex items-center">
+                      Learn Fast
+                      <ArrowRightIcon className="h-5 w-5 pl-0.5" />
+                    </span>
                   </span>
-                ))}
-                <span
-                  className={`mr-8 flex items-center font-bold ${
-                    isDarkTheme ? "text-dark-secondary" : "text-dark-background"
-                  }`}
-                >
-                  <span className="font-bold flex items-center">
-                    Learn Fast
-                    <ArrowRightIcon className="h-5 w-5 pl-0.5" />
-                  </span>
-                </span>
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="w-full z-20 flex flex-col items-center">
               <div className="w-full" ref={searchRef}>
@@ -407,9 +411,9 @@ function Buttons({
         </Tooltip>
       </div>
       <div
-        className={`flex flex-col text-sm justify-center text-center items-center -ml-10 ${
-          isDarkTheme ? "text-dark-secondary" : "text-light-secondary"
-        } `}
+        className={`flex flex-col text-sm justify-center text-center items-center ${
+          isExpanded ? "" : "-ml-10"
+        } ${isDarkTheme ? "text-dark-secondary" : "text-light-secondary"} `}
       >
         <p className={`font-bold justify-center items-center  px-2  `}>
           Copyright ©2024 Re. All rights reserved.
