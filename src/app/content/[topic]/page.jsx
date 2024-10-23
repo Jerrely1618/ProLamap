@@ -9,9 +9,10 @@ import {
 } from "@heroicons/react/24/solid";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import Select from "react-select";
-const Welcome = lazy(() => import("./components/Welcome"));
-const RoadMap = lazy(() => import("./components/RoadMap"));
+const InnerContent = lazy(() => import("@/app/components/InnerContent"));
+const RoadMap = lazy(() => import("@/app/components/RoadMap"));
 import { Button, Switch, Tooltip } from "antd";
+import { useSearchParams } from "next/navigation";
 const languages = [
   { value: "python", label: "Python" },
   {
@@ -29,6 +30,8 @@ const initialState = {
   isDraggable: true,
   showSettings: false,
   eliminateLanguage: "python",
+  isMediaOnly: false,
+  selectedTopic: null,
   confirmDelete: "",
   returnToCenter: false,
   selectedOption: {},
@@ -52,13 +55,21 @@ function reducer(state, action) {
       return { ...state, options: action.payload };
     case "SET_SELECTED_OPTION":
       return { ...state, selectedOption: action.payload };
+    case "INITIALIZE":
+      return {
+        ...state,
+        selectedTopic: action.payload.selectedTopic,
+        isExpanded: action.payload.isExpanded,
+        isDarkTheme: action.payload.isDarkTheme,
+      };
     default:
       return state;
   }
 }
 
-export default function Home() {
+export default function Page({ params }) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const searchParams = useSearchParams();
   const {
     isExpanded,
     isHidden,
@@ -67,6 +78,8 @@ export default function Home() {
     isDraggable,
     showSettings,
     eliminateLanguage,
+    isMediaOnly,
+    selectedTopic,
     confirmDelete,
     returnToCenter,
     selectedOption,
@@ -76,7 +89,21 @@ export default function Home() {
     change,
     progressBarWidth,
   } = state;
+  useEffect(() => {
+    const isExpanded = searchParams.get("isExpanded") === "true";
+    const isDarkTheme = searchParams.get("isDarkTheme") === "true";
 
+    const selectedTopic = params.topic;
+
+    dispatch({
+      type: "INITIALIZE",
+      payload: {
+        selectedTopic,
+        isExpanded,
+        isDarkTheme,
+      },
+    });
+  }, [searchParams, params]);
   const isDragging = useRef(false);
   const settingsRef = useRef(null);
 
@@ -128,15 +155,6 @@ export default function Home() {
     }
   }, [options]);
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
-
   const setScreenWidth = (value) =>
     dispatch({ type: "SET_STATE", payload: { screenWidth: value } });
   const setWindowWidth = (value) =>
@@ -147,15 +165,14 @@ export default function Home() {
     dispatch({ type: "SET_STATE", payload: { isDraggable: value } });
   const setShowSettings = (value) =>
     dispatch({ type: "SET_STATE", payload: { showSettings: value } });
-  const setEliminateLanguage = (value) =>
-    dispatch({ type: "SET_STATE", payload: { eliminateLanguage: value } });
-  const setSelectedTopic = (value) =>
-    dispatch({ type: "SET_STATE", payload: { selectedTopic: value } });
-  const setConfirmDelete = (value) =>
-    dispatch({ type: "SET_STATE", payload: { confirmDelete: value } });
+  const setIsMediaOnly = () => {
+    dispatch({
+      type: "SET_STATE",
+      payload: { isMediaOnly: !state.isMediaOnly },
+    });
+  };
   const setReturnToCenter = (value) =>
     dispatch({ type: "SET_STATE", payload: { returnToCenter: value } });
-
   const getProgressFromLocalStorage = (value) => {
     const storedOptions = JSON.parse(localStorage.getItem("completed")) || {};
     return storedOptions[value]?.progress || 0;
@@ -181,20 +198,6 @@ export default function Home() {
       dispatch({ type: "SET_STATE", payload: { width: newWidth } });
     }
   }, []);
-
-  const handleClickOutside = (event) => {
-    if (settingsRef.current && !settingsRef.current.contains(event.target)) {
-      setShowSettings(false);
-      setConfirmDelete("");
-    }
-  };
-
-  const handleKeyDown = (event) => {
-    if (event.key === "Escape") {
-      setShowSettings(false);
-      setConfirmDelete("");
-    }
-  };
 
   const handleMouseUp = () => {
     if (isDragging.current) {
@@ -285,16 +288,22 @@ export default function Home() {
           }`}
           style={{ width: `${width}%` }}
         >
-          <div className="flex-grow flex flex-col-reverse md:flex-col h-full w-full">
-            <Welcome
+          <div className="flex-none w-full h-full overflow-hidden">
+            <InnerContent
               isDarkTheme={isDarkTheme}
-              options={options}
-              setSelectedTopic={setSelectedTopic}
-              handleExpand={handleExpand}
+              selectedTopic={selectedTopic}
+              selectedCourse={selectedOption}
+              isMediaOnly={isMediaOnly}
+              setChange={(val) =>
+                dispatch({ type: "SET_STATE", payload: { change: val } })
+              }
               width={width}
+              style={{ width: "100%" }}
+              handleExpand={handleExpand}
               isExpanded={isExpanded}
               handleHide={handleHide}
               toggleTheme={() => dispatch({ type: "TOGGLE_DARK_THEME" })}
+              setIsMediaOnly={setIsMediaOnly}
             />
           </div>
         </div>
@@ -383,7 +392,6 @@ export default function Home() {
               change={change}
               isDraggable={isDraggable}
               isDarkTheme={isDarkTheme}
-              setSelectedTopic={setSelectedTopic}
               selectedCourse={selectedOption}
               returnToCenter={returnToCenter}
               setIsHidden={setIsHidden}
@@ -495,7 +503,12 @@ export default function Home() {
                     </label>
                     <div className="mt-28 flex items-center justify-between">
                       <select
-                        onChange={(e) => setEliminateLanguage(e.target.value)}
+                        onChange={(e) =>
+                          dispatch({
+                            type: "SET_STATE",
+                            payload: { eliminateLanguage: e.target.value },
+                          })
+                        }
                         className="border rounded-md text-xl flex-grow py-1 px-2 mr-2"
                       >
                         {languages.map(

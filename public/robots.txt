@@ -1,0 +1,7 @@
+User-agent: *
+Crawl-delay: 10
+Allow: /
+Allow: /content/
+Allow: /terms/
+Allow: /css/
+Allow: /js/

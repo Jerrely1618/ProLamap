@@ -1,6 +1,7 @@
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  ArrowTrendingUpIcon,
   EyeIcon,
   HomeIcon,
   MoonIcon,
@@ -8,6 +9,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/solid";
 import { Tooltip } from "antd";
+import { useRouter } from "next/navigation";
 import PropTypes from "prop-types";
 import React, {
   useCallback,
@@ -21,7 +23,7 @@ import { ThreeDots } from "react-loader-spinner";
 const BigContent = React.lazy(() => import("./BigContent"));
 const SmallContent = React.lazy(() => import("./SmallContent"));
 
-const Content = React.memo(function Content({
+const InnerContent = React.memo(function InnerContent({
   isDarkTheme,
   selectedCourse,
   isMediaOnly,
@@ -31,8 +33,6 @@ const Content = React.memo(function Content({
   isExpanded,
   handleHide,
   toggleTheme,
-  setShowWelcome,
-  showWelcome,
   width,
   handleExpand,
   setIsMediaOnly,
@@ -170,8 +170,6 @@ const Content = React.memo(function Content({
         isDarkTheme={isDarkTheme}
         handleHide={handleHide}
         toggleTheme={toggleTheme}
-        setShowWelcome={setShowWelcome}
-        showWelcome={showWelcome}
         setIsMediaOnly={setIsMediaOnly}
         isMediaOnly={isMediaOnly}
       />
@@ -207,8 +205,6 @@ const Content = React.memo(function Content({
             handleHide={handleHide}
             width={width}
             toggleTheme={toggleTheme}
-            setShowWelcome={setShowWelcome}
-            showWelcome={showWelcome}
             setIsMediaOnly={setIsMediaOnly}
           />
         ) : (
@@ -235,18 +231,17 @@ function Buttons({
   isDarkTheme,
   handleHide,
   toggleTheme,
-  setShowWelcome,
-  showWelcome,
   setIsMediaOnly,
   isMediaOnly,
 }) {
+  const router = useRouter();
   const toggleSettings = useCallback(() => {
     setIsMediaOnly((prev) => !prev);
   }, [setIsMediaOnly]);
 
   const handleHomeClick = useCallback(() => {
-    setShowWelcome(true);
-  }, [setShowWelcome]);
+    router.push(`/`);
+  }, []);
 
   return (
     <div
@@ -264,21 +259,19 @@ function Buttons({
             <XMarkIcon className="h-5 w-5" />
           </button>
         </Tooltip>
-        {!showWelcome && (
-          <Tooltip title="Home" placement="top">
-            <button
-              aria-label="Home"
-              onClick={handleHomeClick}
-              className={`p-2 rounded transition-color duration-300 ${
-                isDarkTheme
-                  ? "bg-dark-secondary text-dark-background hover:bg-third-primary hover:text-white"
-                  : "bg-light-text1  text-light-secondary hover:bg-blue-500 hover:text-white"
-              }`}
-            >
-              <HomeIcon className="h-5 w-5" />
-            </button>
-          </Tooltip>
-        )}
+        <Tooltip title="Home" placement="top">
+          <button
+            aria-label="Home"
+            onClick={handleHomeClick}
+            className={`p-2 rounded transition-color duration-300 ${
+              isDarkTheme
+                ? "bg-dark-secondary text-dark-background hover:bg-third-primary hover:text-white"
+                : "bg-light-text1  text-light-secondary hover:bg-blue-500 hover:text-white"
+            }`}
+          >
+            <HomeIcon className="h-5 w-5" />
+          </button>
+        </Tooltip>
 
         <Tooltip title="Theme Toggle" placement="top">
           <button
@@ -300,24 +293,35 @@ function Buttons({
       </div>
 
       <div className="flex space-x-2 relative">
-        {!showWelcome && (
-          <Tooltip title="Media-Only" placement="top">
-            <button
-              aria-label="Media-Only"
-              onClick={toggleSettings}
-              className={`p-2 rounded transition-colors duration-300 hover:bg-blue-600 hover:text-white ${
-                isMediaOnly
-                  ? "bg-blue-600 text-white "
-                  : isDarkTheme
-                  ? "bg-dark-secondary text-dark-background "
-                  : "bg-light-text1 text-light-secondary"
-              }`}
-            >
-              <EyeIcon className="h-5 w-5" />
-            </button>
-          </Tooltip>
-        )}
-
+        <Tooltip title="Media-Only" placement="top">
+          <button
+            aria-label="Media-Only"
+            onClick={toggleSettings}
+            className={`p-2 rounded transition-colors duration-300 hover:bg-blue-600 hover:text-white ${
+              isMediaOnly
+                ? "bg-blue-600 text-white "
+                : isDarkTheme
+                ? "bg-dark-secondary text-dark-background "
+                : "bg-light-text1 text-light-secondary"
+            }`}
+          >
+            <EyeIcon className="h-5 w-5" />
+          </button>
+        </Tooltip>
+        <div className="absolute top-11 z-20 flex w-full flex-col -rotate-[32deg] items-center">
+          <ArrowTrendingUpIcon
+            className={`${
+              isDarkTheme ? "text-white" : "text-dark-background"
+            } h-5 w-5 w-full transform -rotate-[60deg]`}
+          />
+          <span
+            className={`text-center text-sm toon m-0  w-full leading-tight ${
+              isDarkTheme ? "text-white" : "text-dark-background"
+            }`}
+          >
+            Only code!
+          </span>
+        </div>
         <Tooltip title="Expand" placement="top">
           <button
             aria-label="Expand"
@@ -340,7 +344,7 @@ function Buttons({
   );
 }
 
-Content.propTypes = {
+InnerContent.propTypes = {
   isDarkTheme: PropTypes.bool.isRequired,
   selectedCourse: PropTypes.object.isRequired,
   selectedTopic: PropTypes.string.isRequired,
@@ -349,12 +353,10 @@ Content.propTypes = {
   isExpanded: PropTypes.bool.isRequired,
   handleHide: PropTypes.func.isRequired,
   toggleTheme: PropTypes.func.isRequired,
-  setShowWelcome: PropTypes.func.isRequired,
-  showWelcome: PropTypes.bool.isRequired,
   width: PropTypes.number.isRequired,
   handleExpand: PropTypes.func.isRequired,
   setIsMediaOnly: PropTypes.func.isRequired,
   isMediaOnly: PropTypes.bool.isRequired,
 };
 
-export default Content;
+export default InnerContent;

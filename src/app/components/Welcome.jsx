@@ -13,18 +13,16 @@ import { Tooltip } from "antd";
 import Link from "next/link";
 import debounce from "lodash.debounce";
 import { FixedSizeList as List } from "react-window";
+import { useRouter } from "next/navigation";
 
 export default function Welcome({
   isDarkTheme,
-  setShowWelcome,
-  setSelectedTopic,
   handleExpand,
   isExpanded,
   handleHide,
   toggleTheme,
-  showWelcome,
-  setIsMediaOnly,
 }) {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredTopics, setFilteredTopics] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -129,10 +127,11 @@ export default function Welcome({
   };
 
   const handleTopicClick = (item) => {
-    setSelectedTopic(
-      item.parentTopic ? capitalize(item.parentTopic) : capitalize(item.topic)
+    router.push(
+      `/content/${
+        item.parentTopic ? item.parentTopic : item.topic
+      }?isExpanded=${isExpanded}&isDarkTheme=${isDarkTheme}`
     );
-    setShowWelcome(false);
   };
 
   const handleKeyDown = (event) => {
@@ -336,9 +335,6 @@ export default function Welcome({
         isDarkTheme={isDarkTheme}
         handleHide={handleHide}
         toggleTheme={toggleTheme}
-        setShowWelcome={setShowWelcome}
-        showWelcome={showWelcome}
-        setIsMediaOnly={setIsMediaOnly}
       />
     </>
   );
@@ -349,18 +345,7 @@ function Buttons({
   isDarkTheme,
   handleHide,
   toggleTheme,
-  setShowWelcome,
-  showWelcome,
-  setIsMediaOnly,
 }) {
-  const toggleSettings = useCallback(() => {
-    setIsMediaOnly((prev) => !prev);
-  }, [setIsMediaOnly]);
-
-  const handleHomeClick = useCallback(() => {
-    setShowWelcome(true);
-  }, [setShowWelcome]);
-
   return (
     <div className="flex justify-between justify-center items-center bg-transparent m-4 z-10">
       <div className="flex space-x-2">
@@ -372,22 +357,6 @@ function Buttons({
               className={`p-2 rounded bg-redSpecial text-white hover:bg-red-700`}
             >
               <XMarkIcon className="h-5 w-5" />
-            </button>
-          </Tooltip>
-        )}
-
-        {!showWelcome && (
-          <Tooltip title="Home" placement="top">
-            <button
-              aria-label="Home"
-              onClick={handleHomeClick}
-              className={`p-2 rounded ${
-                isDarkTheme
-                  ? "bg-dark-secondary text-dark-background"
-                  : "bg-light-text1  text-light-secondary"
-              }`}
-            >
-              <HomeIcon className="h-5 w-5" />
             </button>
           </Tooltip>
         )}
@@ -450,21 +419,13 @@ Buttons.propTypes = {
   isDarkTheme: PropTypes.bool.isRequired,
   handleHide: PropTypes.func.isRequired,
   toggleTheme: PropTypes.func.isRequired,
-  setShowWelcome: PropTypes.func.isRequired,
-  showWelcome: PropTypes.oneOfType([PropTypes.bool, PropTypes.object])
-    .isRequired,
-  setIsMediaOnly: PropTypes.func.isRequired,
 };
 Welcome.propTypes = {
   isDarkTheme: PropTypes.bool.isRequired,
   setSelectedTopic: PropTypes.func.isRequired,
-  setShowWelcome: PropTypes.func.isRequired,
   handleExpand: PropTypes.func.isRequired,
   isExpanded: PropTypes.bool.isRequired,
   width: PropTypes.number.isRequired,
   handleHide: PropTypes.func.isRequired,
   toggleTheme: PropTypes.func.isRequired,
-  showWelcome: PropTypes.oneOfType([PropTypes.bool, PropTypes.object])
-    .isRequired,
-  setIsMediaOnly: PropTypes.func.isRequired,
 };

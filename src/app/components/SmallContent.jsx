@@ -15,7 +15,6 @@ const SmallContent = React.memo(function SmallContent({
   setSelectedStep,
   isCompleted,
   contentData,
-  width,
   selectedCourse,
   selectedTopic,
   isMediaOnly,
@@ -157,7 +156,6 @@ SmallContent.propTypes = {
   setSelectedStep: PropTypes.func.isRequired,
   isCompleted: PropTypes.bool.isRequired,
   contentData: PropTypes.object.isRequired,
-  width: PropTypes.number.isRequired,
   selectedCourse: PropTypes.shape({
     value: PropTypes.string.isRequired,
   }).isRequired,

@@ -9,14 +9,14 @@ export default function Terms() {
       }`}
     >
       <div className="flex-grow p-5 overflow-auto">
-        <h1 className="4xl">ProlaDict</h1>
+        <h1 className="4xl">Re</h1>
         <h1 className="text-3xl font-bold mb-4">Terms of Use</h1>
 
         <section className="mb-4">
           <h2 className="text-2xl font-semibold">1. Acceptance of Terms</h2>
           <p>
-            By accessing or using ProlaDict (the &quot;Website&quot;), you agree
-            to comply with and be bound by these Terms of Use (the
+            By accessing or using Re (the &quot;Website&quot;), you agree to
+            comply with and be bound by these Terms of Use (the
             &quot;Terms&quot;). If you do not agree to these Terms, please
             refrain from using the Website.
           </p>
@@ -29,17 +29,17 @@ export default function Terms() {
           <p>
             All content on this Website, including but not limited to text,
             graphics, logos, designs, and user interfaces (the
-            &quot;Content&quot;), are the intellectual property of ProlaDict and
-            are protected by copyright, trademark, and other intellectual
-            property laws. Unauthorized use, copying, or distribution of any
-            Content is strictly prohibited.
+            &quot;Content&quot;), are the intellectual property of Re and are
+            protected by copyright, trademark, and other intellectual property
+            laws. Unauthorized use, copying, or distribution of any Content is
+            strictly prohibited.
           </p>
           <p>
             You are granted a limited, non-exclusive, revocable license to
             access and use the Website for personal, non-commercial purposes
             only. This license does not grant you any rights to modify,
             reproduce, distribute, or create derivative works from any Content
-            without express written permission from ProlaDict.
+            without express written permission from Re.
           </p>
         </section>
 
@@ -82,10 +82,10 @@ export default function Terms() {
           </h2>
           <p>
             The Website and its Content are provided on an &quot;as is&quot; and
-            &quot;as available&quot; basis. ProlaDict makes no warranties,
-            express or implied, regarding the operation or availability of the
-            Website or the accuracy, reliability, or completeness of the
-            Content. We disclaim all warranties, including implied warranties of
+            &quot;as available&quot; basis. Re makes no warranties, express or
+            implied, regarding the operation or availability of the Website or
+            the accuracy, reliability, or completeness of the Content. We
+            disclaim all warranties, including implied warranties of
             merchantability and fitness for a particular purpose.
           </p>
         </section>
@@ -93,10 +93,10 @@ export default function Terms() {
         <section className="mb-4">
           <h2 className="text-2xl font-semibold">6. Limitation of Liability</h2>
           <p>
-            To the fullest extent permitted by law, ProlaDict shall not be
-            liable for any damages, losses, or liabilities arising from your use
-            of the Website, including but not limited to direct, indirect,
-            incidental, or consequential damages.
+            To the fullest extent permitted by law, Re shall not be liable for
+            any damages, losses, or liabilities arising from your use of the
+            Website, including but not limited to direct, indirect, incidental,
+            or consequential damages.
           </p>
         </section>
 
