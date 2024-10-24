@@ -28,7 +28,7 @@ Our goal is to put in the hands of everyone the knowledge of programming. Think 
 With **Re**, you can search it up fast and reliably.
 
 ## How to get started
-To start contributing to the project, follow these steps:
+Thank you for being interested in contributing, these are the steps to start working on the project:
 
 1. **Clone the repository**:
 ```bash
