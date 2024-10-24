@@ -1,0 +1,43 @@
+name: New Bug Report
+description: Report the bug you found so we can fix it.
+title: "Short description of bug"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for finding this bug!
+        A great title will help other understand and see the bug faster as it should be a brief description of the problem, so keep that in mind.
+        
+  - type: markdown
+    attributes:
+      value: |
+       #
+
+  - type: textarea
+    attributes:
+      label: What happened?
+      description: "Explain the problem clearly and be concise. Include screenshoots if possible."
+    validations:
+      required: true
+
+
+  - type: textarea
+    attributes:
+      label: How do we reproduce it?
+      placeholder: "Steps to reproduce..."
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Environment of where you found the bug?
+      placeholder: "OS and Browser..."
+      value: |\
+        OS:
+        Browser:
+    validations:
+      required: false
