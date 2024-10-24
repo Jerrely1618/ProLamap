@@ -32,8 +32,7 @@ To start contributing to the project, follow these steps:
 
 1. **Clone the repository**:
    ```bash
-   git clone 
-   cd Re
+   git clone https://github.com/qReReRe/Re.git
 
 2. **Install dependencies**:
 ```bash
