@@ -9,6 +9,14 @@ The human brain can hold up **2.5 Petabytes (PB)** of information—whole librar
   <img src="./public/resvg1.svg" width="300" height="300" alt="Re Logo" />
   </a>
 </p>
+<div align="center">
+<a target="_blank" href="https://opensource.org/licenses/Apache-2.0" style="background:none">
+    <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" style="height: 22px;" />
+</a>
+<a target="_blank" href="https://discord.gg/4WAVaNqSK2" style="background:none">
+    <img src="https://img.shields.io/badge/discord-join-continue.svg?labelColor=191937&color=6F6FF7&logo=discord" style="height: 22px;" />
+</a>
+</div>
 The purpose of Re is to hold the crucial languages, algorithms, and data structures for you to:
 
 - **Learn**
