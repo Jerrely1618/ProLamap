@@ -31,9 +31,9 @@ With **Re**, you can search it up fast and reliably.
 To start contributing to the project, follow these steps:
 
 1. **Clone the repository**:
-   ```bash
+```bash
    git clone https://github.com/qReReRe/Re.git
-
+```
 2. **Install dependencies**:
 ```bash
   npm install
