@@ -43,9 +43,9 @@ To start contributing to the project, follow these steps:
 ```bash
   npm run dev
 ```
-4. **Open the browser and start contributing! **
+4. **Open the browser and start contributing!**
 Feel free to make any changes you see ncessary, fix bugs and/or add features. Who knows? You could even improve this README.
-5. **Submit the pull request to share your changes with us :) **
+5. **Submit the pull request to share your changes with us :)**
 
 
 ## Working Live
