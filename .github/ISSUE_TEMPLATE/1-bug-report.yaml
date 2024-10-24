@@ -6,20 +6,19 @@ body:
     attributes:
       value: |
         Thanks for finding this bug!
-        A great title will help other understand and see the bug faster as it should be a brief description of the problem, so keep that in mind.
+        A great title will help others understand and see the bug faster as it should be a brief description of the problem, so keep that in mind.
         
   - type: markdown
     attributes:
       value: |
-       #
+        # Please fill out the following details
 
   - type: textarea
     attributes:
       label: What happened?
-      description: "Explain the problem clearly and be concise. Include screenshoots if possible."
+      description: "Explain the problem clearly and be concise. Include screenshots if possible."
     validations:
       required: true
-
 
   - type: textarea
     attributes:
@@ -36,7 +35,7 @@ body:
     attributes:
       label: Environment of where you found the bug?
       placeholder: "OS and Browser..."
-      value: |\
+      value: |
         OS:
         Browser:
     validations:
