@@ -4,7 +4,11 @@ The human brain can hold up **2.5 Petabytes (PB)** of information—whole librar
 > Life is fleeting and so are our thoughts.
 
 ## Introducing Re
-
+<p align="center">
+  <a href="https://pro-lamap.vercel.app/" target="_blank">
+  <img src="./public/resvg1.svg" width="300" height="300" alt="Re Logo" />
+  </a>
+</p>
 The purpose of **Re** is to hold the crucial languages, algorithms, and data structures for you to:
 
 - **Learn**
