@@ -26,3 +26,33 @@ The purpose of Re is to hold the crucial languages, algorithms, and data structu
 Our goal is to put in the hands of everyone the knowledge of programming. Think of it as a dictionary for all the programming knwoledge with languages, algorithms and data structure whenever you need them. A goodbye to searching **10 websites** and **5 tutorials** to find how to apply **Dijkstra's algorithm** (or in my case, how to spell it). 
 
 With **Re**, you can search it up fast and reliably.
+
+## How to get started
+To start contributing to the project, follow these steps:
+
+1. **Clone the repository**:
+   ```bash
+   git clone 
+   cd Re
+
+2. **Install dependencies**:
+```bash
+  npm install
+```
+
+3. **Run the development server**:
+```bash
+  npm run dev
+```
+4. **Open the browser and start contributing! **
+Feel free to make any changes you see ncessary, fix bugs and/or add features. Who knows? You could even improve this README.
+5. **Submit the pull request to share your changes with us :) **
+
+
+## Working Live
+
+Youtube: [@Vchange](https://www.youtube.com/@Vchanging) 
+
+## License
+
+[Apache 2.0 © 2023 Continue Dev, Inc.](./LICENSE)
