@@ -9,7 +9,7 @@ The human brain can hold up **2.5 Petabytes (PB)** of information—whole librar
   <img src="./public/resvg1.svg" width="300" height="300" alt="Re Logo" />
   </a>
 </p>
-The purpose of **Re** is to hold the crucial languages, algorithms, and data structures for you to:
+The purpose of Re is to hold the crucial languages, algorithms, and data structures for you to:
 
 - **Learn**
 - **Remember**
