@@ -6,7 +6,7 @@ The human brain can hold up **2.5 Petabytes (PB)** of information—whole librar
 ## Introducing Re
 <p align="center">
   <a href="https://pro-lamap.vercel.app/" target="_blank">
-  <img src="./public/resvg1.svg" width="300" height="300" alt="Re Logo" />
+  <img src="../public/resvg1.svg" width="300" height="300" alt="Re Logo" />
   </a>
 </p>
 <div align="center">
