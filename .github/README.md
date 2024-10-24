@@ -47,6 +47,7 @@ Thank you for being interested in contributing, these are the steps to start wor
 Feel free to make any changes you see ncessary, fix bugs and/or add features. Who knows? You could even improve this README.
 5. **Submit the pull request to share your changes with us :)**
 
+Refer to [Contributing](https://github.com/qReReRe/Re/blob/eb5b156253980015e2abd797f42447b280c0ce19/.github/CONTRIBUTING.md) for more information.
 
 ## Working Live
 
