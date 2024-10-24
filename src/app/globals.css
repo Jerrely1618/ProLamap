@@ -2,30 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 .toon{
-    font-family: 'Gamja Flower', cursive;
+    font-family: var(--font-gamja-flower), cursive;
 }
 .title {
-    font-family: 'Manrope', sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-weight: 800;
 }
 .body {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-weight: 300;
 }
 .body-light {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-weight: 100;
 }
 .body-medium {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-weight: 400;
 }
 .body-bold {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-weight: 600;
 }
 .bubble {
-    font-family: 'Modak', cursive;
+  font-family: var(--font-manrope), sans-serif;
+  font-weight: 400;
   }
 
   .scrollbar-left-small::-webkit-scrollbar {
