@@ -30,7 +30,18 @@ export const metadata = {
   "og:title": "Re - Remember Programming Languages",
   "og:description": "A comprehensive dictionary to remember, learn and apply programming concepts easily.",
   "og:type": "website",
+  applicationName: "Re",
+  manifest: "/site.webmanifest",
+  icons: {
+    icon: [
+      { rel: "icon", type: "image/png", sizes: "48x48", url: "/favicon-48x48.png" },
+      { rel: "icon", type: "image/svg+xml", url: "/favicon.svg" },
+    ],
+    apple: "/apple-touch-icon.png",
+    shortcut: "/favicon.ico",
+  },
 };
+
 
 export const viewport = {
   width: "device-width",
@@ -40,14 +51,7 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${montserrat.className} ${gamjaFlower.className} ${manrope.className}`}>
-      <Head>
-      <link rel="icon" type="image/png" href="/favicon-48x48.png" sizes="48x48" />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="shortcut icon" href="/favicon.ico" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-<meta name="apple-mobile-web-app-title" content="Re" />
-<link rel="manifest" href="/site.webmanifest" />
-</Head>
+
       <body className={`antialiased`}>
         {children}
       </body>
