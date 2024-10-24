@@ -15,6 +15,6 @@ The purpose of Re is to hold the crucial languages, algorithms, and data structu
 - **Remember**
 - **Reapply** into your code
 
-Our goal is to put in the hands of everyone the knowledge of programming. Think of it as a dictionary for all programming. A goodbye to searching **10 websites** and **5 tutorials** to find how to apply **Dijkstra's algorithm** (or in my case, how to spell it). 
+Our goal is to put in the hands of everyone the knowledge of programming. Think of it as a dictionary for all the programming knwoledge with languages, algorithms and data structure whenever you need them. A goodbye to searching **10 websites** and **5 tutorials** to find how to apply **Dijkstra's algorithm** (or in my case, how to spell it). 
 
 With **Re**, you can search it up fast and reliably.
