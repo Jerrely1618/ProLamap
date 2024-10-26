@@ -98,7 +98,7 @@ const RoadMapBubble = React.memo(function RoadMapBubble({
         scale: 1.15,
         transition: { duration: 0.05, ease: "linear" },
       }}
-      onClick={() => handleTopicClick(text, true, isDarkTheme)}
+      onClick={() => handleTopicClick(text, false, isDarkTheme)}
     >
       {text}
       <div className="flex flex-wrap px-5 mt-0.5 items-center justify-center">

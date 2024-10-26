@@ -14,7 +14,6 @@ import Link from "next/link";
 import debounce from "lodash.debounce";
 import { FixedSizeList as List } from "react-window";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 export default function Welcome({
   isDarkTheme,
@@ -79,8 +78,6 @@ export default function Welcome({
       listRef.current.scrollToItem(selectedIndex);
     }
   }, [selectedIndex, filteredTopics]);
-
-  const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -159,10 +156,10 @@ export default function Welcome({
         } absolute md:top-5 bottom-5 z-10`}
       >
         <div>
-          <span>#Learn</span>
-          <span>Reapply</span>
+          <span>#Quick</span>
+          <span>Relearn</span>
           <span>Remember</span>
-          <span>Code!</span>
+          <span>Reapply!</span>
         </div>
       </div>
       <div className="flex flex-col items-center p-4 h-screen justify-center z-10">
@@ -393,7 +390,7 @@ function Buttons({
         } ${isDarkTheme ? "text-dark-secondary" : "text-light-secondary"} `}
       >
         <p className={`font-bold justify-center items-center  px-2  `}>
-          Copyright ©2024 Re. All rights reserved.
+          Copyright ©2024 qReReRe. All rights reserved.
         </p>
         <Link href="/terms" className={`font-semibold`}>
           Terms of Use

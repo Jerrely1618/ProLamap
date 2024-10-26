@@ -106,7 +106,7 @@ const BigContent = React.memo(function BigContent({
               }`}
             >
               <p className={`font-bold `}>
-                Copyright ©2024 Re. All rights reserved.
+                Copyright ©2024 qReReRe. All rights reserved.
               </p>
               <Link href="/terms">Terms of Use</Link>
             </div>

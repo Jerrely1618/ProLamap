@@ -22,15 +22,15 @@ const manrope = Manrope({
 });
 
 export const metadata = {
-  title: "Re - Programming Dictionary for Fast Learning",
-  description: "Master programming languages quickly with Re, the ultimate dictionary for Python concepts including algorithms, recursion, data structures, and more. Perfect for learners and developers seeking to solidify and reapply their knowledge.",
-  keywords: "Re, Python, programming, algorithms, recursion, data structures, learning, coding",
-  author: "Re Team",
+  title: "qReReRe - Programming Dictionary for Fast Learning",
+  description: "Master programming languages quickly with qReReRe, the ultimate dictionary for Python concepts including algorithms, recursion, data structures, and more. Perfect for learners and developers seeking to solidify and reapply their knowledge.",
+  keywords: "qReReRe, Python, programming, algorithms, recursion, data structures, learning, coding",
+  author: "qReReRe Team",
   robots: "index, follow",
-  "og:title": "Re - Remember Programming Languages",
+  "og:title": "qReReRe - Remember Programming Languages",
   "og:description": "A comprehensive dictionary to remember, learn and apply programming concepts easily.",
   "og:type": "website",
-  applicationName: "Re",
+  applicationName: "qReReRe",
   manifest: "/site.webmanifest",
   icons: {
     icon: [

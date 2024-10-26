@@ -25,7 +25,7 @@ const languages = [
 const initialState = {
   isExpanded: true,
   isHidden: false,
-  width: 100,
+  width: 40,
   isDarkTheme: true,
   isDraggable: true,
   showSettings: false,
