@@ -59,7 +59,8 @@ Refer to [Contributing](https://github.com/qReReRe/Re/blob/eb5b156253980015e2abd
 
 ## Working Live
 
-Youtube: [@Vchange](https://www.youtube.com/@Vchanging)
+Youtube: [@Dchange1](https://www.youtube.com/@Dchange1)
+Twitch: [@Vchanging](https://www.twitch.tv/vchanging)
 
 ## License
 
