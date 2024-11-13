@@ -6,6 +6,7 @@ import {
   Bars4Icon,
   CheckIcon,
 } from "@heroicons/react/24/solid";
+import AdHorizontal from "./AdHorizontal";
 const ContentForStep = React.lazy(() => import("./ContentForStep"));
 
 const SmallContent = React.memo(function SmallContent({
@@ -15,6 +16,7 @@ const SmallContent = React.memo(function SmallContent({
   setSelectedStep,
   isCompleted,
   contentData,
+  width,
   selectedCourse,
   selectedTopic,
   isMediaOnly,
@@ -41,11 +43,7 @@ const SmallContent = React.memo(function SmallContent({
   }, [steps, selectedStep, setSelectedStep]);
 
   return (
-    <div
-      className={`${
-        isDarkTheme ? "bg-dark-background" : "bg-light-background"
-      }`}
-    >
+    <>
       <h1
         className={`${
           isDarkTheme ? "text-white" : "text-third-background"
@@ -85,6 +83,7 @@ const SmallContent = React.memo(function SmallContent({
             contentData={contentData}
             isDarkTheme={isDarkTheme}
           />
+          <AdHorizontal />
         </div>
       )}
 
@@ -149,7 +148,7 @@ const SmallContent = React.memo(function SmallContent({
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 });
 
@@ -160,6 +159,7 @@ SmallContent.propTypes = {
   setSelectedStep: PropTypes.func.isRequired,
   isCompleted: PropTypes.bool.isRequired,
   contentData: PropTypes.object.isRequired,
+  width: PropTypes.number.isRequired,
   selectedCourse: PropTypes.shape({
     value: PropTypes.string.isRequired,
   }).isRequired,

@@ -54,9 +54,9 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${montserrat.className} ${gamjaFlower.className} ${manrope.className}`}>
-      <Head>
+      <head>
         <AdSense/>
-      </Head>
+      </head>
       <body className={`antialiased`}>
         {children}
         <SpeedInsights/>

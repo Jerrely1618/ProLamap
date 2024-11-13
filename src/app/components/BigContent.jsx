@@ -2,6 +2,7 @@ import { CheckIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import PropTypes from "prop-types";
 import React, { useCallback, useMemo } from "react";
+import AdHorizontal from "./AdHorizontal";
 const ContentForStep = React.lazy(() => import("./ContentForStep"));
 
 const BigContent = React.memo(function BigContent({
@@ -27,18 +28,18 @@ const BigContent = React.memo(function BigContent({
 
   return (
     <div
-      className={`max-w-screen-lg justify-center flex flex-col ${
+      className={`justify-center flex flex-col ${
         isDarkTheme ? "bg-dark-background" : "bg-light-background"
       }`}
     >
       <h1
         className={`${
           isDarkTheme ? "text-white" : "text-third-background"
-        } text-5xl body-bold  transition-colors duration-300 text-left pb-2 px-4`}
+        } text-5xl body-bold  transition-colors duration-300 text-left py-2 px-4`}
       >
         {selectedTopic}
       </h1>
-      <div className="overflow-y-auto grid grid-cols-4 h-screen pb-[180px]">
+      <div className="overflow-y-auto grid grid-cols-4 h-screen">
         <div className="col-span-3 px-5">
           <ContentForStep
             step={selectedStep}
@@ -49,10 +50,11 @@ const BigContent = React.memo(function BigContent({
             contentData={contentData}
             isDarkTheme={isDarkTheme}
           />
+          <AdHorizontal />
         </div>
 
         <div
-          className={`transition-colors duration-300 col-span-1 bg-transparent h-full`}
+          className={`transition-colors duration-300 col-span-1 bg-transparent`}
         >
           <div className={`grid w-full bg-transparent border-b-0`}>
             <div className="grid">

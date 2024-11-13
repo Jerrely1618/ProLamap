@@ -20,7 +20,6 @@ import React, {
 } from "react";
 import { ThreeDots } from "react-loader-spinner";
 import AdVertical from "./AdVertical";
-import AdHorizontal from "./AdHorizontal";
 
 const BigContent = React.lazy(() => import("./BigContent"));
 const SmallContent = React.lazy(() => import("./SmallContent"));
@@ -165,7 +164,7 @@ const InnerContent = React.memo(function InnerContent({
   }
 
   return (
-    <>
+    <div className="h-screen">
       <Buttons
         handleExpand={handleExpand}
         isExpanded={isExpanded}
@@ -210,7 +209,7 @@ const InnerContent = React.memo(function InnerContent({
             setIsMediaOnly={setIsMediaOnly}
           />
         ) : (
-          <div className="grid grid-cols-6">
+          <div className="grid grid-cols-6 h-screen">
             <div className="text-white col-span-1">
               <AdVertical />
             </div>
@@ -227,14 +226,13 @@ const InnerContent = React.memo(function InnerContent({
                 toggleCompletion={toggleCompletion}
               />
             </div>
-            <div className="text-white col-span-1">
+            <div className="text-white col-span-1 ">
               <AdVertical />
             </div>
           </div>
         )}
-        <AdHorizontal />
       </Suspense>
-    </>
+    </div>
   );
 });
 
