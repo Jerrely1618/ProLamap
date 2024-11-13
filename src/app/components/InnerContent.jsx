@@ -19,6 +19,8 @@ import React, {
   Suspense,
 } from "react";
 import { ThreeDots } from "react-loader-spinner";
+import AdVertical from "./AdVertical";
+import AdHorizontal from "./AdHorizontal";
 
 const BigContent = React.lazy(() => import("./BigContent"));
 const SmallContent = React.lazy(() => import("./SmallContent"));
@@ -209,7 +211,9 @@ const InnerContent = React.memo(function InnerContent({
           />
         ) : (
           <div className="grid grid-cols-6">
-            <div className="text-white col-span-1">ADS</div>
+            <div className="text-white col-span-1">
+              <AdVertical />
+            </div>
             <div className="col-span-4">
               <BigContent
                 isDarkTheme={isDarkTheme}
@@ -223,9 +227,12 @@ const InnerContent = React.memo(function InnerContent({
                 toggleCompletion={toggleCompletion}
               />
             </div>
-            <div className="text-white col-span-1">ADS</div>
+            <div className="text-white col-span-1">
+              <AdVertical />
+            </div>
           </div>
         )}
+        <AdHorizontal />
       </Suspense>
     </>
   );

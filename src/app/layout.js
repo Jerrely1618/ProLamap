@@ -1,6 +1,8 @@
 import './globals.css';
 import { Gamja_Flower, Montserrat, Manrope } from "next/font/google";
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import Head from 'next/head';
+import AdSense from './components/AdSense';
  
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -52,6 +54,9 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${montserrat.className} ${gamjaFlower.className} ${manrope.className}`}>
+      <Head>
+        <AdSense/>
+      </Head>
       <body className={`antialiased`}>
         {children}
         <SpeedInsights/>
