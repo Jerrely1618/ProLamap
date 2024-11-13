@@ -208,17 +208,23 @@ const InnerContent = React.memo(function InnerContent({
             setIsMediaOnly={setIsMediaOnly}
           />
         ) : (
-          <BigContent
-            isDarkTheme={isDarkTheme}
-            selectedStep={selectedStep}
-            selectedCourse={selectedCourse}
-            setSelectedStep={setSelectedStep}
-            selectedTopic={selectedTopic}
-            isMediaOnly={isMediaOnly}
-            contentData={contentData}
-            isCompleted={isCompleted}
-            toggleCompletion={toggleCompletion}
-          />
+          <div className="grid grid-cols-6">
+            <div className="text-white col-span-1">ADS</div>
+            <div className="col-span-4">
+              <BigContent
+                isDarkTheme={isDarkTheme}
+                selectedStep={selectedStep}
+                selectedCourse={selectedCourse}
+                setSelectedStep={setSelectedStep}
+                selectedTopic={selectedTopic}
+                isMediaOnly={isMediaOnly}
+                contentData={contentData}
+                isCompleted={isCompleted}
+                toggleCompletion={toggleCompletion}
+              />
+            </div>
+            <div className="text-white col-span-1">ADS</div>
+          </div>
         )}
       </Suspense>
     </>

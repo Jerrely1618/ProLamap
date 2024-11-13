@@ -41,7 +41,11 @@ const SmallContent = React.memo(function SmallContent({
   }, [steps, selectedStep, setSelectedStep]);
 
   return (
-    <>
+    <div
+      className={`${
+        isDarkTheme ? "bg-dark-background" : "bg-light-background"
+      }`}
+    >
       <h1
         className={`${
           isDarkTheme ? "text-white" : "text-third-background"
@@ -145,7 +149,7 @@ const SmallContent = React.memo(function SmallContent({
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 });
 

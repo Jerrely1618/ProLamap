@@ -38,8 +38,7 @@ const BigContent = React.memo(function BigContent({
       >
         {selectedTopic}
       </h1>
-
-      <div className="overflow-y-auto grid grid-cols-4 min-w-0 w-full h-screen pb-[180px]">
+      <div className="overflow-y-auto grid grid-cols-4 h-screen pb-[180px]">
         <div className="col-span-3 px-5">
           <ContentForStep
             step={selectedStep}
