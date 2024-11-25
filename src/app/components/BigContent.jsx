@@ -3,10 +3,10 @@ import Link from "next/link";
 import PropTypes from "prop-types";
 import React, { useCallback, useMemo } from "react";
 import AdHorizontal from "./AdHorizontal";
+import { useTheme } from "next-themes";
 const ContentForStep = React.lazy(() => import("./ContentForStep"));
 
 const BigContent = React.memo(function BigContent({
-  isDarkTheme,
   selectedStep,
   selectedCourse,
   setSelectedStep,
@@ -16,25 +16,25 @@ const BigContent = React.memo(function BigContent({
   isCompleted,
   toggleCompletion,
 }) {
+  const { theme } = useTheme();
+  const handleStepSelection = useCallback(
+    (step) => setSelectedStep(step),
+    [setSelectedStep]
+  );
   const steps = useMemo(
     () => Object.keys(contentData[selectedCourse.value]?.[selectedTopic] || {}),
     [contentData, selectedCourse.value, selectedTopic]
   );
 
-  const handleStepSelection = useCallback(
-    (step) => setSelectedStep(step),
-    [setSelectedStep]
-  );
-
   return (
     <div
       className={`justify-center flex flex-col ${
-        isDarkTheme ? "bg-dark-background" : "bg-light-background"
+        theme === "dark" ? "bg-dark-background" : "bg-light-background"
       }`}
     >
       <h1
         className={`${
-          isDarkTheme ? "text-white" : "text-third-background"
+          theme === "dark" ? "text-white" : "text-third-background"
         } text-5xl body-bold  transition-colors duration-300 text-left py-2 px-4`}
       >
         {selectedTopic}
@@ -48,7 +48,6 @@ const BigContent = React.memo(function BigContent({
             selectedSubtopic={selectedStep}
             isMediaOnly={isMediaOnly}
             contentData={contentData}
-            isDarkTheme={isDarkTheme}
           />
           <AdHorizontal />
         </div>
@@ -103,7 +102,9 @@ const BigContent = React.memo(function BigContent({
 
             <div
               className={`flex flex-col text-sm mt-10 text-center ${
-                isDarkTheme ? "text-dark-secondary" : "text-light-secondary"
+                theme === "dark"
+                  ? "text-dark-secondary"
+                  : "text-light-secondary"
               }`}
             >
               <p className={`font-bold `}>
@@ -119,7 +120,6 @@ const BigContent = React.memo(function BigContent({
 });
 
 BigContent.propTypes = {
-  isDarkTheme: PropTypes.bool.isRequired,
   selectedStep: PropTypes.string.isRequired,
   selectedCourse: PropTypes.shape({
     value: PropTypes.string.isRequired,

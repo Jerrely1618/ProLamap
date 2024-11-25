@@ -7,22 +7,21 @@ import {
   CheckIcon,
 } from "@heroicons/react/24/solid";
 import AdHorizontal from "./AdHorizontal";
+import { useTheme } from "next-themes";
 const ContentForStep = React.lazy(() => import("./ContentForStep"));
 
 const SmallContent = React.memo(function SmallContent({
   toggleCompletion,
-  isDarkTheme,
   selectedStep,
   setSelectedStep,
   isCompleted,
   contentData,
-  width,
   selectedCourse,
   selectedTopic,
   isMediaOnly,
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const { theme } = useTheme();
   const steps = useMemo(
     () => Object.keys(contentData[selectedCourse.value]?.[selectedTopic] || {}),
     [contentData, selectedCourse.value, selectedTopic]
@@ -43,10 +42,14 @@ const SmallContent = React.memo(function SmallContent({
   }, [steps, selectedStep, setSelectedStep]);
 
   return (
-    <>
+    <div
+      className={`${
+        theme === "dark" ? "bg-dark-background" : "bg-light-background"
+      }`}
+    >
       <h1
         className={`${
-          isDarkTheme ? "text-white" : "text-third-background"
+          theme === "dark" ? "text-white" : "text-third-background"
         } text-5xl body-bold transition-all duration-300 text-left pb-2 px-4`}
       >
         {selectedTopic}
@@ -81,7 +84,6 @@ const SmallContent = React.memo(function SmallContent({
             selectedSubtopic={selectedStep}
             isMediaOnly={isMediaOnly}
             contentData={contentData}
-            isDarkTheme={isDarkTheme}
           />
           <AdHorizontal />
         </div>
@@ -89,7 +91,7 @@ const SmallContent = React.memo(function SmallContent({
 
       <div
         className={`fixed bottom-0 transition-colors duration-300 w-full ${
-          isDarkTheme ? "bg-dark-background" : "bg-light-background"
+          theme === "dark" ? "bg-dark-background" : "bg-light-background"
         } ${
           isCompleted ? "border-t-green-500" : "border-t-light-background"
         } border-t-[5px]`}
@@ -98,7 +100,7 @@ const SmallContent = React.memo(function SmallContent({
           <div className="flex items-center justify-between w-auto">
             <div
               className={`flex h-full ${
-                isDarkTheme
+                theme === "dark"
                   ? "bg-light-background text-black"
                   : "bg-light-background text-light-text1"
               }`}
@@ -121,7 +123,7 @@ const SmallContent = React.memo(function SmallContent({
           </div>
           <div className="h-auto w-full py-3 px-4 flex items-center justify-center bg-white transition-colors body-bold text-base duration-300 text-center flex-grow">
             <Bars4Icon
-              className="h-6 w-6 cursor-pointer"
+              className="h-6 w-6 cursor-pointer text-black"
               onClick={() => setIsMenuOpen((prev) => !prev)}
             />
           </div>
@@ -148,13 +150,12 @@ const SmallContent = React.memo(function SmallContent({
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 });
 
 SmallContent.propTypes = {
   toggleCompletion: PropTypes.func.isRequired,
-  isDarkTheme: PropTypes.bool.isRequired,
   selectedStep: PropTypes.string.isRequired,
   setSelectedStep: PropTypes.func.isRequired,
   isCompleted: PropTypes.bool.isRequired,

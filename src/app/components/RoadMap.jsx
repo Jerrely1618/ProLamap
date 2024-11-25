@@ -8,6 +8,7 @@ import React, {
 import { motion } from "framer-motion";
 import PropTypes from "prop-types";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 
 const randomFloat = (min, max) => Math.random() * (max - min) + min;
 
@@ -38,13 +39,13 @@ const getLevels = (data) => {
 const RoadMapBubble = React.memo(function RoadMapBubble({
   text,
   isHoveringRoadmap,
-  isDarkTheme,
   subtopics,
   handleTopicClick,
   selectedCourse,
   change,
 }) {
   const [hovered, setHovered] = useState(false);
+  const { theme } = useTheme();
   const [completedSubtopics, setCompletedSubtopics] = useState([]);
 
   const updateCompletedSubtopics = useCallback(() => {
@@ -79,7 +80,7 @@ const RoadMapBubble = React.memo(function RoadMapBubble({
         ${
           allCompleted
             ? "text-white bg-green-500"
-            : isDarkTheme
+            : theme === "dark"
             ? "bg-light-background text-dark-background"
             : "bg-third-background text-light-background"
         }
@@ -98,7 +99,7 @@ const RoadMapBubble = React.memo(function RoadMapBubble({
         scale: 1.15,
         transition: { duration: 0.05, ease: "linear" },
       }}
-      onClick={() => handleTopicClick(text, false, isDarkTheme)}
+      onClick={() => handleTopicClick(text, false)}
     >
       {text}
       <div className="flex flex-wrap px-5 mt-0.5 items-center justify-center">
@@ -119,7 +120,6 @@ const RoadMapBubble = React.memo(function RoadMapBubble({
 });
 
 const RoadMap = ({
-  isDarkTheme,
   returnToCenter,
   isDraggable,
   setIsHidden,
@@ -151,10 +151,8 @@ const RoadMap = ({
     );
     setScale(Math.max(0.2, Math.min(1.1, roadmapScale)));
   }, [width]);
-  const handleTopicClick = (text, isExpanded, isDarkTheme) => {
-    router.push(
-      `/content/${text}?isExpanded=${isExpanded}&isDarkTheme=${isDarkTheme}`
-    );
+  const handleTopicClick = (text, isExpanded) => {
+    router.push(`/content/${text}?isExpanded=${isExpanded}`);
   };
 
   useEffect(() => {
@@ -311,7 +309,6 @@ const RoadMap = ({
                   <RoadMapBubble
                     text={node}
                     isHoveringRoadmap={isHoveringRoadmap}
-                    isDarkTheme={isDarkTheme}
                     handleTopicClick={handleTopicClick}
                     subtopics={topics[node] || {}}
                     selectedCourse={selectedCourse}
@@ -331,7 +328,6 @@ const RoadMap = ({
 RoadMapBubble.propTypes = {
   text: PropTypes.string.isRequired,
   isHoveringRoadmap: PropTypes.bool.isRequired,
-  isDarkTheme: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
   subtopics: PropTypes.object.isRequired,
   selectedCourse: PropTypes.object.isRequired,
@@ -340,7 +336,6 @@ RoadMapBubble.propTypes = {
 };
 
 RoadMap.propTypes = {
-  isDarkTheme: PropTypes.bool.isRequired,
   setSelectedTopic: PropTypes.func.isRequired,
   returnToCenter: PropTypes.bool.isRequired,
   isDraggable: PropTypes.bool.isRequired,

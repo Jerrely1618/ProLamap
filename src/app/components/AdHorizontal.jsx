@@ -10,7 +10,7 @@ export default function AdHorizontal() {
   }, []);
 
   return (
-    <>
+    <div className="">
       <ins
         class="adsbygoogle"
         style={{ display: "block", textAlign: "center" }}
@@ -19,6 +19,6 @@ export default function AdHorizontal() {
         data-ad-client="ca-pub-7881518457068083"
         data-ad-slot="9675290059"
       ></ins>
-    </>
+    </div>
   );
 }

@@ -13,6 +13,7 @@ const InnerContent = lazy(() => import("@/app/components/InnerContent"));
 const RoadMap = lazy(() => import("@/app/components/RoadMap"));
 import { Button, Switch, Tooltip } from "antd";
 import { useSearchParams } from "next/navigation";
+import { useTheme } from "next-themes";
 const languages = [
   { value: "python", label: "Python" },
   {
@@ -26,7 +27,6 @@ const initialState = {
   isExpanded: true,
   isHidden: false,
   width: 40,
-  isDarkTheme: true,
   isDraggable: true,
   showSettings: false,
   eliminateLanguage: "python",
@@ -46,11 +46,6 @@ function reducer(state, action) {
   switch (action.type) {
     case "SET_STATE":
       return { ...state, ...action.payload };
-    case "TOGGLE_DARK_THEME":
-      return {
-        ...state,
-        isDarkTheme: !state.isDarkTheme,
-      };
     case "SET_OPTIONS":
       return { ...state, options: action.payload };
     case "SET_SELECTED_OPTION":
@@ -60,7 +55,6 @@ function reducer(state, action) {
         ...state,
         selectedTopic: action.payload.selectedTopic,
         isExpanded: action.payload.isExpanded,
-        isDarkTheme: action.payload.isDarkTheme,
       };
     default:
       return state;
@@ -69,12 +63,12 @@ function reducer(state, action) {
 
 export default function Page({ params }) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { theme } = useTheme();
   const searchParams = useSearchParams();
   const {
     isExpanded,
     isHidden,
     width,
-    isDarkTheme,
     isDraggable,
     showSettings,
     eliminateLanguage,
@@ -91,7 +85,6 @@ export default function Page({ params }) {
   } = state;
   useEffect(() => {
     const isExpanded = searchParams.get("isExpanded") === "true";
-    const isDarkTheme = searchParams.get("isDarkTheme") === "true";
 
     const selectedTopic = params.topic;
 
@@ -100,7 +93,6 @@ export default function Page({ params }) {
       payload: {
         selectedTopic,
         isExpanded,
-        isDarkTheme,
       },
     });
   }, [searchParams, params]);
@@ -284,13 +276,12 @@ export default function Page({ params }) {
       {!isHidden && (
         <div
           className={`flex flex-col flex-grow h-full transition-width transition-colors duration-300 shadow-glassy backdrop-blur-md bg-opacity-glass ${
-            isDarkTheme ? "bg-dark-gradient" : "bg-light-gradient"
+            theme === "dark" ? "bg-dark-gradient" : "bg-light-gradient"
           }`}
           style={{ width: `${width}%` }}
         >
           <div className="flex-none w-full h-full overflow-hidden">
             <InnerContent
-              isDarkTheme={isDarkTheme}
               selectedTopic={selectedTopic}
               selectedCourse={selectedOption}
               isMediaOnly={isMediaOnly}
@@ -302,7 +293,6 @@ export default function Page({ params }) {
               handleExpand={handleExpand}
               isExpanded={isExpanded}
               handleHide={handleHide}
-              toggleTheme={() => dispatch({ type: "TOGGLE_DARK_THEME" })}
               setIsMediaOnly={setIsMediaOnly}
             />
           </div>
@@ -310,7 +300,6 @@ export default function Page({ params }) {
       )}
       {!isHidden && !isExpanded && (
         <Separation
-          isDarkTheme={isDarkTheme}
           handleMouseDown={handleMouseDown}
           handleTouchStart={handleTouchStart}
         />
@@ -318,7 +307,7 @@ export default function Page({ params }) {
       {!isExpanded && (
         <div
           className={`flex flex-col flex-grow overflow-hidden transition-all transition-colors duration-300 ${
-            isDarkTheme
+            theme === "dark"
               ? "bg-dark-background text-dark-text1"
               : "bg-light-background text-light-text1"
           }`}
@@ -326,10 +315,10 @@ export default function Page({ params }) {
             width: `${100 - width}%`,
             backgroundImage: `
         linear-gradient(90deg, ${
-          isDarkTheme ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)"
+          theme === "dark" ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)"
         } 1px, transparent 1px),
         linear-gradient(180deg, ${
-          isDarkTheme ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)"
+          theme === "dark" ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)"
         } 1px, transparent 1px)
       `,
             backgroundSize: "20px 20px",
@@ -353,7 +342,7 @@ export default function Page({ params }) {
                 width < 70 ? (
                   <div
                     className={`relative flex-grow h-4 rounded  mx-2 ${
-                      isDarkTheme
+                      theme === "dark"
                         ? "bg-light-background border-light-background"
                         : "bg-third-background border-dark-background"
                     }`}
@@ -367,7 +356,7 @@ export default function Page({ params }) {
                 ) : (
                   <p
                     className={`text-right font-bold text-3xl bg-red ${
-                      isDarkTheme
+                      theme === "dark"
                         ? "text-light-background"
                         : "text-dark-background"
                     }`}
@@ -380,7 +369,6 @@ export default function Page({ params }) {
               <Selection
                 selectedOption={selectedOption}
                 setSelectedOption={handleOptionChange}
-                isDarkTheme={isDarkTheme}
                 options={options}
               />
             </div>
@@ -391,7 +379,6 @@ export default function Page({ params }) {
               width={100 - width}
               change={change}
               isDraggable={isDraggable}
-              isDarkTheme={isDarkTheme}
               selectedCourse={selectedOption}
               returnToCenter={returnToCenter}
               setIsHidden={setIsHidden}
@@ -403,7 +390,7 @@ export default function Page({ params }) {
               aria-label="Center Roadmap"
               onClick={setReturnToCenter}
               className={`p-2 rounded absolute  bottom-[14px] left-5 ${
-                isDarkTheme
+                theme === "dark"
                   ? "bg-dark-secondary text-dark-background"
                   : "bg-light-text1  text-light-secondary"
               }  ${isHidden ? "left-[60px] bottom-4 " : ""}`}
@@ -413,7 +400,7 @@ export default function Page({ params }) {
           </Tooltip>
           <h1
             className={`text-2xl my-1 absolute bottom-[17px] right-10 ${
-              isDarkTheme ? "text-dark-secondary" : "text-light-secondary"
+              theme === "dark" ? "text-dark-secondary" : "text-light-secondary"
             } body`}
           >
             Re
@@ -425,7 +412,7 @@ export default function Page({ params }) {
           aria-label="Show"
           onClick={() => setIsHidden(false)}
           className={`absolute bottom-5 left-4 p-2 rounded ${
-            isDarkTheme
+            theme === "dark"
               ? "bg-dark-secondary text-dark-background"
               : "bg-light-secondary text-light-text1"
           }`}
@@ -448,7 +435,9 @@ export default function Page({ params }) {
                 aria-label="Close"
                 onClick={() => setShowSettings(false)}
                 className={`p-2 rounded bg-redSpecial hover:bg-red-700 ${
-                  isDarkTheme ? " text-light-background" : "text-light-text1"
+                  theme === "dark"
+                    ? " text-light-background"
+                    : "text-light-text1"
                 }`}
               >
                 <XMarkIcon className="h-5 w-5" />
@@ -551,14 +540,14 @@ export default function Page({ params }) {
   );
 }
 const Separation = React.memo(function Separation({
-  isDarkTheme,
   handleMouseDown,
   handleTouchStart,
 }) {
+  const { theme } = useTheme("dark");
   return (
     <div
       className={`cursor-col-resize h-screen relative px-2 transition-colors duration-300 
-          ${isDarkTheme ? "bg-dark-background" : "bg-light-background"}`}
+          ${theme === "dark" ? "bg-dark-background" : "bg-light-background"}`}
       onMouseDown={handleMouseDown}
       onTouchStart={handleTouchStart}
     >
@@ -579,9 +568,9 @@ const Separation = React.memo(function Separation({
 const Selection = React.memo(function Selection({
   selectedOption,
   setSelectedOption,
-  isDarkTheme,
   options,
 }) {
+  const { theme } = useTheme();
   const selectStyles = {
     control: (provided) => ({
       ...provided,
@@ -598,7 +587,7 @@ const Selection = React.memo(function Selection({
       margin: "0rem",
       padding: "0rem",
       fontWeight: "bold",
-      color: isDarkTheme ? "#e2eff1" : "#1a202c",
+      color: theme === "dark" ? "#e2eff1" : "#1a202c",
     }),
     indicatorSeparator: () => null,
     dropdownIndicator: (provided) => ({
@@ -629,7 +618,7 @@ const Selection = React.memo(function Selection({
         className={`p-2 cursor-pointer font-bold ${
           isFocused
             ? "bg-gray-200 text-light-text1"
-            : isDarkTheme
+            : theme === "dark"
             ? "bg-light-background text-light-text1"
             : "bg-dark-background text-light-background"
         }`}
@@ -667,14 +656,12 @@ const Selection = React.memo(function Selection({
 });
 
 Separation.propTypes = {
-  isDarkTheme: PropTypes.bool.isRequired,
   handleMouseDown: PropTypes.func.isRequired,
   handleTouchStart: PropTypes.func.isRequired,
 };
 Selection.propTypes = {
   selectedOption: PropTypes.object.isRequired,
   setSelectedOption: PropTypes.func.isRequired,
-  isDarkTheme: PropTypes.bool.isRequired,
   options: PropTypes.array.isRequired,
   innerProps: PropTypes.object,
   isFocused: PropTypes.bool,

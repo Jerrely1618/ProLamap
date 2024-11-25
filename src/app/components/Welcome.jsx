@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
-  HomeIcon,
   MoonIcon,
   SunIcon,
   XMarkIcon,
@@ -14,15 +13,11 @@ import Link from "next/link";
 import debounce from "lodash.debounce";
 import { FixedSizeList as List } from "react-window";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 
-export default function Welcome({
-  isDarkTheme,
-  handleExpand,
-  isExpanded,
-  handleHide,
-  toggleTheme,
-}) {
+export default function Welcome({ handleExpand, isExpanded, handleHide }) {
   const router = useRouter();
+  const { theme } = useTheme();
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredTopics, setFilteredTopics] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -128,7 +123,7 @@ export default function Welcome({
     router.push(
       `/content/${
         item.parentTopic ? item.parentTopic : item.topic
-      }?isExpanded=${isExpanded}&isDarkTheme=${isDarkTheme}`
+      }?isExpanded=${isExpanded}`
     );
   };
 
@@ -152,7 +147,7 @@ export default function Welcome({
     <>
       <div
         className={`body-bold flex space-x-5 left-20 ${
-          isDarkTheme ? "text-dark-secondary" : "text-dark-background"
+          theme === "dark" ? "text-dark-secondary" : "text-dark-background"
         } absolute md:top-5 bottom-5 z-10`}
       >
         <div>
@@ -177,7 +172,7 @@ export default function Welcome({
                 fillRule="evenodd"
                 clipRule="evenodd"
                 d="M214.316 594V164V159H214.239C211.773 79.338 150.593 13.9508 71.1361 1.96537C79.513 0.670918 88.0882 0 96.8157 0C191.533 0 268.316 79.0217 268.316 176.5C268.316 177.335 268.31 178.168 268.299 179H268.316V614H167.316V594H214.316ZM0 322.206C27.5524 341.634 60.8944 353 96.8157 353C105.481 353 113.996 352.339 122.316 351.062V309.892C99.0891 321.466 72.7411 328 44.8159 328C29.3022 328 14.2754 325.983 0 322.206ZM324 290V1.99999H445.6C448.4 1.99999 452.133 2.13332 456.8 2.39998C461.6 2.53332 465.867 2.93333 469.6 3.59999C486.8 6.26666 500.867 11.9333 511.8 20.6C522.867 29.2666 531 40.2 536.2 53.4C541.4 66.4667 544 81.0667 544 97.2C544 121.333 538 142 526 159.2C518.592 169.736 508.593 177.782 496.002 183.338L548 290H486.4L439.099 192.4H378.4V290H324ZM378.4 141.6H443.2C446 141.6 449.067 141.467 452.4 141.2C455.733 140.933 458.8 140.4 461.6 139.6C468.933 137.6 474.6 134.267 478.6 129.6C482.6 124.8 485.333 119.533 486.8 113.8C488.4 107.933 489.2 102.4 489.2 97.2C489.2 92 488.4 86.5333 486.8 80.8C485.333 74.9333 482.6 69.6667 478.6 65C474.6 60.2 468.933 56.8 461.6 54.8C458.8 54 455.733 53.4667 452.4 53.2C449.067 52.9333 446 52.8 443.2 52.8H378.4V141.6ZM591.969 290V1.99999H779.969V52.8H646.369V114.4H755.969V165.2H646.369V239.2H779.969V290H591.969ZM324 614V326H445.6C448.4 326 452.133 326.133 456.8 326.4C461.6 326.533 465.867 326.933 469.6 327.6C486.8 330.267 500.867 335.933 511.8 344.6C522.867 353.267 531 364.2 536.2 377.4C541.4 390.467 544 405.067 544 421.2C544 445.333 538 466 526 483.2C518.592 493.736 508.593 501.782 496.002 507.338L548 614H486.4L439.099 516.4H378.4V614H324ZM378.4 465.6H443.2C446 465.6 449.067 465.467 452.4 465.2C455.733 464.933 458.8 464.4 461.6 463.6C468.933 461.6 474.6 458.267 478.6 453.6C482.6 448.8 485.333 443.533 486.8 437.8C488.4 431.933 489.2 426.4 489.2 421.2C489.2 416 488.4 410.533 486.8 404.8C485.333 398.933 482.6 393.667 478.6 389C474.6 384.2 468.933 380.8 461.6 378.8C458.8 378 455.733 377.467 452.4 377.2C449.067 376.933 446 376.8 443.2 376.8H378.4V465.6ZM591.969 614V326H779.969V376.8H646.369V438.4H755.969V489.2H646.369V563.2H779.969V614H591.969ZM810.5 1.99998V614H926.1V406.6H1055.09L1155.6 614H1286.5L1176 387.342C1202.76 375.536 1224.01 358.438 1239.75 336.05C1265.25 299.5 1278 255.583 1278 204.3C1278 170.017 1272.47 138.992 1261.43 111.225C1250.38 83.175 1233.09 59.9416 1209.57 41.5249C1186.34 23.1083 1156.45 11.0666 1119.9 5.39998C1111.97 3.98332 1102.9 3.13331 1092.7 2.84996C1082.78 2.28331 1074.85 1.99998 1068.9 1.99998H810.5ZM1063.8 298.65H926.1V109.95H1063.8C1069.75 109.95 1076.27 110.233 1083.35 110.8C1090.43 111.367 1096.95 112.5 1102.9 114.2C1118.48 118.45 1130.53 125.675 1139.03 135.875C1147.53 145.792 1153.33 156.983 1156.45 169.45C1159.85 181.633 1161.55 193.25 1161.55 204.3C1161.55 215.35 1159.85 227.108 1156.45 239.575C1153.33 251.758 1147.53 262.95 1139.03 273.15C1130.53 283.067 1118.48 290.15 1102.9 294.4C1096.95 296.1 1090.43 297.233 1083.35 297.8C1076.27 298.367 1069.75 298.65 1063.8 298.65ZM1379.93 1.99998V614H1779.43V506.05H1495.53V348.8H1728.43V240.85H1495.53V109.95H1779.43V1.99998H1379.93Z"
-                fill={`${isDarkTheme ? "#BECDFA" : "#2E073F"}`}
+                fill={`${theme === "dark" ? "#BECDFA" : "#2E073F"}`}
               />
             </svg>
 
@@ -185,7 +180,7 @@ export default function Welcome({
               <span className={`text-blue-500`}>Language,</span>
               <span
                 className={`${
-                  isDarkTheme ? "text-dark-secondary" : "text-third-text1"
+                  theme === "dark" ? "text-dark-secondary" : "text-third-text1"
                 }`}
               >
                 Data Structure & Algorithms
@@ -200,7 +195,7 @@ export default function Welcome({
                     <span
                       key={index}
                       className={`mr-8 flex items-center text-xs md:text-sm sm:text-sm font-bold ${
-                        isDarkTheme
+                        theme === "dark"
                           ? "text-dark-secondary"
                           : "text-dark-background"
                       }`}
@@ -210,7 +205,7 @@ export default function Welcome({
                   ))}
                   <span
                     className={`mr-8 flex items-center font-bold ${
-                      isDarkTheme
+                      theme === "dark"
                         ? "text-dark-secondary"
                         : "text-dark-background"
                     }`}
@@ -232,7 +227,7 @@ export default function Welcome({
                   value={searchTerm}
                   onChange={handleSearchChange}
                   onKeyDown={handleKeyDown}
-                  className={`mt-4 px-4 py-2 w-full text-lg border border-gray-300 focus:outline-none ${
+                  className={`mt-4 px-4 py-2 w-full text-lg border border-gray-300 focus:outline-none bg-white ${
                     filteredTopics.length > 0 ? "rounded-t-md" : "rounded-md"
                   }`}
                 />
@@ -259,7 +254,7 @@ export default function Welcome({
                             className={`flex justify-between h-full pl-4 w-full text-light-background body-bold text-left text-xl ${
                               selectedIndex === index
                                 ? "bg-blue-300"
-                                : isDarkTheme
+                                : theme === "dark"
                                 ? "bg-dark-background"
                                 : "bg-light-text2"
                             } hover:bg-blue-500 focus:bg-blue-500 transition-colors duration-200 
@@ -298,7 +293,7 @@ export default function Welcome({
               <div className="absolute bottom-28 inline-block">
                 <button
                   className={`relative justify-center items-center p-2 transition-color duration-300 bg-rounded body-bold shadow-glassy backdrop-blur-md rounded-md ${
-                    isDarkTheme
+                    theme === "dark"
                       ? "bg-dark-secondary text-dark-background hover:bg-third-primary hover:text-white"
                       : "bg-light-text1 text-white hover:bg-third-background"
                   }`}
@@ -337,20 +332,13 @@ export default function Welcome({
       <Buttons
         handleExpand={handleExpand}
         isExpanded={isExpanded}
-        isDarkTheme={isDarkTheme}
         handleHide={handleHide}
-        toggleTheme={toggleTheme}
       />
     </>
   );
 }
-function Buttons({
-  handleExpand,
-  isExpanded,
-  isDarkTheme,
-  handleHide,
-  toggleTheme,
-}) {
+function Buttons({ handleExpand, isExpanded, handleHide }) {
+  const { theme, setTheme } = useTheme();
   return (
     <div className="flex justify-between justify-center items-center bg-transparent m-4 z-10">
       <div className="flex space-x-2">
@@ -369,14 +357,14 @@ function Buttons({
         <Tooltip title="Theme Toggle" placement="top">
           <button
             aria-label="Theme Toggle"
-            onClick={toggleTheme}
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             className={`p-2 rounded transition-color duration-300 ${
-              isDarkTheme
+              theme === "dark"
                 ? "bg-dark-secondary text-dark-background hover:text-white"
                 : "bg-light-text1  text-light-secondary hover:text-dark-background"
             }`}
           >
-            {isDarkTheme ? (
+            {theme === "dark" ? (
               <SunIcon className="h-5 w-5" />
             ) : (
               <MoonIcon className="h-5 w-5" />
@@ -387,7 +375,9 @@ function Buttons({
       <div
         className={`flex flex-col text-sm justify-center text-center items-center ${
           isExpanded ? "" : "-ml-10"
-        } ${isDarkTheme ? "text-dark-secondary" : "text-light-secondary"} `}
+        } ${
+          theme === "dark" ? "text-dark-secondary" : "text-light-secondary"
+        } `}
       >
         <p className={`font-bold justify-center items-center  px-2  `}>
           Copyright ©2024 qReReRe. All rights reserved.
@@ -402,7 +392,7 @@ function Buttons({
             aria-label="Expand"
             onClick={handleExpand}
             className={`p-2 rounded transition-color duration-300 ${
-              isDarkTheme
+              theme === "dark"
                 ? "bg-dark-secondary text-dark-background hover:bg-third-primary hover:text-white"
                 : "bg-light-text1  text-light-secondary hover:bg-blue-500 hover:text-white"
             }`}
@@ -421,16 +411,12 @@ function Buttons({
 Buttons.propTypes = {
   handleExpand: PropTypes.func.isRequired,
   isExpanded: PropTypes.bool.isRequired,
-  isDarkTheme: PropTypes.bool.isRequired,
   handleHide: PropTypes.func.isRequired,
-  toggleTheme: PropTypes.func.isRequired,
 };
 Welcome.propTypes = {
-  isDarkTheme: PropTypes.bool.isRequired,
   setSelectedTopic: PropTypes.func.isRequired,
   handleExpand: PropTypes.func.isRequired,
   isExpanded: PropTypes.bool.isRequired,
   width: PropTypes.number.isRequired,
   handleHide: PropTypes.func.isRequired,
-  toggleTheme: PropTypes.func.isRequired,
 };

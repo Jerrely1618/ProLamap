@@ -1,6 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.title404{
+  font-family: var(--font-oldstdTT), var(--font-manrope);
+  font-weight: 300;
+  text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.60) ;
+}
 .toon{
     font-family: var(--font-gamja-flower), cursive;
 }

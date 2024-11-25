@@ -20,12 +20,12 @@ import React, {
 } from "react";
 import { ThreeDots } from "react-loader-spinner";
 import AdVertical from "./AdVertical";
+import { useTheme } from "next-themes";
 
 const BigContent = React.lazy(() => import("./BigContent"));
 const SmallContent = React.lazy(() => import("./SmallContent"));
 
 const InnerContent = React.memo(function InnerContent({
-  isDarkTheme,
   selectedCourse,
   isMediaOnly,
   selectedTopic,
@@ -33,7 +33,6 @@ const InnerContent = React.memo(function InnerContent({
   setChange,
   isExpanded,
   handleHide,
-  toggleTheme,
   width,
   handleExpand,
   setIsMediaOnly,
@@ -42,6 +41,7 @@ const InnerContent = React.memo(function InnerContent({
   const [selectedStep, setSelectedStep] = useState("");
   const [isCompleted, setIsCompleted] = useState(false);
   const [loading, setLoading] = useState(true);
+  const { theme, setTheme } = useTheme();
 
   const fetchContentData = useCallback(async () => {
     setLoading(true);
@@ -151,7 +151,11 @@ const InnerContent = React.memo(function InnerContent({
 
   if (loading) {
     return (
-      <div className="flex flex-col w-full min-w-0 text-2xl items-center justify-center h-screen">
+      <div
+        className={`flex flex-col w-full min-w-0 text-2xl items-center justify-center h-screen ${
+          theme === "dark" ? "bg-light-background" : "bg-light-background"
+        }`}
+      >
         <ThreeDots
           height="80"
           width="80"
@@ -168,9 +172,8 @@ const InnerContent = React.memo(function InnerContent({
       <Buttons
         handleExpand={handleExpand}
         isExpanded={isExpanded}
-        isDarkTheme={isDarkTheme}
         handleHide={handleHide}
-        toggleTheme={toggleTheme}
+        setTheme={setTheme}
         setIsMediaOnly={setIsMediaOnly}
         isMediaOnly={isMediaOnly}
       />
@@ -178,7 +181,7 @@ const InnerContent = React.memo(function InnerContent({
         fallback={
           <div
             className={` flex flex-col w-full min-w-0 text-2xl items-center justify-center h-screen ${
-              isDarkTheme ? "bg-dark-background" : "bg-light-background"
+              theme === "dark" ? "bg-dark-background" : "bg-light-background"
             }`}
           >
             <ThreeDots
@@ -194,7 +197,6 @@ const InnerContent = React.memo(function InnerContent({
         {window.innerWidth < 768 || width < 40 ? (
           <SmallContent
             toggleCompletion={toggleCompletion}
-            isDarkTheme={isDarkTheme}
             selectedStep={selectedStep}
             setSelectedStep={setSelectedStep}
             isCompleted={isCompleted}
@@ -205,17 +207,25 @@ const InnerContent = React.memo(function InnerContent({
             isExpanded={isExpanded}
             handleHide={handleHide}
             width={width}
-            toggleTheme={toggleTheme}
             setIsMediaOnly={setIsMediaOnly}
           />
         ) : (
           <div className="grid grid-cols-6 h-screen">
-            <div className="text-white col-span-1">
-              <AdVertical />
-            </div>
-            <div className="col-span-4">
+            {isExpanded && (
+              <div
+                className={` ${
+                  theme === "dark"
+                    ? "bg-dark-background"
+                    : "bg-light-background"
+                } col-span-1`}
+              >
+                <AdVertical />
+              </div>
+            )}
+            <div
+              className={`${isExpanded ? "col-span-4" : "col-span-6 mb-10"}`}
+            >
               <BigContent
-                isDarkTheme={isDarkTheme}
                 selectedStep={selectedStep}
                 selectedCourse={selectedCourse}
                 setSelectedStep={setSelectedStep}
@@ -226,9 +236,17 @@ const InnerContent = React.memo(function InnerContent({
                 toggleCompletion={toggleCompletion}
               />
             </div>
-            <div className="text-white col-span-1 ">
-              <AdVertical />
-            </div>
+            {isExpanded && (
+              <div
+                className={` ${
+                  theme === "dark"
+                    ? "bg-dark-background"
+                    : "bg-light-background"
+                } col-span-1`}
+              >
+                <AdVertical />
+              </div>
+            )}
           </div>
         )}
       </Suspense>
@@ -239,12 +257,11 @@ const InnerContent = React.memo(function InnerContent({
 function Buttons({
   handleExpand,
   isExpanded,
-  isDarkTheme,
   handleHide,
-  toggleTheme,
   setIsMediaOnly,
   isMediaOnly,
 }) {
+  const { theme, setTheme } = useTheme();
   const router = useRouter();
   const toggleSettings = useCallback(() => {
     setIsMediaOnly((prev) => !prev);
@@ -257,7 +274,7 @@ function Buttons({
   return (
     <div
       className={`flex justify-between p-4 ${
-        isDarkTheme ? "bg-dark-background" : "bg-light-background"
+        theme === "dark" ? "bg-dark-background" : "bg-light-background"
       }`}
     >
       <div className="flex space-x-2">
@@ -275,7 +292,7 @@ function Buttons({
             aria-label="Home"
             onClick={handleHomeClick}
             className={`p-2 rounded transition-color duration-300 ${
-              isDarkTheme
+              theme === "dark"
                 ? "bg-dark-secondary text-dark-background hover:bg-third-primary hover:text-white"
                 : "bg-light-text1  text-light-secondary hover:bg-blue-500 hover:text-white"
             }`}
@@ -287,14 +304,14 @@ function Buttons({
         <Tooltip title="Theme Toggle" placement="top">
           <button
             aria-label="Theme Toggle"
-            onClick={toggleTheme}
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             className={`p-2 rounded transition-color duration-300 ${
-              isDarkTheme
+              theme === "dark"
                 ? "bg-dark-secondary text-dark-background hover:text-white"
                 : "bg-light-text1  text-light-secondary hover:text-dark-background"
             }`}
           >
-            {isDarkTheme ? (
+            {theme === "dark" ? (
               <SunIcon className="h-5 w-5" />
             ) : (
               <MoonIcon className="h-5 w-5" />
@@ -311,7 +328,7 @@ function Buttons({
             className={`p-2 rounded transition-colors duration-300 hover:bg-blue-600 hover:text-white ${
               isMediaOnly
                 ? "bg-blue-600 text-white "
-                : isDarkTheme
+                : theme === "dark"
                 ? "bg-dark-secondary text-dark-background "
                 : "bg-light-text1 text-light-secondary"
             }`}
@@ -322,12 +339,12 @@ function Buttons({
         <div className="absolute top-11 z-20 flex w-full flex-col -rotate-[32deg] items-center">
           <ArrowTrendingUpIcon
             className={`${
-              isDarkTheme ? "text-white" : "text-dark-background"
+              theme === "dark" ? "text-white" : "text-dark-background"
             } h-5 w-5 w-full transform -rotate-[60deg]`}
           />
           <span
             className={`text-center text-sm toon m-0  w-full leading-tight ${
-              isDarkTheme ? "text-white" : "text-dark-background"
+              theme === "dark" ? "text-white" : "text-dark-background"
             }`}
           >
             Only code!
@@ -338,7 +355,7 @@ function Buttons({
             aria-label="Expand"
             onClick={handleExpand}
             className={`p-2 rounded transition-color duration-300 ${
-              isDarkTheme
+              theme === "dark"
                 ? "bg-dark-secondary text-dark-background hover:bg-third-primary hover:text-white"
                 : "bg-light-text1  text-light-secondary hover:bg-blue-500 hover:text-white"
             }`}
@@ -356,14 +373,12 @@ function Buttons({
 }
 
 InnerContent.propTypes = {
-  isDarkTheme: PropTypes.bool.isRequired,
   selectedCourse: PropTypes.object.isRequired,
   selectedTopic: PropTypes.string.isRequired,
   selectedSubtopic: PropTypes.string,
   setChange: PropTypes.func.isRequired,
   isExpanded: PropTypes.bool.isRequired,
   handleHide: PropTypes.func.isRequired,
-  toggleTheme: PropTypes.func.isRequired,
   width: PropTypes.number.isRequired,
   handleExpand: PropTypes.func.isRequired,
   setIsMediaOnly: PropTypes.func.isRequired,

@@ -3,6 +3,7 @@ import {
   ChevronUpIcon,
   InformationCircleIcon,
 } from "@heroicons/react/24/solid";
+import { useTheme } from "next-themes";
 import Link from "next/link";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
@@ -23,19 +24,18 @@ const ContentForStep = React.memo(function ContentForStep({
   selectedSubtopic,
   contentData,
   isMediaOnly,
-  isDarkTheme,
 }) {
   const topicContent =
     contentData[selectedCourse.value]?.[selectedTopic]?.[step] ||
     contentData[selectedCourse.value]?.[selectedTopic]?.[selectedSubtopic];
-
+  const { theme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
 
   if (!Array.isArray(topicContent) || topicContent.length === 0) {
     return (
       <p
         className={`text-3xl justify-center ${
-          isDarkTheme ? "text-white" : "text-dark-background"
+          theme === "dark" ? "text-white" : "text-dark-background"
         }`}
       >
         Oooops, no content available for {step}.
@@ -48,7 +48,7 @@ const ContentForStep = React.memo(function ContentForStep({
       {topicContent.map((item, index) => (
         <div
           className={`body-medium text-xl ${
-            isDarkTheme ? "text-light-background" : "text-dark-background"
+            theme === "dark" ? "text-light-background" : "text-dark-background"
           }`}
           key={index}
         >
@@ -105,7 +105,9 @@ const ContentForStep = React.memo(function ContentForStep({
           {item.type === "title" && (
             <h2
               className={`text-xl body-bold ${
-                isDarkTheme ? "text-light-background" : "text-dark-background"
+                theme === "dark"
+                  ? "text-light-background"
+                  : "text-dark-background"
               }`}
             >
               {item.content}
@@ -114,7 +116,7 @@ const ContentForStep = React.memo(function ContentForStep({
           {item.type === "mainTitle" && (
             <h2
               className={`text-3xl body-bold ${
-                isDarkTheme ? "text-light-text1" : "text-dark-primary"
+                theme === "dark" ? "text-light-text1" : "text-dark-primary"
               }`}
             >
               {item.content}
@@ -163,7 +165,7 @@ const ContentForStep = React.memo(function ContentForStep({
                       <Link href={href} target="_blank" passHref>
                         <span
                           className={`${
-                            isDarkTheme
+                            theme === "dark"
                               ? "text-light-text1"
                               : "text-dark-primary"
                           } font-bold hover:underline`}
@@ -205,7 +207,7 @@ const ContentForStep = React.memo(function ContentForStep({
           {item.type === "code" && selectedCourse.value && (
             <SyntaxHighlighter
               language={selectedCourse.value}
-              style={isDarkTheme ? coldarkDark : oneLight}
+              style={theme === "dark" ? coldarkDark : oneLight}
               className="text-base scrollbar-left-small"
             >
               {item.content}
@@ -226,6 +228,5 @@ ContentForStep.propTypes = {
   selectedSubtopic: PropTypes.string,
   contentData: PropTypes.object.isRequired,
   isMediaOnly: PropTypes.bool.isRequired,
-  isDarkTheme: PropTypes.bool.isRequired,
 };
 export default ContentForStep;

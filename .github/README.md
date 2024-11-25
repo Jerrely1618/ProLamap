@@ -4,11 +4,11 @@ The human brain can hold up **2.5 Petabytes (PB)** of information—whole librar
 
 > Life is fleeting and so are our thoughts.
 
-## Introducing Re
+## Introducing qReReRe
 
 <p align="center">
   <a href="https://pro-lamap.vercel.app/" target="_blank">
-  <img src="../public/logoword.svg" width="300" height="300" alt="Re Logo" />
+  <img src="../public/logoword.svg" width="300" height="300" alt="qReReRe Logo" />
   </a>
 </p>
 <div align="center">
@@ -19,15 +19,15 @@ The human brain can hold up **2.5 Petabytes (PB)** of information—whole librar
     <img src="https://img.shields.io/badge/discord-join-continue.svg?labelColor=191937&color=6F6FF7&logo=discord" style="height: 22px;" />
 </a>
 </div>
-The purpose of Re is to hold the crucial languages, algorithms, and data structures for you to:
+The purpose of qReReRe is to hold the crucial languages, algorithms, and data structures for you to quickly:
 
-- **Learn**
+- **Relearn**
 - **Remember**
 - **Reapply** into your code
 
 Our goal is to put in the hands of everyone the knowledge of programming. Think of it as a dictionary for all the programming knwoledge with languages, algorithms and data structure whenever you need them. A goodbye to searching **10 websites** and **5 tutorials** to find how to apply **Dijkstra's algorithm** (or in my case, how to spell it).
 
-With **Re**, you can search it up fast and reliably.
+With **qReReRe**, you can search it up fast and reliably.
 
 ## How to get started
 
@@ -59,8 +59,7 @@ Refer to [Contributing](https://github.com/qReReRe/Re/blob/eb5b156253980015e2abd
 
 ## Working Live
 
-Youtube: [@Dchange1](https://www.youtube.com/@Dchange1)
-Twitch: [@Vchanging](https://www.twitch.tv/vchanging)
+Youtube: [@Vchange](https://www.youtube.com/@Vchanging)
 
 ## License
 

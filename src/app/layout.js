@@ -1,8 +1,8 @@
 import './globals.css';
-import { Gamja_Flower, Montserrat, Manrope } from "next/font/google";
+import { Gamja_Flower, Montserrat, Manrope, Old_Standard_TT } from "next/font/google";
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import Head from 'next/head';
 import AdSense from './components/AdSense';
+import { ThemeProvider } from 'next-themes';
  
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -15,6 +15,14 @@ const gamjaFlower = Gamja_Flower({
   weight: ['400'],
   display: 'swap',
   variable: '--font-gamja-flower',
+});
+
+const oldstdTT = Old_Standard_TT({
+  subsets: ['latin'],
+  weight: ['400'],
+  style: ['normal'],
+  display: 'swap',
+  variable: '--font-oldstdTT',
 });
 
 const manrope = Manrope({
@@ -53,12 +61,16 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${montserrat.className} ${gamjaFlower.className} ${manrope.className}`}>
+
+    <html lang="en" className={`${montserrat.className} ${oldstdTT.className} ${gamjaFlower.className} ${manrope.className}`}>
+
       <head>
         <AdSense/>
       </head>
-      <body className={`antialiased`}>
-        {children}
+      <body className={`antialiased`} suppressHydrationWarning >      
+        <ThemeProvider attribute="class">
+          {children}
+        </ThemeProvider>
         <SpeedInsights/>
       </body>
     </html>
