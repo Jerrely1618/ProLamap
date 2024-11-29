@@ -949,9 +949,92 @@
       ]
     },
     "Algorithms": {
-      "Binary Search": [],
-      "Dijiikstra": [],
-      "Fast and Slow Pointers": [],
+      "Binary Search": [
+        {
+          "type":"mainTitle",
+          "content":"Binary Search"
+        },
+        {
+          "type":"Idea",
+          "content":"Allows to **find** an element in a **sorted** array in O(log n) time."
+        },
+        {
+          "type": "text",
+          "content":"The binary search algorithm takes the divide and conquer approach into how we search for items in our data structures. For it to be efficient, the data must be sorted beforehand."
+        },
+        {
+          "type":"text",
+          "content":"In the algorithm, we divide the data structure into the partition left and right of the middle. If the target value is less than the middle, we move to the left otherwise right. When the middle value is equal to the target then we have found the index and we return it."
+        },
+        {
+          "type":"code",
+          "content":"def binary_search(arr, target):\n    left, right = 0, len(arr) - 1 # Assign pointers of boundaries\n     # Only stop when there are no more middle pointers to calculate\n    while left <= right:\n        # Calculate the middle pointer\n        middle = left + (right - left) // 2\n        if arr[middle] == target: # Check target against middle value\n            return middle\n        elif arr[middle] < target: # Move to right partition\n            left = middle + 1\n        else: # Move to left partition\n            right = middle - 1\n    return -1"
+        },
+        {
+          "type":"title",
+          "content":"Adapting the Algorithm"
+        },
+        {
+          "type":"text",
+          "content":"While 9 time out of 10, the format above will help you solve any problem with binary search solutions. However, sometimes you will have to adapt the algorithm to the specifications of your problem. The main points to keep in mind are the following:\n"
+        },
+        {
+          "type":"text",
+          "content":"- **Left and Right Pointers**: Decide the boundaries of your search, where should you start or end.\n- **Move Pointers**: Under what circumstances should you move the left or right pointers, is it simply for the middle value to be less or more than the target, or is it something more?\n- **Return**: At times, what we are asked to do goes beyond finding a value but instead an event like when an array changes from consecutive 0s to 1s. In this case we may not want to return the middle pointer but the index below it or above it. These are the rightmost or leftmost elements."
+        },
+        {
+          "type":"code",
+          "content":"def binary_search(arr, target):\n    left, right = 0, len(arr) - 1\n    while left < right:\n        middle = left + (right - left) // 2\n        if arr[middle] == target:\n            return middle\n        elif arr[middle] < target:\n            left = middle + 1\n        else:\n            right = middle\n    return -1"
+        },
+        {
+          "type":"depth",
+          "content":"1. [Binary Search](https://en.wikipedia.org/wiki/Binary_search_algorithm) | Wikipedia"
+        }
+      ],
+      "Dijiikstra": [
+        {
+          "type": "mainTitle",
+          "content": "Dijkstra's Algorithm"
+        },
+        {
+          "type": "Idea",
+          "content":"Dijkstra's Algorithm"
+        },
+        {
+          "type": "title",
+          "content":"Adjacency Matrix and List"
+        },
+        {
+          "type": "code",
+          "content": "import heapq\n\ndef dijkstra_matrix(graph, start):\n    n = len(graph)\n    distances = [float('inf')] * n  # Initialize all distances as infinity\n    distances[start] = 0  # Start distance is 0\n    priority_queue = [(0, start)]  # Start with the start node in the priority queue\n\n    while priority_queue:\n        current_distance, current_node = heapq.heappop(priority_queue)  # Pop the node with the smallest distance\n        if current_distance > distances[current_node]:\n            continue\n        # Iterate through all nodes\n        for neighbor in range(n):  \n            if graph[current_node][neighbor] != float('inf'):  # If there's an edge to the neighbor\n                edge_weight = graph[current_node][neighbor]\n                if current_distance + edge_weight < distances[neighbor]:\n                    distances[neighbor] = current_distance + edge_weight\n                    heapq.heappush(priority_queue, (distances[neighbor], neighbor))\n\n    return distances\n\ngraph_matrix = [\n    [0, 7, 9, float('inf')],\n    [7, 0, 10, 15],\n    [9, 10, 0, 11],\n    [float('inf'), 15, 11, 0],\n]\n\nprint(dijkstra_matrix(graph_matrix, 0))  # [0, 7, 9, 20]"
+        },
+        {
+          "type": "code",
+          "content": "import heapq\n\ndef dijkstra_list(graph, start):\n    n = len(graph)\n    distances = [float('inf')] * n\n    distances[start] = 0\n    priority_queue = [(0, start)]\n\n    while priority_queue:\n        current_distance, current_node = heapq.heappop(priority_queue)\n        if current_distance > distances[current_node]:\n            continue\n        # Iterate through each neighbors\n        for neighbor, edge_weight in graph[current_node]:\n            if current_distance + edge_weight < distances[neighbor]:\n                distances[neighbor] = current_distance + edge_weight\n                heapq.heappush(priority_queue, (distances[neighbor], neighbor))\n\n    return distances\n\ngraph_list = {\n    0: [(1, 7), (2, 9)],\n    1: [(0, 7), (2, 10), (3, 15)],\n    2: [(0, 9), (1, 10), (3, 11), (5, 10)],\n    3: [(1, 15), (2, 11), (4, 6)],\n    4: [(3, 6), (5, 9)],\n    5: [(2, 10), (4, 9)],\n}\n\nprint(dijkstra_list(graph_list, 0))  # [0, 7, 9, 20, 20, 19]"
+        },
+        {
+          "type": "title",
+          "content":"Edge List"
+        },
+        {
+          "type": "code",
+          "content": "import heapq\n\ndef dijkstra_edge(edges, n, start):\n    distances = [float('inf')] * n\n    distances[start] = 0\n    priority_queue = [(0, start)]\n\n    while priority_queue:\n        current_distance, current_node = heapq.heappop(priority_queue)\n        if current_distance > distances[current_node]:\n            continue\n        for node, neighbor, edge_weight in edges:\n            if node == current_node:\n                new_dist = current_distance + edge_weight\n                if new_dist < distances[neighbor]:\n                    distances[neighbor] = new_dist\n                    heapq.heappush(priority_queue, (distances[neighbor], neighbor))\n    return distances\n\nedges = [\n    (0, 1, 7), (0, 2, 9),\n    (1, 0, 7), (1, 2, 10), (1, 3, 15),\n    (2, 0, 9), (2, 1, 10), (2, 3, 11), (2, 5, 10),\n    (3, 1, 15), (3, 2, 11), (3, 4, 6),\n]\nstart_node = 0\nn = 6\n\nprint(dijkstra_edge(edges, n, start_node))  # [0, 7, 9, 20, 20, 19]"
+        }
+      ],
+      "Fast and Slow": [
+        {
+          "type": "mainTitle",
+          "content": "Fast and Slow"
+        },
+        {
+          "type": "Idea",
+          "content": "Fast and Slow"
+        },
+        {
+          "type":"code",
+          "content":"# Detects cycle in a linked list\ndef slowFast(head: ListNode) -> ListNode:\n    slow = fast = head\n    # Common approach\n    while fast and fast.next:\n        slow = slow.next # Moves at 1 step at a time\n        fast = fast.next.next # Moves in 2 steps at a time\n        if slow == fast:\n            return True\n    return False"
+        }
+      ],
       "Topological Sort": [],
       "Prism's Algorithm": [],
       "Kruskal's Algorithm": []

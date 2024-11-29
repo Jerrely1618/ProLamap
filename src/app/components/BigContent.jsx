@@ -2,7 +2,7 @@ import { CheckIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import PropTypes from "prop-types";
 import React, { useCallback, useMemo } from "react";
-import AdHorizontal from "./AdHorizontal";
+import AdHorizontal from "../ads/AdHorizontal";
 import { useTheme } from "next-themes";
 const ContentForStep = React.lazy(() => import("./ContentForStep"));
 
@@ -62,7 +62,7 @@ const BigContent = React.memo(function BigContent({
                   aria-label={step}
                   key={step}
                   onClick={() => handleStepSelection(step)}
-                  className={`py-5 px-4 transition-all text-white duration-300 body-bold text-base text-left relative ${
+                  className={`py-5 px-4 transition-all text-white hover:ml-3 duration-300 body-bold text-base text-left relative ${
                     selectedStep === step
                       ? "ml-5 bg-third-background  z-0"
                       : `ml-0 z-10 shadow-xl bg-light-text1`
@@ -81,7 +81,7 @@ const BigContent = React.memo(function BigContent({
                 className={`mt-5 flex items-center justify-center body-bold px-5 py-2 rounded transition-colors duration-300 ${
                   isCompleted
                     ? "bg-green-500 text-white"
-                    : "bg-light-background text-black"
+                    : "hover:bg-gray-200 bg-light-background text-black"
                 }`}
                 onClick={toggleCompletion}
                 style={{

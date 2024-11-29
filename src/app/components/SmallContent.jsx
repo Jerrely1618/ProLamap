@@ -6,7 +6,7 @@ import {
   Bars4Icon,
   CheckIcon,
 } from "@heroicons/react/24/solid";
-import AdHorizontal from "./AdHorizontal";
+import AdHorizontal from "../ads/AdHorizontal";
 import { useTheme } from "next-themes";
 const ContentForStep = React.lazy(() => import("./ContentForStep"));
 

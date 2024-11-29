@@ -12,7 +12,7 @@ export default function AdHorizontal() {
   return (
     <div className="">
       <ins
-        class="adsbygoogle"
+        className="adsbygoogle"
         style={{ display: "block", textAlign: "center" }}
         data-ad-layout="in-article"
         data-ad-format="fluid"

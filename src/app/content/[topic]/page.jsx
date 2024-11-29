@@ -12,8 +12,9 @@ import Select from "react-select";
 const InnerContent = lazy(() => import("@/app/components/InnerContent"));
 const RoadMap = lazy(() => import("@/app/components/RoadMap"));
 import { Button, Switch, Tooltip } from "antd";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useTheme } from "next-themes";
+import { useExpanded } from "@/app/providers/ExpansionProvider";
 const languages = [
   { value: "python", label: "Python" },
   {
@@ -24,9 +25,6 @@ const languages = [
   },
 ];
 const initialState = {
-  isExpanded: true,
-  isHidden: false,
-  width: 40,
   isDraggable: true,
   showSettings: false,
   eliminateLanguage: "python",
@@ -54,21 +52,19 @@ function reducer(state, action) {
       return {
         ...state,
         selectedTopic: action.payload.selectedTopic,
-        isExpanded: action.payload.isExpanded,
       };
     default:
       return state;
   }
 }
 
-export default function Page({ params }) {
+export default function Page() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const {expanded, setExpanded} = useExpanded();
   const { theme } = useTheme();
+  const params = useParams();
   const searchParams = useSearchParams();
   const {
-    isExpanded,
-    isHidden,
-    width,
     isDraggable,
     showSettings,
     eliminateLanguage,
@@ -84,15 +80,11 @@ export default function Page({ params }) {
     progressBarWidth,
   } = state;
   useEffect(() => {
-    const isExpanded = searchParams.get("isExpanded") === "true";
-
-    const selectedTopic = params.topic;
-
+    const selectedTopic = decodeURIComponent(params.topic);
     dispatch({
       type: "INITIALIZE",
       payload: {
         selectedTopic,
-        isExpanded,
       },
     });
   }, [searchParams, params]);
@@ -151,8 +143,6 @@ export default function Page({ params }) {
     dispatch({ type: "SET_STATE", payload: { screenWidth: value } });
   const setWindowWidth = (value) =>
     dispatch({ type: "SET_STATE", payload: { windowWidth: value } });
-  const setIsHidden = (value) =>
-    dispatch({ type: "SET_STATE", payload: { isHidden: value } });
   const setIsDraggable = (value) =>
     dispatch({ type: "SET_STATE", payload: { isDraggable: value } });
   const setShowSettings = (value) =>
@@ -187,7 +177,7 @@ export default function Page({ params }) {
     const newWidth = (clientX / window.innerWidth) * 100;
 
     if (newWidth >= 35 && newWidth <= 100) {
-      dispatch({ type: "SET_STATE", payload: { width: newWidth } });
+      setExpanded(newWidth);
     }
   }, []);
 
@@ -213,20 +203,6 @@ export default function Page({ params }) {
     isDragging.current = true;
     document.addEventListener("touchmove", handleTouchMove);
     document.addEventListener("touchend", handleMouseUp);
-  };
-
-  const handleExpand = () => {
-    dispatch({
-      type: "SET_STATE",
-      payload: { isExpanded: !isExpanded, width: isExpanded ? 40 : 100 },
-    });
-  };
-
-  const handleHide = () => {
-    dispatch({
-      type: "SET_STATE",
-      payload: { isHidden: true, isExpanded: false },
-    });
   };
 
   const handleOptionChange = (option) => {
@@ -273,12 +249,14 @@ export default function Page({ params }) {
 
   return (
     <div className="flex h-screen transition-all overflow-hidden duration-300">
-      {!isHidden && (
+
+      {expanded <= 100 && (
+        <>
         <div
           className={`flex flex-col flex-grow h-full transition-width transition-colors duration-300 shadow-glassy backdrop-blur-md bg-opacity-glass ${
             theme === "dark" ? "bg-dark-gradient" : "bg-light-gradient"
           }`}
-          style={{ width: `${width}%` }}
+          style={{ width: `${expanded}%` }}
         >
           <div className="flex-none w-full h-full overflow-hidden">
             <InnerContent
@@ -288,23 +266,17 @@ export default function Page({ params }) {
               setChange={(val) =>
                 dispatch({ type: "SET_STATE", payload: { change: val } })
               }
-              width={width}
               style={{ width: "100%" }}
-              handleExpand={handleExpand}
-              isExpanded={isExpanded}
-              handleHide={handleHide}
               setIsMediaOnly={setIsMediaOnly}
             />
           </div>
         </div>
-      )}
-      {!isHidden && !isExpanded && (
         <Separation
           handleMouseDown={handleMouseDown}
           handleTouchStart={handleTouchStart}
-        />
+        /></>
       )}
-      {!isExpanded && (
+      {expanded < 100 && (
         <div
           className={`flex flex-col flex-grow overflow-hidden transition-all transition-colors duration-300 ${
             theme === "dark"
@@ -312,7 +284,7 @@ export default function Page({ params }) {
               : "bg-light-background text-light-text1"
           }`}
           style={{
-            width: `${100 - width}%`,
+            width: `${100 - expanded}%`,
             backgroundImage: `
         linear-gradient(90deg, ${
           theme === "dark" ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)"
@@ -339,7 +311,7 @@ export default function Page({ params }) {
               <div className="flex items-center justify-center z-10 mx-5 w-full sm:mx-2">
                 {screenWidth > 0 &&
                 (windowWidth / screenWidth) * 100 > 50 &&
-                width < 70 ? (
+                expanded < 70 ? (
                   <div
                     className={`relative flex-grow h-4 rounded  mx-2 ${
                       theme === "dark"
@@ -376,12 +348,11 @@ export default function Page({ params }) {
 
           <div className="flex items-center h-full justify-center transition-colors duration-300 max-w-full">
             <RoadMap
-              width={100 - width}
+              width={100 - expanded}
               change={change}
               isDraggable={isDraggable}
               selectedCourse={selectedOption}
               returnToCenter={returnToCenter}
-              setIsHidden={setIsHidden}
             />
           </div>
 
@@ -393,7 +364,7 @@ export default function Page({ params }) {
                 theme === "dark"
                   ? "bg-dark-secondary text-dark-background"
                   : "bg-light-text1  text-light-secondary"
-              }  ${isHidden ? "left-[60px] bottom-4 " : ""}`}
+              }  ${expanded === 0 ? "left-[60px] bottom-4 " : ""}`}
             >
               <ArrowsPointingInIcon className="h-5 w-5" />
             </button>
@@ -407,14 +378,14 @@ export default function Page({ params }) {
           </h1>
         </div>
       )}
-      {isHidden && (
+      {expanded === 0 && (
         <button
           aria-label="Show"
-          onClick={() => setIsHidden(false)}
+          onClick={() => setExpanded(40)}
           className={`absolute bottom-5 left-4 p-2 rounded ${
             theme === "dark"
-              ? "bg-dark-secondary text-dark-background"
-              : "bg-light-secondary text-light-text1"
+                  ? "bg-dark-secondary text-dark-background"
+                  : "bg-light-text1  text-light-secondary"
           }`}
         >
           <ArrowRightIcon className="h-5 w-5" />

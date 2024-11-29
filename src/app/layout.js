@@ -1,8 +1,9 @@
 import './globals.css';
 import { Gamja_Flower, Montserrat, Manrope, Old_Standard_TT } from "next/font/google";
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import AdSense from './components/AdSense';
+import AdSense from './ads/AdSense';
 import { ThemeProvider } from 'next-themes';
+import { ExpandedProvider } from './providers/ExpansionProvider';
  
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -67,10 +68,12 @@ export default function RootLayout({ children }) {
       <head>
         <AdSense/>
       </head>
-      <body className={`antialiased`} suppressHydrationWarning >      
-        <ThemeProvider attribute="class">
-          {children}
-        </ThemeProvider>
+      <body className={`antialiased`} suppressHydrationWarning >   
+        <ExpandedProvider>   
+          <ThemeProvider attribute="class">
+            {children}
+          </ThemeProvider>
+        </ExpandedProvider>
         <SpeedInsights/>
       </body>
     </html>

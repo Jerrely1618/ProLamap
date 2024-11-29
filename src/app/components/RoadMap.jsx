@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import PropTypes from "prop-types";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
+import { useExpanded } from "../providers/ExpansionProvider";
 
 const randomFloat = (min, max) => Math.random() * (max - min) + min;
 
@@ -122,8 +123,6 @@ const RoadMapBubble = React.memo(function RoadMapBubble({
 const RoadMap = ({
   returnToCenter,
   isDraggable,
-  setIsHidden,
-  width,
   selectedCourse,
   change,
 }) => {
@@ -139,7 +138,7 @@ const RoadMap = ({
   const lastTouchX = useRef(0);
   const [levels, setLevels] = useState({});
   const lastDistance = useRef(0);
-
+  const {expanded, setExpanded} = useExpanded();
   const updateScale = useCallback(() => {
     const widthPercentage = (window.innerWidth / window.screen.width) * 100;
     const heightPercentage = (window.innerHeight / window.screen.height) * 100;
@@ -147,12 +146,12 @@ const RoadMap = ({
     const roadmapScale = Math.min(
       widthPercentage / 75,
       heightPercentage / 110,
-      width / 75
+      expanded / 75
     );
     setScale(Math.max(0.2, Math.min(1.1, roadmapScale)));
-  }, [width]);
-  const handleTopicClick = (text, isExpanded) => {
-    router.push(`/content/${text}?isExpanded=${isExpanded}`);
+  }, [expanded]);
+  const handleTopicClick = (text) => {
+    router.push(`/content/${text}`);
   };
 
   useEffect(() => {
@@ -313,7 +312,6 @@ const RoadMap = ({
                     subtopics={topics[node] || {}}
                     selectedCourse={selectedCourse}
                     change={change}
-                    setIsHidden={setIsHidden}
                   />
                 </div>
               ))}
@@ -332,15 +330,12 @@ RoadMapBubble.propTypes = {
   subtopics: PropTypes.object.isRequired,
   selectedCourse: PropTypes.object.isRequired,
   change: PropTypes.any.isRequired,
-  setIsHidden: PropTypes.func.isRequired,
 };
 
 RoadMap.propTypes = {
   setSelectedTopic: PropTypes.func.isRequired,
   returnToCenter: PropTypes.bool.isRequired,
   isDraggable: PropTypes.bool.isRequired,
-  setIsHidden: PropTypes.func.isRequired,
-  width: PropTypes.number.isRequired,
   selectedCourse: PropTypes.object.isRequired,
   change: PropTypes.any.isRequired,
 };

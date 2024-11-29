@@ -19,8 +19,9 @@ import React, {
   Suspense,
 } from "react";
 import { ThreeDots } from "react-loader-spinner";
-import AdVertical from "./AdVertical";
+import AdVertical from "../ads/AdVertical";
 import { useTheme } from "next-themes";
+import { useExpanded } from "../providers/ExpansionProvider";
 
 const BigContent = React.lazy(() => import("./BigContent"));
 const SmallContent = React.lazy(() => import("./SmallContent"));
@@ -31,10 +32,6 @@ const InnerContent = React.memo(function InnerContent({
   selectedTopic,
   selectedSubtopic,
   setChange,
-  isExpanded,
-  handleHide,
-  width,
-  handleExpand,
   setIsMediaOnly,
 }) {
   const [contentData, setContentData] = useState(null);
@@ -42,7 +39,7 @@ const InnerContent = React.memo(function InnerContent({
   const [isCompleted, setIsCompleted] = useState(false);
   const [loading, setLoading] = useState(true);
   const { theme, setTheme } = useTheme();
-
+  const {expanded} = useExpanded();
   const fetchContentData = useCallback(async () => {
     setLoading(true);
     try {
@@ -170,9 +167,6 @@ const InnerContent = React.memo(function InnerContent({
   return (
     <div className="h-screen">
       <Buttons
-        handleExpand={handleExpand}
-        isExpanded={isExpanded}
-        handleHide={handleHide}
         setTheme={setTheme}
         setIsMediaOnly={setIsMediaOnly}
         isMediaOnly={isMediaOnly}
@@ -194,7 +188,7 @@ const InnerContent = React.memo(function InnerContent({
           </div>
         }
       >
-        {window.innerWidth < 768 || width < 40 ? (
+        {window.innerWidth < 768 || expanded < 40 ? (
           <SmallContent
             toggleCompletion={toggleCompletion}
             selectedStep={selectedStep}
@@ -204,14 +198,11 @@ const InnerContent = React.memo(function InnerContent({
             selectedCourse={selectedCourse}
             isMediaOnly={isMediaOnly}
             selectedTopic={selectedTopic}
-            isExpanded={isExpanded}
-            handleHide={handleHide}
-            width={width}
             setIsMediaOnly={setIsMediaOnly}
           />
         ) : (
           <div className="grid grid-cols-6 h-screen">
-            {isExpanded && (
+            {expanded === 100 && (
               <div
                 className={` ${
                   theme === "dark"
@@ -223,7 +214,7 @@ const InnerContent = React.memo(function InnerContent({
               </div>
             )}
             <div
-              className={`${isExpanded ? "col-span-4" : "col-span-6 mb-10"}`}
+              className={`${expanded === 100 ? "col-span-4" : "col-span-6 mb-10"}`}
             >
               <BigContent
                 selectedStep={selectedStep}
@@ -236,7 +227,7 @@ const InnerContent = React.memo(function InnerContent({
                 toggleCompletion={toggleCompletion}
               />
             </div>
-            {isExpanded && (
+            {expanded === 100 && (
               <div
                 className={` ${
                   theme === "dark"
@@ -255,19 +246,18 @@ const InnerContent = React.memo(function InnerContent({
 });
 
 function Buttons({
-  handleExpand,
-  isExpanded,
-  handleHide,
   setIsMediaOnly,
   isMediaOnly,
 }) {
   const { theme, setTheme } = useTheme();
+  const {expanded, setExpanded} = useExpanded();
   const router = useRouter();
   const toggleSettings = useCallback(() => {
     setIsMediaOnly((prev) => !prev);
   }, [setIsMediaOnly]);
 
   const handleHomeClick = useCallback(() => {
+    setExpanded(100);
     router.push(`/`);
   }, []);
 
@@ -281,7 +271,7 @@ function Buttons({
         <Tooltip title="Exit" placement="top">
           <button
             aria-label="Exit"
-            onClick={handleHide}
+            onClick={() => {setExpanded(0)}}
             className={`p-2 rounded transition-colors duration-300 bg-redSpecial text-white hover:bg-red-700`}
           >
             <XMarkIcon className="h-5 w-5" />
@@ -353,14 +343,14 @@ function Buttons({
         <Tooltip title="Expand" placement="top">
           <button
             aria-label="Expand"
-            onClick={handleExpand}
+            onClick={expanded > 40 ? ()=>{setExpanded(40)} : ()=>{setExpanded(100)}}
             className={`p-2 rounded transition-color duration-300 ${
               theme === "dark"
                 ? "bg-dark-secondary text-dark-background hover:bg-third-primary hover:text-white"
                 : "bg-light-text1  text-light-secondary hover:bg-blue-500 hover:text-white"
             }`}
           >
-            {isExpanded ? (
+            {expanded > 40 ? (
               <ArrowLeftIcon className="h-5 w-5" />
             ) : (
               <ArrowRightIcon className="h-5 w-5" />
@@ -377,10 +367,6 @@ InnerContent.propTypes = {
   selectedTopic: PropTypes.string.isRequired,
   selectedSubtopic: PropTypes.string,
   setChange: PropTypes.func.isRequired,
-  isExpanded: PropTypes.bool.isRequired,
-  handleHide: PropTypes.func.isRequired,
-  width: PropTypes.number.isRequired,
-  handleExpand: PropTypes.func.isRequired,
   setIsMediaOnly: PropTypes.func.isRequired,
   isMediaOnly: PropTypes.bool.isRequired,
 };

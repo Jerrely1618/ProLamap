@@ -14,10 +14,12 @@ import debounce from "lodash.debounce";
 import { FixedSizeList as List } from "react-window";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
+import { useExpanded } from "../providers/ExpansionProvider";
 
-export default function Welcome({ handleExpand, isExpanded, handleHide }) {
+export default function Welcome() {
   const router = useRouter();
   const { theme } = useTheme();
+  const { expanded } = useExpanded();
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredTopics, setFilteredTopics] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -123,7 +125,7 @@ export default function Welcome({ handleExpand, isExpanded, handleHide }) {
     router.push(
       `/content/${
         item.parentTopic ? item.parentTopic : item.topic
-      }?isExpanded=${isExpanded}`
+      }`
     );
   };
 
@@ -188,7 +190,7 @@ export default function Welcome({ handleExpand, isExpanded, handleHide }) {
             </span>
           </h1>
           <div className="flex flex-col items-center justify-center w-full">
-            {isExpanded && (
+            {expanded > 50 && (
               <div className="overflow-hidden z-20 whitespace-nowrap body mt-0 ml-1.5 w-full">
                 <div className="animate-marquee whitespace-nowrap flex will-change-transform">
                   {topics.map((topic, index) => (
@@ -329,20 +331,20 @@ export default function Welcome({ handleExpand, isExpanded, handleHide }) {
           will-change: transform;
         }
       `}</style>
-      <Buttons
-        handleExpand={handleExpand}
-        isExpanded={isExpanded}
-        handleHide={handleHide}
-      />
+      <Buttons/>
     </>
   );
 }
-function Buttons({ handleExpand, isExpanded, handleHide }) {
+function Buttons() {
   const { theme, setTheme } = useTheme();
+  const { expanded, setExpanded } = useExpanded();
+  const handleHide = () => setExpanded(0);
+  const handleExpand = () => setExpanded(100);
+  const handleMinimize = () => setExpanded(40);
   return (
     <div className="flex justify-between justify-center items-center bg-transparent m-4 z-10">
       <div className="flex space-x-2">
-        {!isExpanded && (
+        {expanded > 0 && (
           <Tooltip title="Exit" placement="top">
             <button
               aria-label="Exit"
@@ -374,7 +376,7 @@ function Buttons({ handleExpand, isExpanded, handleHide }) {
       </div>
       <div
         className={`flex flex-col text-sm justify-center text-center items-center ${
-          isExpanded ? "" : "-ml-10"
+          expanded === 100 ? "" : "-ml-10"
         } ${
           theme === "dark" ? "text-dark-secondary" : "text-light-secondary"
         } `}
@@ -390,14 +392,14 @@ function Buttons({ handleExpand, isExpanded, handleHide }) {
         <Tooltip title="Expand" placement="top">
           <button
             aria-label="Expand"
-            onClick={handleExpand}
+            onClick={expanded > 40 ? handleMinimize : handleExpand}
             className={`p-2 rounded transition-color duration-300 ${
               theme === "dark"
                 ? "bg-dark-secondary text-dark-background hover:bg-third-primary hover:text-white"
                 : "bg-light-text1  text-light-secondary hover:bg-blue-500 hover:text-white"
             }`}
           >
-            {isExpanded ? (
+            {expanded > 40 ? (
               <ArrowLeftIcon className="h-5 w-5" />
             ) : (
               <ArrowRightIcon className="h-5 w-5" />
@@ -408,15 +410,3 @@ function Buttons({ handleExpand, isExpanded, handleHide }) {
     </div>
   );
 }
-Buttons.propTypes = {
-  handleExpand: PropTypes.func.isRequired,
-  isExpanded: PropTypes.bool.isRequired,
-  handleHide: PropTypes.func.isRequired,
-};
-Welcome.propTypes = {
-  setSelectedTopic: PropTypes.func.isRequired,
-  handleExpand: PropTypes.func.isRequired,
-  isExpanded: PropTypes.bool.isRequired,
-  width: PropTypes.number.isRequired,
-  handleHide: PropTypes.func.isRequired,
-};
