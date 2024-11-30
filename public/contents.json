@@ -1035,9 +1035,50 @@
           "content":"# Detects cycle in a linked list\ndef slowFast(head: ListNode) -> ListNode:\n    slow = fast = head\n    # Common approach\n    while fast and fast.next:\n        slow = slow.next # Moves at 1 step at a time\n        fast = fast.next.next # Moves in 2 steps at a time\n        if slow == fast:\n            return True\n    return False"
         }
       ],
-      "Topological Sort": [],
-      "Prism's Algorithm": [],
-      "Kruskal's Algorithm": []
+      "Kahn's Algorithm (Topological Sort)": [
+        {
+          "type": "mainTitle",
+          "content": "Kahn's Algorithm (Topological Sort)"
+        },
+        {
+          "type": "Idea",
+          "content": "Kahn's Algorithm (Topological Sort)"
+        },
+        {
+          "type":"code",
+          "content":"def topological_sort(n, edges):\n    graph = defaultdict(list)\n    in_degree = [0] * n\n\n    for u, v in edges:\n        graph[u].append(v)\n        in_degree[v] += 1\n\n    queue = deque([u for u in range(n) if in_degree[u] == 0])\n    result = []\n\n    while queue:\n        node = queue.popleft()\n        result.append(node)\n        for neighbor in graph[node]:\n            in_degree[neighbor] -= 1\n            if in_degree[neighbor] == 0:\n                queue.append(neighbor)\n\n    return result if len(result) == n else []\n\nn = 6\nedges = [(5, 2), (5, 0), (4, 0), (4, 1), (2, 3), (3, 1)]\nprint(topological_sort(n, edges)) # [4, 5, 2, 0, 3, 1]"
+        }
+      ],
+      "Prism's Algorithm": [
+        {"type":"mainTitle","content":"Prism's Algorithm"},
+        {"type":"Idea","content":"Prism's Algorithm"},
+        {"type":"code","content":"def prims_algo(edges):\n    # Adjency list of the graph\n    graph = defaultdict(list)\n    for u, v, w in edges:\n        graph[u].append((v, w))\n        graph[v].append((u, w))\n\n    # Initializing states\n    visited = [False] * n # Visited list\n    minHeap = [(0, 0)] # Starting heap with node 0 at 0 cost\n    minCost = 0 # Total cost of the Minimum Spanning Tree\n\n    while minHeap:\n        # Get the node with minimum edge cost\n        cost, u = heapq.heappop(minHeap)\n        # We've seen it? We skip it\n        if visited[u]:\n            continue\n        visited[u] = True\n        # Add current cost\n        minCost += cost\n\n        # Check adjancent edges of the u node\n        for v, w in graph[u]:\n            if not visited[v]:\n                heapq.heappush(minHeap, (w, v)) # Add edge to the heap\n\n    return minCost\n\nn = 4\nedges = [(0, 1, 1), (0, 2, 2), (0, 3, 3), (1, 2, 4), (1, 3, 5), (2, 3, 6)]\nprint(prims(n, edges)) # 6"}
+      ],
+      "Disjoint-Set (Union-Find)": [
+        {
+          "type": "mainTitle",
+          "content": "Disjoint-Set (Union-Find)"
+        },
+        {
+          "type":"code",
+          "content":"class DisjointSet:\n    def __init__(self, n):\n        self.parent = list(range(n))\n        self.rank = [0] * n\n\n    def find(self, u):\n        if self.parent[u] != u:\n            self.parent[u] = self.find(self.parent[u])\n        return self.parent[u]\n\n    def union(self, u, v):\n        root_u, root_v = self.find(u), self.find(v)\n        if root_u == root_v:\n            return\n        if self.rank[root_u] < self.rank[root_v]:\n            self.parent[root_u] = root_v\n        elif self.rank[root_u] > self.rank[root_v]:\n            self.parent[root_v] = root_u\n        else:\n            self.parent[root_u] = root_v\n            self.rank[root_v] += 1"
+        }
+
+      ],
+      "Kruskal's Algorithm": [
+        {
+          "type": "mainTitle",
+          "content": "Kruskal's Algorithm"
+        },
+        {
+          "type":"title",
+          "content":"Union-Find Data Structure"
+        },
+        {
+          "type":"code",
+          "content":"def kruskal(n, edges):\n    dsu = DisjointSet(n)\n\n    edges.sort(key=lambda x: x[2])\n    minimumSpanningTree = []\n    minimumSpanningTree_weight = 0\n\n    for u, v, weight in edges:\n        if dsu.find(u) != dsu.find(v):\n            dsu.union(u, v)\n            minimumSpanningTree.append((u, v, weight))\n            minimumSpanningTree_weight += weight\n\n    return minimumSpanningTree, minimumSpanningTree_weight\n\nn = 4\nedges = [(0, 1, 1), (0, 2, 2), (0, 3, 3), (1, 2, 4), (1, 3, 5), (2, 3, 6)]\nprint(kruskal(n, edges)) # ([(0, 1, 1), (0, 2, 2), (0, 3, 3)], 6)"
+        }
+      ]
     },
     "Exception Handling": {
       "General": [],
